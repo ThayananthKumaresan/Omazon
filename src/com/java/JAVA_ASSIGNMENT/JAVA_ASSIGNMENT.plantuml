@@ -1,0 +1,291 @@
+@startuml
+
+title __JAVA_ASSIGNMENT's Class Diagram__\n
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Cart {
+        {static} + userCartDatabase : ArrayList<Cart>
+        ~ cartQuantity : int
+        ~ cartUser : String
+        + Cart()
+        + Cart()
+        + getCartProduct()
+        + getCartQuantity()
+        + getCartUser()
+        + setCartProduct()
+        + setCartQuantity()
+        + setCartUser()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Customer {
+        - address : String
+        - paymentPassword : String
+        - walletBalance : Double
+        + Customer()
+        + getAddress()
+        + getBalance()
+        + getPaymentPassword()
+        + setAddress()
+        + setBalance()
+        + setPaymentPassword()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.DatabaseHandler {
+        {static} + main()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Favorites {
+        {static} + userFavoritesDatabase : ArrayList<Favorites>
+        ~ favoritesUser : String
+        + Favorites()
+        + Favorites()
+        + getFavoritesProduct()
+        + getFavoritesUser()
+        + setFavoritesProduct()
+        + setFavoritesUser()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Feedback {
+        {static} + feedbackDataBase : ArrayList<Feedback>
+        ~ feedbackCommentBySeller : String
+        ~ feedbackCustomerName : String
+        ~ feedbackID : String
+        ~ feedbackRating : int
+        ~ feedbackReview : String
+        + Feedback()
+        + Feedback()
+        + getFeedbackCommentBySeller()
+        + getFeedbackCustomerName()
+        + getFeedbackID()
+        + getFeedbackProduct()
+        + getFeedbackRating()
+        + getFeedbackReview()
+        + setFeedbackCommentBySeller()
+        + setFeedbackCustomerName()
+        + setFeedbackID()
+        + setFeedbackProduct()
+        + setFeedbackRating()
+        + setFeedbackReview()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Main {
+        {static} + sessionCustomer : Customer
+        {static} + sessionSeller : Seller
+        {static} + userWallet : Wallet
+        {static} + cartPage()
+        {static} + categoryPage()
+        {static} + checkoutPage()
+        {static} + exitApp()
+        {static} + favoritesPage()
+        {static} + feedbackPage()
+        {static} + homePage()
+        {static} + loginPage()
+        {static} + main()
+        {static} + mainMenuPage()
+        {static} + manageFeedbackPage()
+        {static} + manageOrdersPage()
+        {static} + managePaymentPage()
+        {static} + manageProductPage()
+        {static} + manageSellerProfilePage()
+        {static} + orderHistoryPage()
+        {static} + productDisplayPage()
+        {static} + registerPage()
+        {static} + searchPage()
+        {static} + userProfilePage()
+        {static} + walletPage()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Notification {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Orders {
+        {static} + orderDatabase : ArrayList<Orders>
+        ~ orderCart : ArrayList<Cart>
+        ~ orderCustomerName : String
+        ~ orderDate : Date
+        ~ orderID : String
+        ~ orderRatedOrNot : String
+        ~ orderReceivedOrNot : String
+        ~ orderSellerUsername : String
+        ~ orderStatus : String
+        ~ orderTotalPaid : double
+        ~ orderTrackingID : String
+        + Orders()
+        + Orders()
+        + getOrderCart()
+        + getOrderCustomer()
+        + getOrderCustomerName()
+        {static} + getOrderDatabase()
+        + getOrderDate()
+        + getOrderID()
+        + getOrderRatedOrNot()
+        + getOrderReceivedOrNot()
+        + getOrderSellerUsername()
+        + getOrderStatus()
+        + getOrderTotalPaid()
+        + getOrderTrackingID()
+        + setOrderCart()
+        + setOrderCustomer()
+        + setOrderCustomerName()
+        {static} + setOrderDatabase()
+        + setOrderDate()
+        + setOrderID()
+        + setOrderRatedOrNot()
+        + setOrderReceivedOrNot()
+        + setOrderSellerUsername()
+        + setOrderStatus()
+        + setOrderTotalPaid()
+        + setOrderTrackingID()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Product {
+        {static} + productDatabase : ArrayList<Product>
+        - productCategory : String
+        - productDescription : String
+        - productID : String
+        - productName : String
+        - productPrice : double
+        - productSalesCount : int
+        - productSellerUsername : String
+        - productStockCount : int
+        + Product()
+        + Product()
+        + Product()
+        + getProductCategory()
+        {static} + getProductDatabase()
+        + getProductDescription()
+        + getProductID()
+        + getProductName()
+        + getProductPrice()
+        + getProductSalesCount()
+        + getProductSellerUsername()
+        + getProductStockCount()
+        + setProductCategory()
+        {static} + setProductDatabase()
+        + setProductDescription()
+        + setProductID()
+        + setProductName()
+        + setProductPrice()
+        + setProductSalesCount()
+        + setProductSellerUsername()
+        + setProductStockCount()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Seller {
+        - sellerProfit : double
+        - sellerUsername : String
+        + getSellerProfit()
+        + getSellerUsername()
+        + setSellerProfit()
+        + setSellerUsername()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.User {
+        - email : String
+        - firstName : String
+        - lastName : String
+        - password : String
+        - username : String
+        + getEmail()
+        + getPassword()
+        + getUsername()
+        + setEmail()
+        + setPassword()
+        + setUsername()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.UserHandler {
+        {static} + UserList : ArrayList<User>
+        + loginUser()
+        + registerUser()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.Wallet {
+        ~ userWalletTransaction : ArrayList<WalletTransaction>
+        ~ walletBalance : double
+        + Wallet()
+        + Wallet()
+        + addWalletTransaction()
+        + getWalletBalance()
+        + getWalletTransaction()
+        + setWalletBalance()
+        + updateWalletBalance()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.WalletTransaction {
+        ~ transactionAmount : double
+        ~ transactionDateTime : Date
+        ~ transactionID : String
+        ~ transactionOrderID : String
+        ~ transactionSellerName : String
+        + WalletTransaction()
+        + WalletTransaction()
+        + getTransactionAmount()
+        + getTransactionDateTime()
+        + getTransactionID()
+        + getTransactionOrderID()
+        + getTransactionSellerName()
+        + setTransactionAmount()
+        + setTransactionDateTime()
+        + setTransactionID()
+        + setTransactionOrderID()
+        + setTransactionSellerName()
+    }
+  }
+  
+
+  com.java.JAVA_ASSIGNMENT.Cart o-- com.java.JAVA_ASSIGNMENT.Product : cartProduct
+  com.java.JAVA_ASSIGNMENT.Customer -up-|> com.java.JAVA_ASSIGNMENT.User
+  com.java.JAVA_ASSIGNMENT.Customer o-- com.java.JAVA_ASSIGNMENT.Wallet : userWallet
+  com.java.JAVA_ASSIGNMENT.Favorites o-- com.java.JAVA_ASSIGNMENT.Product : favoritesProduct
+  com.java.JAVA_ASSIGNMENT.Feedback o-- com.java.JAVA_ASSIGNMENT.Product : feedbackProduct
+  com.java.JAVA_ASSIGNMENT.Seller -up-|> com.java.JAVA_ASSIGNMENT.User
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
