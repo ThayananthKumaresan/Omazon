@@ -429,9 +429,8 @@ public class Main {
     }
 
 
-    public static void manageProductPage() {
-        // every object of projectDoa should point to same database???
-        ProductDaoImp productDao = new ProductDaoImp();
+    public static void manageProductPage(ProductDao productDao) {
+        /**Receive an object of ProductDoaImp from invoke method, so all operation can be done on same database*/
 
         // get a list of seller product from ProjectDoa
         Product[] product = sessionSeller.getSellerProduct();
@@ -452,15 +451,15 @@ public class Main {
             switch(inpuString.charAt(0)){
                 case '1':
                     //Add Product
-                    addProductPage();
+                    addProductPage(productDao);
                     break;
                 case '2':
                     //Update product (name ,price and stock counts)
-                    updateProductPage();
+                    updateProductPage(productDao);
                     break;
                 case '3':
                     //Delete product
-                    deleteProductPage();
+                    deleteProductPage(productDao);
                     break;
                 case '4':
                     System.out.println("Exit from seller product page...");
@@ -471,9 +470,7 @@ public class Main {
         }while (true);
     }
 
-    public static void addProductPage(){
-        ProductDaoImp productDao = new ProductDaoImp();
-
+    public static void addProductPage(ProductDao productDao){
         //Generate product id, SHOULD HAVE A METHOD IN ProductDOA DO THIS
         String productID = productDao.generateID();
 
@@ -499,26 +496,12 @@ public class Main {
         System.out.println("Successfully add product");
     }
 
-    public static void updateProductPage(){
-        ProductDaoImp productDao = new ProductDaoImp();
-
+    public static void updateProductPage(ProductDao productDao){
         System.out.print("Enter the id of product:");
         String id = input.next();
 
-        //get the list of product
-        Product[] list = sessionSeller.getSellerProduct();
-
-        //find the product with the id
-        Product product = null; 
-        for (int i = 0; i < list.length; i++){
-            if(list[i].getProductID() == id)
-                product = list[i];
-        }
-        //if not find the id,return
-        if(product == null){
-            System.out.println("Product not find");
-            return;
-        }
+        //get the product
+        Product product = productDao.getProduct(id);
 
         do{
             System.out.println("(1) for update name\n(2) for description\n(3) for category\n(4) for stock(5) for price\n(6) for exit");
@@ -559,9 +542,7 @@ public class Main {
         
     }
 
-    public static void deleteProductPage(){
-        ProductDaoImp productDao = new ProductDaoImp();
-
+    public static void deleteProductPage(ProductDao productDao){
         System.out.print("Enter the id of product:");
         String id = input.next();
 
