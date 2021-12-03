@@ -431,14 +431,145 @@ public class Main {
 
     public static void manageProductPage() {
 
-        ProductDao productDAO = new ProductDaoImp();
-
-        // Find products of this seller
+        // get a list of seller product (seller should have an object ProductDOA, contain all product sell by seller)
+        // if return type is array list, converting require
+        Product[] product = sessionSeller.getSellerProduct();
         // View list of products and stock counts
-        //Add Product
-        //Update product (name ,price and stock counts)
-        //Delete product
+        System.out.println("Prosuct ID     Name           Category       Price          Stock");
+        for (int i = 0; i < product.length; i++){
+            System.out.printf("%15s%15s%15s%15s%15s\n", product[i].getProductID(), product[i].getProductCategory(), product[i].getProductName()
+            , product[i].getProductPrice(), product[i].getProductStockCount());
+        }
 
+        do{
+            System.out.println("(1) for add product\n(2) for update product\n(3) for delete product\n(4) for exit");
+            System.out.println("Enter command:");
+
+            //Get input of a whole line and take the frist character
+            String inpuString = input.nextLine();
+            switch(inpuString.charAt(0)){
+                case '1':
+                    //Add Product
+                    addProductPage();
+                    break;
+                case '2':
+                    //Update product (name ,price and stock counts)
+                    updateProductPage();
+                    break;
+                case '3':
+                    //Delete product
+                    deleteProductPage();
+                    break;
+                case '4':
+                    System.out.println("Exit from seller product page...");
+                    return;
+                default:
+                    System.out.println("Invalid input");
+            }
+        }while (true);
+    }
+
+    public static void addProductPage(){
+        //Generate product id, SHOULD HAVE A STATIC METHOD IN Product DO THIS
+        String productID = ProductDao.generateID();
+
+        // Get the name, using nextLine to allow have space between name of product
+        System.out.print("Enter the name of product:");
+        String name = input.nextLine();
+
+        System.out.print("Enter the category of product:");
+        String category = input.nextLine();
+
+        System.out.print("Enter the description of product:");
+        String descrip = input.nextLine();
+
+        System.out.print("Enter the price of product:");
+        double price = input.nextDouble();
+
+        System.out.print("Enter the stock of product:");
+        double stock = input.nextDouble();
+
+        //Get productDOA in seller class, write a method to return object of ProductDOA  
+        //New constuctor of product require
+        sessionSeller.getProductDOA().addProduct(new Product(productID, name, category, descrip, price, stock));
+
+        System.out.println("Successfully add product");
+    }
+
+    public static void updateProductPage(){
+        System.out.print("Enter the id of product:");
+        String id = input.next();
+
+        //get the list of product
+        Product[] list = sessionSeller.getSellerProduct();
+
+        //find the product with the id
+        Product product = null; 
+        for (int i = 0; i < list.length; i++){
+            if(list[i].getProductID() == id)
+                product = list[i];
+        }
+        //if not find the id,return
+        if(product == null){
+            System.out.println("Product not find");
+            return;
+        }
+
+        do{
+            System.out.println("(1) for update name\n(2) for description\n(3) for category\n(4) for stock(5) for price\n(6) for exit");
+            
+            //Get input of a whole line and take the frist character
+            String inputString = input.nextLine();
+            System.out.println("Enter:");
+            switch(inputString.charAt(0)){
+                //using next line to enable space between word
+                case '1':
+                    product.setProductName(input.nextLine());
+                    sessionSeller.getProductDOA().updateProduct(product);
+                    break;
+                case '2':
+                    product.setProductDescription(input.nextLine());
+                    sessionSeller.getProductDOA().updateProduct(product);
+                    break;
+                case '3':
+                    product.setProductCategory(input.nextLine());
+                    sessionSeller.getProductDOA().updateProduct(product);
+                    break;
+                case '4':
+                    product.setProductStockCount(input.nextInt());
+                    sessionSeller.getProductDOA().updateProduct(product);
+                    break;
+                case '5':
+                    product.setProductPrice(input.nextDouble());
+                    sessionSeller.getProductDOA().updateProduct(product);
+                    break;
+                case '6':
+                    return;
+                default:
+                    System.out.println("Invalid input");
+                
+            }
+
+        }while (true);
+        
+    }
+
+    public static void deleteProductPage(){
+        System.out.print("Enter the id of product:");
+        String id = input.next();
+
+        //get the list of product
+        Product[] list = sessionSeller.getSellerProduct();
+
+        //find the product with the id and delete it
+        for (int i = 0; i < list.length; i++){
+            if(list[i].getProductID() == id){
+                sessionSeller.getProductDOA().deleteProduct(list[i]);
+                System.out.println("Sucessfully delete product");
+                return;
+            }
+        }
+        System.out.println("Object not found");
     }
 
     public static void manageOrdersPage() {
