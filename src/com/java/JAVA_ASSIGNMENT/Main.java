@@ -211,32 +211,55 @@ public class Main {
 
     }
 
-    public static void walletPage() {
+    public static void walletPage(String userName) {
 
         System.out.println("########----- W A L L E T  P A G E-----########");
         WalletDao userWallet = new WalletDaoImp();
         WalletTransactionDao userWalletTransaction = new WalletTransactionDaoImp();
 
+        char userChoice;
+        boolean validInput=true;
         // Display current balance
+        CustomerDao customerDAO=new CustomerDaoImp();
+        System.out.print("Current Balance : RM ");
+        System.out.println(customerDAO.getCustomer(userName).getUserWallet());
         // Present Options -> 1. Top Up Balance , 2.View Transactions , R. Return Home Page
-        //-> 1. Top Up Balance    , userWallet.topUpWalletBalance(0.00);
-        //-> 2. View Transactions ,  userWalletTransaction.getWalletTransaction()
-        //-> R. Return Home Page
+        System.out.println("1. Top Up Balance");
+        System.out.println("2. View Transaction");
+        System.out.println("R. Return Home Page");
+        do {
+            System.out.println("\nYour option : ");
+            userChoice = input.next().charAt(0);
+            //-> 1. Top Up Balance    , userWallet.topUpWalletBalance(0.00);
+            if (userChoice == '1') {
+                validInput = true;
+                System.out.print("Top Up Balance : ");
+                userWallet.topUpWalletBalance(input.nextDouble());
+            }
+            //-> 2. View Transactions ,  userWalletTransaction.getWalletTransaction()
+            else if (userChoice == '2') {
+                validInput = true;
+                System.out.println("View Balance : ");
+                // If user chose to view transactions
+                for (int i = 0; i < userWalletTransaction.getWalletTransaction().size(); i++) {
+                    WalletTransaction printTransaction = userWalletTransaction.getWalletTransaction().get(i);
 
+                    System.out.println(
+                            printTransaction.getTransactionID() +
+                                    printTransaction.getTransactionOrderID() +
+                                    printTransaction.getTransactionSellerName() +
+                                    printTransaction.getTransactionAmount() +
+                                    printTransaction.getTransactionDateTime()
+                    );
+                }
 
-
-        // If user chose to view transactions
-        for (int i = 0; i < userWalletTransaction.getWalletTransaction().size(); i++) {
-            WalletTransaction printTransaction = userWalletTransaction.getWalletTransaction().get(i);
-
-            System.out.println(
-                    printTransaction.getTransactionID() +
-                    printTransaction.getTransactionOrderID() +
-                    printTransaction.getTransactionSellerName() +
-                    printTransaction.getTransactionAmount() +
-                    printTransaction.getTransactionDateTime()
-            );
-        }
+            }
+            //-> R. Return Home Page
+            else if (userChoice != 'R') {
+                System.out.print("Oops wrong value, please enter either 1 or 2.");
+                validInput = false;
+            }
+        }while (!validInput);
     }
 
     public static void cartPage() {
