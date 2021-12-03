@@ -430,10 +430,12 @@ public class Main {
 
 
     public static void manageProductPage() {
+        // every object of projectDoa should point to same database???
+        ProductDaoImp productDao = new ProductDaoImp();
 
-        // get a list of seller product (seller should have an object ProductDOA, contain all product sell by seller)
-        // if return type is array list, converting require
+        // get a list of seller product from ProjectDoa
         Product[] product = sessionSeller.getSellerProduct();
+
         // View list of products and stock counts
         System.out.println("Prosuct ID     Name           Category       Price          Stock");
         for (int i = 0; i < product.length; i++){
@@ -470,8 +472,10 @@ public class Main {
     }
 
     public static void addProductPage(){
-        //Generate product id, SHOULD HAVE A STATIC METHOD IN Product DO THIS
-        String productID = ProductDao.generateID();
+        ProductDaoImp productDao = new ProductDaoImp();
+
+        //Generate product id, SHOULD HAVE A METHOD IN ProductDOA DO THIS
+        String productID = productDao.generateID();
 
         // Get the name, using nextLine to allow have space between name of product
         System.out.print("Enter the name of product:");
@@ -487,16 +491,17 @@ public class Main {
         double price = input.nextDouble();
 
         System.out.print("Enter the stock of product:");
-        double stock = input.nextDouble();
+        int stock = input.nextInt();
 
         //Get productDOA in seller class, write a method to return object of ProductDOA  
-        //New constuctor of product require
-        sessionSeller.getProductDOA().addProduct(new Product(productID, name, category, descrip, price, stock));
+        productDao.addProduct(new Product(productID, name, descrip, category, sessionSeller.getSellerUsername(),price, stock, 0));
 
         System.out.println("Successfully add product");
     }
 
     public static void updateProductPage(){
+        ProductDaoImp productDao = new ProductDaoImp();
+
         System.out.print("Enter the id of product:");
         String id = input.next();
 
@@ -525,23 +530,23 @@ public class Main {
                 //using next line to enable space between word
                 case '1':
                     product.setProductName(input.nextLine());
-                    sessionSeller.getProductDOA().updateProduct(product);
+                    productDao.updateProduct(product);
                     break;
                 case '2':
                     product.setProductDescription(input.nextLine());
-                    sessionSeller.getProductDOA().updateProduct(product);
+                    productDao.updateProduct(product);
                     break;
                 case '3':
                     product.setProductCategory(input.nextLine());
-                    sessionSeller.getProductDOA().updateProduct(product);
+                    productDao.updateProduct(product);
                     break;
                 case '4':
                     product.setProductStockCount(input.nextInt());
-                    sessionSeller.getProductDOA().updateProduct(product);
+                    productDao.updateProduct(product);
                     break;
                 case '5':
                     product.setProductPrice(input.nextDouble());
-                    sessionSeller.getProductDOA().updateProduct(product);
+                    productDao.updateProduct(product);
                     break;
                 case '6':
                     return;
@@ -555,6 +560,8 @@ public class Main {
     }
 
     public static void deleteProductPage(){
+        ProductDaoImp productDao = new ProductDaoImp();
+
         System.out.print("Enter the id of product:");
         String id = input.next();
 
@@ -564,7 +571,7 @@ public class Main {
         //find the product with the id and delete it
         for (int i = 0; i < list.length; i++){
             if(list[i].getProductID() == id){
-                sessionSeller.getProductDOA().deleteProduct(list[i]);
+                productDao.deleteProduct(list[i]);
                 System.out.println("Sucessfully delete product");
                 return;
             }
