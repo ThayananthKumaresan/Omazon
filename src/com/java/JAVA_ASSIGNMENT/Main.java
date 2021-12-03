@@ -565,18 +565,9 @@ public class Main {
         System.out.print("Enter the id of product:");
         String id = input.next();
 
-        //get the list of product
-        Product[] list = sessionSeller.getSellerProduct();
-
-        //find the product with the id and delete it
-        for (int i = 0; i < list.length; i++){
-            if(list[i].getProductID() == id){
-                productDao.deleteProduct(list[i]);
-                System.out.println("Sucessfully delete product");
-                return;
-            }
-        }
-        System.out.println("Object not found");
+        productDao.deleteProduct(productDao.getProduct(id));
+        
+        System.out.println("Sucessfully delete product");
     }
 
     public static void manageOrdersPage() {
