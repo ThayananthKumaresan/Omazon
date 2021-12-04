@@ -7,7 +7,15 @@ public class FeedbackDaoImp implements FeedbackDao{
 
 
     @Override
-    public Feedback getFeedback(String feedbackID) {
+    public Feedback getFeedback(String productID) {
+
+        for (int j = 0; j < feedbackDataBase.size(); j++) {
+
+            if (feedbackDataBase.get(j).getFeedbackProduct().getProductID().equals(productID)) {
+                return feedbackDataBase.get(j);
+            }
+
+        }
         return null;
     }
 

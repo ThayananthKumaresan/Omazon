@@ -4,7 +4,6 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
 
   namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Cart {
-        {static} + userCartDatabase : ArrayList<Cart>
         ~ cartQuantity : int
         ~ cartUser : String
         + Cart()
@@ -20,17 +19,63 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.CartDao {
+        {abstract} + addCart()
+        {abstract} + deleteCart()
+        {abstract} + getCart()
+        {abstract} + updateCart()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.CartDaoImp {
+        {static} + userCartDatabase : ArrayList<Cart>
+        + addCart()
+        + deleteCart()
+        + getCart()
+        + updateCart()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Customer {
+        ~ firstTimeLogin : boolean
         - address : String
         - paymentPassword : String
-        - walletBalance : Double
+        + Customer()
+        + Customer()
         + Customer()
         + getAddress()
-        + getBalance()
         + getPaymentPassword()
+        + getUserWallet()
         + setAddress()
-        + setBalance()
         + setPaymentPassword()
+        + setUserWallet()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.CustomerDao {
+        {abstract} + deleteCustomer()
+        {abstract} + getCustomer()
+        {abstract} + loginCustomer()
+        {abstract} + registerCustomer()
+        {abstract} + updateCustomer()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.CustomerDaoImp {
+        {static} + customerDatabase : ArrayList<Customer>
+        + deleteCustomer()
+        + getCustomer()
+        + loginCustomer()
+        + registerCustomer()
+        + updateCustomer()
     }
   }
   
@@ -44,7 +89,6 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
 
   namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Favorites {
-        {static} + userFavoritesDatabase : ArrayList<Favorites>
         ~ favoritesUser : String
         + Favorites()
         + Favorites()
@@ -57,8 +101,28 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.FavoritesDao {
+        {abstract} + addFavorites()
+        {abstract} + deleteFavorites()
+        {abstract} + getFavorites()
+        {abstract} + updateFavorites()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.FavoritesDaoImp {
+        {static} + userFavoritesDatabase : ArrayList<Favorites>
+        + addFavorites()
+        + deleteFavorites()
+        + getFavorites()
+        + updateFavorites()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Feedback {
-        {static} + feedbackDataBase : ArrayList<Feedback>
         ~ feedbackCommentBySeller : String
         ~ feedbackCustomerName : String
         ~ feedbackID : String
@@ -83,10 +147,31 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.FeedbackDao {
+        {abstract} + addFeedback()
+        {abstract} + deleteFeedback()
+        {abstract} + getFeedback()
+        {abstract} + updateFeedback()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.FeedbackDaoImp {
+        {static} + feedbackDataBase : ArrayList<Feedback>
+        + addFeedback()
+        + deleteFeedback()
+        + getFeedback()
+        + updateFeedback()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Main {
+        {static} + input : Scanner
         {static} + sessionCustomer : Customer
         {static} + sessionSeller : Seller
-        {static} + userWallet : Wallet
         {static} + cartPage()
         {static} + categoryPage()
         {static} + checkoutPage()
@@ -94,6 +179,7 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         {static} + favoritesPage()
         {static} + feedbackPage()
         {static} + homePage()
+        {static} + logOutPage()
         {static} + loginPage()
         {static} + main()
         {static} + mainMenuPage()
@@ -106,6 +192,7 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         {static} + productDisplayPage()
         {static} + registerPage()
         {static} + searchPage()
+        {static} + sellerDashboardPage()
         {static} + userProfilePage()
         {static} + walletPage()
     }
@@ -119,8 +206,29 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.NotificationDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.NotificationDaoImp {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.OrderDao {
+        {abstract} + addOrders()
+        {abstract} + deleteOrders()
+        {abstract} + getOrders()
+        {abstract} + updateOrders()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Orders {
-        {static} + orderDatabase : ArrayList<Orders>
         ~ orderCart : ArrayList<Cart>
         ~ orderCustomerName : String
         ~ orderDate : Date
@@ -136,7 +244,6 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         + getOrderCart()
         + getOrderCustomer()
         + getOrderCustomerName()
-        {static} + getOrderDatabase()
         + getOrderDate()
         + getOrderID()
         + getOrderRatedOrNot()
@@ -148,7 +255,6 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         + setOrderCart()
         + setOrderCustomer()
         + setOrderCustomerName()
-        {static} + setOrderDatabase()
         + setOrderDate()
         + setOrderID()
         + setOrderRatedOrNot()
@@ -162,8 +268,18 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.OrdersDaoImp {
+        {static} + orderDatabase : ArrayList<Orders>
+        + addOrders()
+        + deleteOrders()
+        + getOrders()
+        + updateOrders()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Product {
-        {static} + productDatabase : ArrayList<Product>
         - productCategory : String
         - productDescription : String
         - productID : String
@@ -176,7 +292,6 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         + Product()
         + Product()
         + getProductCategory()
-        {static} + getProductDatabase()
         + getProductDescription()
         + getProductID()
         + getProductName()
@@ -185,7 +300,6 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         + getProductSellerUsername()
         + getProductStockCount()
         + setProductCategory()
-        {static} + setProductDatabase()
         + setProductDescription()
         + setProductID()
         + setProductName()
@@ -193,6 +307,29 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         + setProductSalesCount()
         + setProductSellerUsername()
         + setProductStockCount()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.ProductDao {
+        {abstract} + addProduct()
+        {abstract} + deleteProduct()
+        {abstract} + getProduct()
+        {abstract} + getTop3SellingProduct()
+        {abstract} + updateProduct()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.ProductDaoImp {
+        {static} + productDatabase : ArrayList<Product>
+        + addProduct()
+        + deleteProduct()
+        + getProduct()
+        + getTop3SellingProduct()
+        + updateProduct()
     }
   }
   
@@ -210,6 +347,29 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.SellerDao {
+        {abstract} + deleteSeller()
+        {abstract} + getSeller()
+        {abstract} + loginSeller()
+        {abstract} + registerSeller()
+        {abstract} + updateSeller()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.SellerDaoImp {
+        {static} + sellerDatabase : ArrayList<Seller>
+        + deleteSeller()
+        + getSeller()
+        + loginSeller()
+        + registerSeller()
+        + updateSeller()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.User {
         - email : String
         - firstName : String
@@ -217,20 +377,15 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         - password : String
         - username : String
         + getEmail()
+        + getFirstName()
+        + getLastName()
         + getPassword()
         + getUsername()
         + setEmail()
+        + setFirstName()
+        + setLastName()
         + setPassword()
         + setUsername()
-    }
-  }
-  
-
-  namespace com.java.JAVA_ASSIGNMENT {
-    class com.java.JAVA_ASSIGNMENT.UserHandler {
-        {static} + UserList : ArrayList<User>
-        + loginUser()
-        + registerUser()
     }
   }
   
@@ -240,11 +395,25 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
         ~ userWalletTransaction : ArrayList<WalletTransaction>
         ~ walletBalance : double
         + Wallet()
-        + Wallet()
         + addWalletTransaction()
         + getWalletBalance()
         + getWalletTransaction()
         + setWalletBalance()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.WalletDao {
+        {abstract} + topUpWalletBalance()
+        {abstract} + updateWalletBalance()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.WalletDaoImp {
+        + topUpWalletBalance()
         + updateWalletBalance()
     }
   }
@@ -273,12 +442,38 @@ title __JAVA_ASSIGNMENT's Class Diagram__\n
   }
   
 
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.WalletTransactionDao {
+        {abstract} + addWalletTransaction()
+        {abstract} + getWalletTransaction()
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.WalletTransactionDaoImp {
+        + addWalletTransaction()
+        + getWalletTransaction()
+    }
+  }
+  
+
   com.java.JAVA_ASSIGNMENT.Cart o-- com.java.JAVA_ASSIGNMENT.Product : cartProduct
+  com.java.JAVA_ASSIGNMENT.CartDaoImp .up.|> com.java.JAVA_ASSIGNMENT.CartDao
   com.java.JAVA_ASSIGNMENT.Customer -up-|> com.java.JAVA_ASSIGNMENT.User
   com.java.JAVA_ASSIGNMENT.Customer o-- com.java.JAVA_ASSIGNMENT.Wallet : userWallet
+  com.java.JAVA_ASSIGNMENT.CustomerDaoImp .up.|> com.java.JAVA_ASSIGNMENT.CustomerDao
   com.java.JAVA_ASSIGNMENT.Favorites o-- com.java.JAVA_ASSIGNMENT.Product : favoritesProduct
+  com.java.JAVA_ASSIGNMENT.FavoritesDaoImp .up.|> com.java.JAVA_ASSIGNMENT.FavoritesDao
   com.java.JAVA_ASSIGNMENT.Feedback o-- com.java.JAVA_ASSIGNMENT.Product : feedbackProduct
+  com.java.JAVA_ASSIGNMENT.FeedbackDaoImp .up.|> com.java.JAVA_ASSIGNMENT.FeedbackDao
+  com.java.JAVA_ASSIGNMENT.NotificationDaoImp .up.|> com.java.JAVA_ASSIGNMENT.NotificationDao
+  com.java.JAVA_ASSIGNMENT.OrdersDaoImp .up.|> com.java.JAVA_ASSIGNMENT.OrderDao
+  com.java.JAVA_ASSIGNMENT.ProductDaoImp .up.|> com.java.JAVA_ASSIGNMENT.ProductDao
   com.java.JAVA_ASSIGNMENT.Seller -up-|> com.java.JAVA_ASSIGNMENT.User
+  com.java.JAVA_ASSIGNMENT.SellerDaoImp .up.|> com.java.JAVA_ASSIGNMENT.SellerDao
+  com.java.JAVA_ASSIGNMENT.WalletDaoImp .up.|> com.java.JAVA_ASSIGNMENT.WalletDao
+  com.java.JAVA_ASSIGNMENT.WalletTransactionDaoImp .up.|> com.java.JAVA_ASSIGNMENT.WalletTransactionDao
 
 
 right footer

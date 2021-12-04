@@ -1,20 +1,22 @@
 package com.java.JAVA_ASSIGNMENT;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class WalletTransaction {
 
     String transactionID;
     double transactionAmount;
-    String transactionSellerName;
-    String transactionOrderID;
-    Date transactionDateTime;
+    ArrayList<Orders> ListofOrdersForTransaction = new ArrayList<>();
+    String transactionDateTime;
 
-    public WalletTransaction(String transactionID, double transactionAmount, String transactionSellerName, String transactionOrderID, Date transactionDateTime) {
+    public WalletTransaction() {
+    }
+
+    public WalletTransaction(String transactionID, double transactionAmount, ArrayList<Orders> listofOrdersForTransaction, String transactionDateTime) {
         this.transactionID = transactionID;
         this.transactionAmount = transactionAmount;
-        this.transactionSellerName = transactionSellerName;
-        this.transactionOrderID = transactionOrderID;
+        ListofOrdersForTransaction = listofOrdersForTransaction;
         this.transactionDateTime = transactionDateTime;
     }
 
@@ -34,31 +36,19 @@ public class WalletTransaction {
         this.transactionAmount = transactionAmount;
     }
 
-    public String getTransactionSellerName() {
-        return transactionSellerName;
+    public ArrayList<Orders> getListofOrdersForTransaction() {
+        return ListofOrdersForTransaction;
     }
 
-    public void setTransactionSellerName(String transactionSellerName) {
-        this.transactionSellerName = transactionSellerName;
+    public void setListofOrdersForTransaction(ArrayList<Orders> listofOrdersForTransaction) {
+        ListofOrdersForTransaction = listofOrdersForTransaction;
     }
 
-    public String getTransactionOrderID() {
-        return transactionOrderID;
-    }
-
-    public void setTransactionOrderID(String transactionOrderID) {
-        this.transactionOrderID = transactionOrderID;
-    }
-
-    public Date getTransactionDateTime() {
+    public String getTransactionDateTime() {
         return transactionDateTime;
     }
 
-    public void setTransactionDateTime(Date transactionDateTime) {
+    public void setTransactionDateTime(String transactionDateTime) {
         this.transactionDateTime = transactionDateTime;
-    }
-
-    public WalletTransaction() {
-
     }
 }

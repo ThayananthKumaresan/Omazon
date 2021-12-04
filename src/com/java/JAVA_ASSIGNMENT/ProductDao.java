@@ -8,6 +8,10 @@ public interface ProductDao {
     public void updateProduct(Product product);
     public void deleteProduct(Product product);
     public void addProduct(Product product);
+    public void addProductStock(Product product, int stockCountToAdd);
+    public void reduceProductStock(Product product,int stockCountToReduce);
+    public void addProductSalesCount(Product product, int salesCountToAdd);
+
     public ArrayList<Product> getTop3SellingProduct();
 
 

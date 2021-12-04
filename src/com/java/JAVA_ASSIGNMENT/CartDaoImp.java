@@ -2,14 +2,23 @@ package com.java.JAVA_ASSIGNMENT;
 
 import java.util.ArrayList;
 
+import static com.java.JAVA_ASSIGNMENT.Main.sessionCustomer;
+
 public class CartDaoImp implements CartDao{
 
     public static ArrayList<Cart> userCartDatabase = new ArrayList<>();
 
 
     @Override
-    public Cart getCart(String orderID) {
-        return null;
+    public  ArrayList<Cart> getCart(String cartUser) {
+
+        ArrayList<Cart> cartDetailsOfThisUser = new ArrayList<>();
+        for (Cart cart : userCartDatabase) {
+            if (cart.getCartUser().equals(sessionCustomer.getUsername())) {
+                cartDetailsOfThisUser.add(cart);
+            }
+        }
+        return cartDetailsOfThisUser;
     }
 
     @Override
@@ -20,10 +29,14 @@ public class CartDaoImp implements CartDao{
     @Override
     public void deleteCart(Cart cart) {
 
+        userCartDatabase.remove(cart);
+
     }
 
     @Override
     public void addCart(Cart cart) {
+
+        userCartDatabase.add(cart);
 
     }
 }

@@ -2,27 +2,29 @@ package com.java.JAVA_ASSIGNMENT;
 
 import java.util.ArrayList;
 
-public class FavoritesDaoImp implements FeedbackDao{
+public class FavoritesDaoImp implements FavoritesDao{
 
     public static ArrayList<Favorites> userFavoritesDatabase= new ArrayList<>();
 
+
     @Override
-    public Feedback getFeedback(String feedbackID) {
+    public Favorites getFavorites(String favoritesUser) {
         return null;
     }
 
     @Override
-    public void updateFeedback(Feedback feedback) {
+    public void updateFavorites(Favorites favorite) {
 
     }
 
     @Override
-    public void deleteFeedback(Feedback feedback) {
+    public void deleteFavorites(Favorites favorite) {
 
     }
 
     @Override
-    public void addFeedback(Feedback feedback) {
+    public void addFavorites(Favorites favorite) {
+        userFavoritesDatabase.add(favorite);
 
     }
 }

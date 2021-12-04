@@ -1,10 +1,10 @@
 package com.java.JAVA_ASSIGNMENT;
 
 
-import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static com.java.JAVA_ASSIGNMENT.CartDaoImp.userCartDatabase;
 import static com.java.JAVA_ASSIGNMENT.FavoritesDaoImp.userFavoritesDatabase;
@@ -13,6 +13,7 @@ import static com.java.JAVA_ASSIGNMENT.OrdersDaoImp.orderDatabase;
 import static com.java.JAVA_ASSIGNMENT.ProductDaoImp.productDatabase;
 import static com.java.JAVA_ASSIGNMENT.CustomerDaoImp.customerDatabase;
 import static com.java.JAVA_ASSIGNMENT.SellerDaoImp.sellerDatabase;
+import static com.java.JAVA_ASSIGNMENT.NotificationDaoImp.sellerNotificationDatabase;
 
 
 public class Main {
@@ -20,6 +21,26 @@ public class Main {
     public static Customer sessionCustomer;
     public static Seller sessionSeller;
     public static Scanner input = new Scanner(System.in);
+    static CartDao cartDAO = new CartDaoImp();
+    static ProductDao productDAO = new ProductDaoImp();
+    static WalletDao walletDAO = new WalletDaoImp();
+    static OrderDao orderDAO = new OrdersDaoImp();
+    static WalletTransactionDao walletTransactionDAO = new WalletTransactionDaoImp();
+    static CustomerDao customerDAO = new CustomerDaoImp();
+    static NotificationDao notificationDAO = new NotificationDaoImp();
+    static FeedbackDao feedbackDAO = new FeedbackDaoImp();
+
+    static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
+
+
+
+
+    public static void promptEnterKey(){
+        System.out.println("Press \"ENTER\" to continue...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+    }
+
 
     public static void mainMenuPage() {
 
@@ -35,7 +56,7 @@ public class Main {
 
         char userRole = 'n';
         boolean validInput;
-        do{
+        do{  //
             System.out.print("\nYour are ? : ");
             userRole = input.next().charAt(0);
 
@@ -143,8 +164,21 @@ public class Main {
 
     public static void logOutPage(char userRole){
 
+        if (userRole =='C')
+        {
+            System.out.print("Thank you for shopping. You have been logged out. You will be now redirected to Main Menu Page");
+
+        }else{
+
+            System.out.print("Thank you for your service. You have been logged out.You will be now redirected to Main Menu Page");
+        }
+
+        promptEnterKey();
+        mainMenuPage();
 
     }
+
+
 
     public static void registerPage(char userRole) {
         System.out.println("########----- R E G I S T R A T I O N  P A G E-----########");
@@ -212,18 +246,78 @@ public class Main {
 
         System.out.println("########----- H O M E  P A G E-----########");
 
+
         ProductDao productDAO = new ProductDaoImp();
         ArrayList<Product> top3SellingProducts = productDAO.getTop3SellingProduct();
-
         // List 3 Best Selling Products ( A , B , C)  getTop3SellingProduct()
-        // Present Options ->
-        // 1. Search , searchPage()
-        // 2. Check Wallet , walletPage()
-        // 3. View Cart , cartPage()
-        // 4. View Favorites , favoritesPage()
-        // 5.View Categories ,   categoryPage()
-        // 6. Log Out  logOutPage('C')
-        // Get the choice [DATA VALIDATION]
+        System.out.println("TOP SELLING PRODUCTS");
+        for (int i = 0; i < top3SellingProducts.size(); i++) {
+
+            System.out.println( "NO."+(i+1)+" - "+ top3SellingProducts.get(i).getProductName());
+
+        }
+
+
+        System.out.println("1.Search");
+        System.out.println("2.Check Wallet");
+        System.out.println("3.View Cart");
+        System.out.println("4.View Favorites");
+        System.out.println("5.View Categories");
+        System.out.println("6.Log Out");
+        System.out.println("Your choice : ");
+        int userChoice = input.nextInt();         // Get the choice
+
+        boolean validInput;
+        do{
+            try {
+                System.out.print("\nYour option : ");
+                userChoice = input.nextInt();
+                validInput=true;
+
+                if(userChoice < 1 || userChoice  > 5 ){
+                    System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
+                    validInput = false;
+                    input.nextLine();
+                }
+            }
+            catch (InputMismatchException ex) {
+                System.out.println("You have entered an invalid format of input");
+                validInput=false;
+                input.nextLine();
+            }
+
+        }while(!validInput);
+
+
+
+        switch (userChoice) {
+            case 1:
+                System.out.println("This is search Page ");
+                searchPage();
+                break;
+            case 2:
+                System.out.println("This is wallet Page ");
+                walletPage();
+                break;
+            case 3:
+                System.out.println("This is cart Page ");
+                cartPage();
+                break;
+            case 4:
+                System.out.println("This is  favorites Page ");
+                favoritesPage();
+                break;
+            case 5:
+                System.out.println("This is category Page ");
+                categoryPage();
+                break;
+            case 6:
+                System.out.println("This is logout Page ");
+                logOutPage('C');
+                break;
+
+        }
+
 
     }
 
@@ -262,8 +356,8 @@ public class Main {
 
             System.out.println(
                     printTransaction.getTransactionID() +
-                    printTransaction.getTransactionOrderID() +
-                    printTransaction.getTransactionSellerName() +
+                    //printTransaction.getTransactionOrderID() +
+                    //printTransaction.getTransactionSellerName() +
                     printTransaction.getTransactionAmount() +
                     printTransaction.getTransactionDateTime()
             );
@@ -272,27 +366,62 @@ public class Main {
 
     public static void cartPage() {
 
-        // During looping total up the prices and display it as well
-        // Present Options -> Press C to Checkout or Press R to return Home Page
-        // If C , then redirect to Checkout Page
 
-        ArrayList<Cart> cartDetailsOfThisUser = new ArrayList<>();
-        double totalAmount = 0.0;
-        for (Cart cart : userCartDatabase) {
-            if (cart.getCartUser().equals(sessionCustomer)) {
+            ArrayList<Cart> cartDetailsOfThisUser = cartDAO.getCart(sessionCustomer.getUsername());
 
-                Product productsInCartToDisplay;
-                productsInCartToDisplay = cart.getCartProduct();
-                cartDetailsOfThisUser.add(cart);
+
+            double totalAmount = 0.0;
+
+            System.out.println("No      Product Name        Price       Quantity");
+            for (int i = 0; i < cartDetailsOfThisUser.size(); i++) {
+
+                Cart cart = cartDetailsOfThisUser.get(i);
+                Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
+                System.out.println((i + 1) + "      " +
+                        productsInCartToDisplay.getProductName() + "      " +
+                        productsInCartToDisplay.getProductPrice() + "      " +
+                        cart.getCartQuantity());
+
                 totalAmount += productsInCartToDisplay.getProductPrice();
-                System.out.println(productsInCartToDisplay.getProductName() + productsInCartToDisplay.getProductPrice() + cart.getCartQuantity());
+
             }
+
+            System.out.printf("Total Amount in Cart : RM %.2f", totalAmount);
+            System.out.println("What would you like to do ?");
+            System.out.println("1. Checkout Now");
+            System.out.println("2. Return to Home");
+
+            boolean validInput;
+            int userChoice = 0;
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 2) {
+                        System.out.print("Oops wrong value, please enter either 1 or 2.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
+                }
+
+            } while (!validInput);
+
+
+        if (userChoice == 1) {
+            System.out.println("You will be now directed to Checkout page");
+            checkoutPage(cartDetailsOfThisUser, totalAmount);
+
+        } else {
+            System.out.println("You will be now directed to Home page");
         }
-        System.out.println("Total Amount in Cart : " + totalAmount);
 
-
-        //IF choose C for Checkout
-        checkoutPage(cartDetailsOfThisUser, totalAmount);
 
     }
 
@@ -320,50 +449,92 @@ public class Main {
 
     }
 
+
     public static void productDisplayPage(String productID) {
 
-        //To display the product , use the product id ,then
-        // loop through the productDatabase
-        // Display necessary info to the user
+        System.out.println("########----- P R O D U C T  P A G E-----########");
 
-        ProductDao productDAO = new ProductDaoImp();
-        productDAO.getProduct(productID);
+        Product searchedProduct =productDAO.getProduct(productID);
+        if ( searchedProduct != null){
 
-        //Move this logic to getProduct()
-        for (int i = 0; i < productDatabase.size(); i++) {
-            if (productDatabase.get(i).getProductID().equals(productID)) {
-                System.out.println(
-                        productDatabase.get(i).getProductName() +
-                                productDatabase.get(i).getProductCategory() +
-                                productDatabase.get(i).getProductDescription() +
-                                productDatabase.get(i).getProductPrice());
+            System.out.println(
+                    searchedProduct.getProductName() +
+                            searchedProduct.getProductCategory() +
+                            searchedProduct.getProductDescription() +
+                            searchedProduct.getProductPrice()
+            );
 
-            }
-            for (int j = 0; j < feedbackDataBase.size(); j++) {
+            Feedback searchedProductFeedback =feedbackDAO.getFeedback(productID);
 
-                if (feedbackDataBase.get(i).getFeedbackProduct().equals(productID)) {
-                    System.out.println(
-                            feedbackDataBase.get(i).getFeedbackReview() +
-                                    feedbackDataBase.get(i).getFeedbackCommentBySeller());
+            System.out.println(
+                    searchedProductFeedback.getFeedbackReview() +
+                            searchedProductFeedback.getFeedbackCommentBySeller()
+            );
 
 
+            System.out.println("What would you like to do ?");
+            System.out.println("1. Add to cart");
+            System.out.println("2. Add to favorites");
+
+            int userChoice=0,cartQuantity=0;
+            boolean validInput;
+
+            do{
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput=true;
+
+                    if(userChoice < 1 || userChoice  > 2 ){
+                        System.out.print("Oops wrong value, please enter either 1 or 2.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                }
+                catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput=false;
+                    input.nextLine();
                 }
 
+            }while(!validInput);
+
+
+            if (userChoice == 1) {
+
+                do{
+                    try {
+                        System.out.print("\nEnter quantity in digits (Eg :25");
+                        cartQuantity= input.nextInt();
+                        validInput=true;
+
+                    }
+                    catch (InputMismatchException ex) {
+                        System.out.println("You have entered an invalid format of input");
+                        validInput=false;
+                        input.nextLine();
+                    }
+
+                    Cart addToCart = new Cart(productID,cartQuantity,sessionCustomer.getUsername());
+                    CartDao cartDAO = new CartDaoImp();
+                    cartDAO.addCart(addToCart);
+
+                    System.out.println("Great this product is added to cart with the quantity !" + cartQuantity);
+
+                }while(!validInput);
+
+            } else {
+
+                Favorites addToFavorites = new Favorites(searchedProduct,sessionCustomer.getUsername());
+                FavoritesDao favoritesDAO = new FavoritesDaoImp();
+                favoritesDAO.addFavorites(addToFavorites);
+                System.out.println("Great this product is added to favorites !");
             }
 
+        }else{
 
+            System.out.println("Oops sorry couldn't find the product you're looking for. Please enter the product ID correctly");
         }
-
-//        //Whenever the user chose to add product to cart
-//        Cart addToCart = new Cart();
-//        Product productForCart = new Product(productSearched.getProductID(), productSearched.getProductName(), productSearched.getProductDescription(), productSearched.getProductPrice());
-//        userCartDatabase.add(addToCart);
-//
-//
-//        //Whenever the user chose to add product to favorites
-//        Product productForFavorites = new Product(productSearched.getProductID(), productSearched.getProductName(), productSearched.getProductDescription(), productSearched.getProductPrice());
-//        Favorites addToFavorites = new Favorites(productForFavorites, "Username");
-//        userFavoritesDatabase.add(addToFavorites);
 
 
     }
@@ -371,48 +542,177 @@ public class Main {
 
     public static void checkoutPage(ArrayList<Cart> cartDetailsOfThisUser, double totalCheckoutAmount) {
 
-        //using for loop on userCartDatabase
-        //display list of products,price that matches with the current user
 
         for (int i = 0; i < cartDetailsOfThisUser.size(); i++) {
 
-            System.out.println(
-                    cartDetailsOfThisUser.get(i).getCartProduct().getProductName() +
-                            cartDetailsOfThisUser.get(i).getCartProduct().getProductPrice() +
-                            cartDetailsOfThisUser.get(i).getCartQuantity());
+            Cart cart = cartDetailsOfThisUser.get(i);
+            Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
+            System.out.println((i+1)+"      "+
+                    productsInCartToDisplay.getProductName() +"      "+
+                    productsInCartToDisplay.getProductPrice()+"      " +
+                    cart.getCartQuantity());
+
 
         }
         System.out.println("Total Amount to Checkout : " + totalCheckoutAmount);
 
 
-        //Add Transaction
-        WalletTransaction transaction = new WalletTransaction("T1001", 30.00, "Muhadiyyah", "OD0392", new Date());
-        WalletTransactionDao userWalletTransaction = new WalletTransactionDaoImp();
-        userWalletTransaction.addWalletTransaction(transaction);
+        System.out.println("What would you like to do ?");
+        System.out.println("1. Pay Now");
+        System.out.println("2. Return to Home");
 
+        boolean validInput;
+        int userChoice=0;
 
-        //Reduce Wallet Balance
-        WalletDao userWallet = new WalletDaoImp();
-        userWallet.updateWalletBalance(totalCheckoutAmount);
+        do{
+            try {
+                System.out.print("\nYour option : ");
+                userChoice = input.nextInt();
+                validInput=true;
 
-        //Add New Order
-        Orders order = new Orders();
-        orderDatabase.add(order);
-
-        //Update Product StockCount
-        for (int j = 0; j < cartDetailsOfThisUser.size(); j++) {
-
-            for (int i = 0; i < productDatabase.size(); i++) {
-
-                if (cartDetailsOfThisUser.get(i).getCartProduct().getProductID().equals(productDatabase.get(i).getProductID())) {
-                    productDatabase.get(i).setProductStockCount(productDatabase.get(i).getProductStockCount() - cartDetailsOfThisUser.get(i).getCartQuantity());
+                if(userChoice < 1 || userChoice  > 2 ){
+                    System.out.print("Oops wrong value, please enter either 1 or 2.");
+                    validInput = false;
+                    input.nextLine();
                 }
             }
+            catch (InputMismatchException ex) {
+                System.out.println("You have entered an invalid format of input");
+                validInput=false;
+                input.nextLine();
+            }
 
-            //TODO : Removing from Cart Database
-            userCartDatabase.remove(cartDetailsOfThisUser.get(j));
+        }while(!validInput);
 
+
+        if (userChoice == 1) {
+
+            // TODO : FORGOT PASSWORD
+            String paymentPassword;
+            do {
+                System.out.println("Enter your payment password :");
+                 paymentPassword = input.next();
+
+                 if (!customerDAO.checkPaymentPassword(paymentPassword) ){
+                     System.out.println("Uh Oh , wrong password. Try again:");
+                 }
+
+            }while(!customerDAO.checkPaymentPassword(paymentPassword));
+
+
+
+            while(sessionCustomer.getUserWallet().getWalletBalance() < totalCheckoutAmount){
+
+                System.out.println("Insufficient Balance , please Top Up. Your balance in wallet is "+sessionCustomer.getUserWallet().getWalletBalance());
+
+                System.out.println("What would you like to do ?");
+                System.out.println("1. Top Up my Wallet and Proceed Payment");
+                System.out.println("2. Cancel this transaction");
+
+                do{
+                    try {
+                        System.out.print("\nYour option : ");
+                        userChoice = input.nextInt();
+                        validInput=true;
+
+                        if(userChoice < 1 || userChoice  > 2 ){
+                            System.out.print("Oops wrong value, please enter either 1 or 2.");
+                            validInput = false;
+                            input.nextLine();
+                        }
+                    }
+                    catch (InputMismatchException ex) {
+                        System.out.println("You have entered an invalid format of input");
+                        validInput=false;
+                        input.nextLine();
+                    }
+
+                }while(!validInput);
+
+                if (userChoice == 1) {
+
+                    WalletDao walltetDao = new WalletDaoImp();
+                    //TODO: Input Validation
+                    System.out.println("Enter the amount you would like to top up : RM ");
+                    double topUpAmount = input.nextDouble();
+                    walltetDao.topUpWalletBalance(topUpAmount);
+
+                }else{
+                        break;
+                }
+
+            }
+
+
+            //Once there is Sufficient balance , proceed the checkout process
+            LocalDateTime myDateObj = LocalDateTime.now();
+            String formattedDate = myDateObj.format(myFormatObj);
+
+            //Add New Order
+            ArrayList <Orders> ListofOrdersForTransaction = new ArrayList<>();
+
+            for (int i = 0; i < cartDetailsOfThisUser.size(); i++) {
+
+                Cart cart = cartDetailsOfThisUser.get(i);
+                Product productsInCartForOrders = productDAO.getProduct(cart.getCartProductID());
+                String uniqueID = UUID.randomUUID().toString().substring(0,8);
+
+
+                Orders order = new Orders(
+                        "Unprocessed" ,
+                        "OD"+uniqueID,
+                        formattedDate,
+                        totalCheckoutAmount,
+                        sessionCustomer.getUsername(),
+                        false,
+                        "Track Not Set",
+                        false,
+                        productsInCartForOrders.getProductSellerUsername(),
+                        productsInCartForOrders,
+                        cart.getCartQuantity()
+                        );
+                // Add Orders
+                ListofOrdersForTransaction.add(order);
+                orderDAO.addOrders(order);
+
+                //Increase Sales Count of this product
+                productDAO.reduceProductStock(productsInCartForOrders,cart.getCartQuantity());
+
+                //Reduce Stock Count of this product
+                productDAO.addProductSalesCount(productsInCartForOrders,cart.getCartQuantity());
+
+                //Removing from user's cart
+                cartDAO.deleteCart(cartDetailsOfThisUser.get(i));
+
+                // Notify the seller
+                Notification notificationSeller = new Notification(productsInCartForOrders.getProductSellerUsername(),"OD"+uniqueID,sessionCustomer.getFirstName()+sessionCustomer.getLastName(),productsInCartForOrders.getProductName());
+                notificationDAO.addNotification(notificationSeller);
+
+            }
+
+
+            //Reduce Wallet Balance
+            walletDAO.reduceWalletBalance(totalCheckoutAmount);
+
+            //Add Wallet Transaction
+            String uniqueID = UUID.randomUUID().toString().substring(0,8);
+            WalletTransaction transaction = new WalletTransaction(
+                    "TR"+uniqueID ,
+                    totalCheckoutAmount,
+                    ListofOrdersForTransaction,
+                    formattedDate);
+            walletTransactionDAO.addWalletTransaction(transaction);
+
+            System.out.println("Payment Successful , you will be now directed to Order History page");
+
+            orderHistoryPage();
+
+        } else {
+            System.out.println("You will be now directed to Home page");
         }
+
+
+
 
 
     }
@@ -444,9 +744,101 @@ public class Main {
     }
 
     public static void userProfilePage() {
-        // Present Options -> 1. Change Username , 2.Change Email  , 3.Change Password , 4.Update address , 5.Delete Account
-        // Get the choice [DATA VALIDATION]
-        // Perform the action accordingly
+
+        boolean validInput;
+
+        System.out.println("########----- P R O F I L E   P A G E-----########");
+
+        System.out.println("1.Change Username");
+        System.out.println("2.Change Email");
+        System.out.println("3.Change Password");
+        System.out.println("4.Update address");
+        System.out.println("5.Delete Account");
+        System.out.println("Your option : ");
+       int userChoice= input.nextInt();         // Get the choice
+
+
+        do{
+            try {
+                System.out.print("\nYour option : ");
+                userChoice = input.nextInt();
+                validInput=true;
+
+                if(userChoice < 1 || userChoice  > 5 ){
+                    System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 or 5 only.");
+                    validInput = false;
+                    input.nextLine();
+                }
+            }
+            catch (InputMismatchException ex) {
+                System.out.println("You have entered an invalid format of input");
+                validInput=false;
+                input.nextLine();
+            }
+
+        }while(!validInput);
+
+
+
+
+        switch (userChoice) {
+            case 1:
+                    System.out.println("Your new username: ");
+                    String username = input.next();
+                    customerDAO.updateUsername(username);
+                    break;
+            case 2:
+                    System.out.println("Your new Email: ");
+                    String email = input.next();
+                    customerDAO.updateEmail(email);
+                    break;
+            case 3:
+                    System.out.println("Your new Password: ");
+                    String password = input.next();
+                    customerDAO.updatePassword(password);
+                    break;
+            case 4:
+                    System.out.println("Your new Address: ");
+                    String address = input.nextLine();
+                    customerDAO.updateAddress(address);
+                    break;
+            default:
+                    System.out.println("Are you sure to delete the account?");
+                    System.out.println("1. Yes");
+                    System.out.println("2. No");
+
+                    int deleteConfirmation= 0;
+                    do{
+                        try {
+                            System.out.print("\nYour option : ");
+                            deleteConfirmation = input.nextInt();
+                            validInput=true;
+
+                            if(deleteConfirmation < 1 || deleteConfirmation  > 2 ){
+                                System.out.print("Oops wrong value, please enter either 1 or 2.");
+                                validInput = false;
+                                input.nextLine();
+                            }
+                        }
+                        catch (InputMismatchException ex) {
+                            System.out.println("You have entered an invalid format of input");
+                            validInput=false;
+                            input.nextLine();
+                        }
+
+                    }while(!validInput);
+
+                    if (deleteConfirmation == 1) {
+                        customerDAO.deleteCustomer(sessionCustomer);
+                    } else {
+                        // back to the userProfilePage!!! Then choice again!
+                    }
+                break;
+
+        }
+
+
+
 
     }
 
@@ -511,13 +903,13 @@ public class Main {
                                 updateOrder.getOrderReceivedOrNot()
                 );
 
-                for (int j = 0; j < updateOrder.getOrderCart().size(); j++) {
-                    System.out.println((j + 1) +
-                            updateOrder.getOrderCart().get(j).getCartProduct().getProductName() +
-                            updateOrder.getOrderCart().get(j).getCartProduct().getProductPrice() +
-                            updateOrder.getOrderCart().get(j).getCartQuantity()
-                    );
-                }
+//                for (int j = 0; j < updateOrder.getOrderCart().size(); j++) {
+//                    System.out.println((j + 1) +
+//                            updateOrder.getOrderCart().get(j).getCartProduct().getProductName() +
+//                            updateOrder.getOrderCart().get(j).getCartProduct().getProductPrice() +
+//                            updateOrder.getOrderCart().get(j).getCartQuantity()
+//                    );
+//                }
             }
         }
 
@@ -594,8 +986,18 @@ public class Main {
 
     public static void main(String[] args) {
 
+        for (int i = 0; i < 10; i++) {
+            String uniqueID = UUID.randomUUID().toString().substring(0,8);
+            System.out.println(uniqueID);
+        }
 
-        mainMenuPage();
+
+
+
+
+//mainMenuPage();
+        //productDisplayPage("iii")     ;
+        //ADD SOME TEST DATA TO THE DATABASE
 
 
 
