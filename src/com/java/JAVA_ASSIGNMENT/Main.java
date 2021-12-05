@@ -125,6 +125,18 @@ public class Main {
         //2. Check if this seller is found in the sellerDatabase
         //3. If found then copy to sessionSeller
         //4. Direct to sellerDashboard page
+        if(userRole =='S'){
+            System.out.print("Enter your email : ");
+            inputEmail = input.next();
+
+            System.out.print("Password : ");
+            inputPassword = input.next();
+            int i;
+
+            Seller loginCust = new Seller(inputEmail,inputPassword);
+            SellerDao sellerDAO = new SellerDaoImp();
+            sellerDAO.loginSeller(loginCust);
+            }
 
 
     }
@@ -164,10 +176,29 @@ public class Main {
             CustomerDao customerDAO = new CustomerDaoImp();
             customerDAO.registerCustomer(registerCustomer);
         }
-        else{
+        else if (userRole =='S'){
+            Seller registerSeller = new Seller(sellerUsername,sellerEmail,sellerPhonenumber,sellerbankaccount,selleraddress,sellerpassword);
 
-            //For Seller
+            System.out.print("Your Email : ");
+            registerSeller.setEmail(input.next());
 
+            System.out.print("Your Password : ");
+            registerSeller.setPassword(input.next());
+
+            System.out.print("Your Username : ");
+            registerSeller.setUsername(input.next());
+
+            System.out.print("Your Phone Number : ");
+            registerSeller.setSellerPhonenumber(input.next());
+
+            System.out.print("Your Address : ");
+            registerSeller.setAddress(input.next());
+
+            System.out.print("Your Bank account : ");
+            registerSeller.setAddress(input.next());
+
+            SellerDao sellerDAO = new SellerDaoImp();
+            sellerDAO.registerSeller(registerSeller);
         }
 
 
