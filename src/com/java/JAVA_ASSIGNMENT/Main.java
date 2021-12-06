@@ -227,19 +227,88 @@ public class Main {
 
     }
 
-    public static void searchPage() {
+    public static void searchPage(ProductDao productDao) {
+        // Take object productDao from main page, but actually i suggest to have an static object ProductDao
+        boolean searchByProduct = false;
+        String term;
 
 
+        //result of searching simillar term
+        ArrayList<Product> searchResult = new ArrayList<>(); 
 
-        // Present Options -> 1. Search by Product , 2. Search by Seller
-        // Get the choice  [DATA VALIDATION]
-        // After validation and checking the choice get the search term
+        Out:
+        do{
+            // Present Options -> 1. Search by Product , 2. Search by Seller
+            System.out.print("(1) for search by product\n(2) for search by seller\nEnter command:");
+            
+            // Get the choice  [DATA VALIDATION]
+            
+            switch(input.nextLine().charAt(0)){
+                // After validation and checking the choice get the search term
+                case '1':
+                    searchByProduct = true;
+                    // continue run the code in case '2'
+                case '2':
+                    //only search for frist 15 characters
+                    term = input.nextLine().substring(0, 15);
+                    break Out;
+                default:
+                    System.out.println("Invalid input");
+            }
+        }while(true);
+
+        // require a method in class ProductDao to return an ArrayList contain all Product in database, will raise as an issue
+        ArrayList<Product> list = productDao.listOfProduct();
+        
         // Search through the ArrayList of Product , if it matches the search term
-        // **Return the results which have similar keywords
+        // Test and  get the size of list outside the loop to improve preformance
+        // *Focus on for loop to improve preformance
+        // The code has linear order of grow for size of list,may slow if list contain too many element
+        // ***Don't use the code with list with too many element like more than ten thousand 
+        long size =  list.size();
+        if(searchByProduct){
+            for (long i = 0; i < size; i++){
+                Product temp = list.get((int) i)
+                //check does name of product contain term or term contain name of product
+                if(temp.getProductName().contains(term) || term.contains(temp.getProductName()))
+                    //if true,add product into array list
+                    searchResult.add(temp);
+            }
+        }
+        else{
+            for (long i = 0; i < size; i++){
+                Product temp = list.get((int) i)
+                // check does name of seller contain term or term contain name of seller 
+                // dont use function getListOfThisSeller
+                // to enable user input Tan , seller Tan Chun Hong and James Tan came out(two different seller)
+                if(temp.getProductSellerUsername().contains(term) || term.contains(temp.getProductSellerUsername()))
+                    searchResult.add(temp);
+            }
+        }
+        // Now the arraylist searchResult contain the results which have similar keywords
+        
         // Then display list of products based on that search term
-        // Get user choice of product
-        // Then direct Product Display Page
-
+        int index = 0;
+        nextPage:
+        do{
+            System.out.println("Product ID     Name           Category       Price");
+            for(int i = 0; i < 20 && index < list.size(); i++, index++)
+                System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f\n", list.get(index).getProductID(), list.get(index).getProductName(), list.get(index).getProductCategory(), 
+                list.get(index).getProductPrice());
+            
+            // Get user choice of product
+            System.out.print("(1) for next page\n(2) for exit\nEnter product id to view product:");
+            String id = input.next();
+            switch(id.charAt(0)){
+                case '1':
+                    break nextPage;
+                case '2':
+                    return;
+                default:
+                    // Then direct Product Display Page
+                    productDisplayPage(id);
+            }
+        }while(true);
     }
 
     public static void walletPage() {
@@ -460,16 +529,126 @@ public class Main {
     }
 
 
-    public static void manageProductPage() {
+    public static void manageProductPage(ProductDao productDao) {
+        /**Receive an object of ProductDoaImp from invoke method, so all operation can be done on same database*/
 
-        ProductDao productDAO = new ProductDaoImp();
+        // get a list of seller product from ProjectDoa
+        Product[] product = productDao.getListOfProductOfThisSeller(sessionSeller.getSellerUsername());
 
-        // Find products of this seller
         // View list of products and stock counts
-        //Add Product
-        //Update product (name ,price and stock counts)
-        //Delete product
+        System.out.println("Prosuct ID     Name           Category       Price          Stock");
+        for (int i = 0; i < product.length; i++){
+            System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f%-15d\n", product[i].getProductID(), product[i].getProductCategory(), product[i].getProductName()
+            , product[i].getProductPrice(), product[i].getProductStockCount());
+        }
 
+        do{
+            System.out.println("(1) for add product\n(2) for update product\n(3) for delete product\n(4) for exit");
+            System.out.println("Enter command:");
+
+            //Get input of a whole line and take the frist character
+            String inpuString = input.nextLine();
+            switch(inpuString.charAt(0)){
+                case '1':
+                    //Add Product
+                    addProductPage(productDao);
+                    break;
+                case '2':
+                    //Update product (name ,price and stock counts)
+                    updateProductPage(productDao);
+                    break;
+                case '3':
+                    //Delete product
+                    deleteProductPage(productDao);
+                    break;
+                case '4':
+                    System.out.println("Exit from seller product page...");
+                    return;
+                default:
+                    System.out.println("Invalid input");
+            }
+        }while (true);
+    }
+
+    public static void addProductPage(ProductDao productDao){
+        //Generate product id, SHOULD HAVE A METHOD IN ProductDOA DO THIS
+        String productID = productDao.generateID();
+
+        // Get the name, using nextLine to allow have space between name of product
+        System.out.print("Enter the name of product:");
+        String name = input.nextLine();
+
+        System.out.print("Enter the category of product:");
+        String category = input.nextLine();
+
+        System.out.print("Enter the description of product:");
+        String descrip = input.nextLine();
+
+        System.out.print("Enter the price of product:");
+        double price = input.nextDouble();
+
+        System.out.print("Enter the stock of product:");
+        int stock = input.nextInt();
+
+        //Get productDOA in seller class, write a method to return object of ProductDOA  
+        productDao.addProduct(new Product(productID, name, descrip, category, sessionSeller.getSellerUsername(),price, stock, 0));
+
+        System.out.println("Successfully add product");
+    }
+
+    public static void updateProductPage(ProductDao productDao){
+        System.out.print("Enter the id of product:");
+        String id = input.next();
+
+        //get the product
+        Product product = productDao.getProduct(id);
+
+        do{
+            System.out.println("(1) for update name\n(2) for description\n(3) for category\n(4) for stock(5) for price\n(6) for exit");
+            
+            //Get input of a whole line and take the frist character
+            String inputString = input.nextLine();
+            System.out.println("Enter:");
+            switch(inputString.charAt(0)){
+                //using next line to enable space between word
+                case '1':
+                    product.setProductName(input.nextLine());
+                    productDao.updateProduct(product);
+                    break;
+                case '2':
+                    product.setProductDescription(input.nextLine());
+                    productDao.updateProduct(product);
+                    break;
+                case '3':
+                    product.setProductCategory(input.nextLine());
+                    productDao.updateProduct(product);
+                    break;
+                case '4':
+                    product.setProductStockCount(input.nextInt());
+                    productDao.updateProduct(product);
+                    break;
+                case '5':
+                    product.setProductPrice(input.nextDouble());
+                    productDao.updateProduct(product);
+                    break;
+                case '6':
+                    return;
+                default:
+                    System.out.println("Invalid input");
+                
+            }
+
+        }while (true);
+        
+    }
+
+    public static void deleteProductPage(ProductDao productDao){
+        System.out.print("Enter the id of product:");
+        String id = input.next();
+
+        productDao.deleteProduct(productDao.getProduct(id));
+        
+        System.out.println("Sucessfully delete product");
     }
 
     public static void manageOrdersPage() {
