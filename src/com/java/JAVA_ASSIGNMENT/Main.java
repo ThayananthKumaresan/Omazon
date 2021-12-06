@@ -196,19 +196,88 @@ public class Main {
 
     }
 
-    public static void searchPage() {
+    public static void searchPage(ProductDao productDao) {
+        // Take object productDao from main page, but actually i suggest to have an static object ProductDao
+        boolean searchByProduct = false;
+        String term;
 
 
+        //result of searching simillar term
+        ArrayList<Product> searchResult = new ArrayList<>(); 
 
-        // Present Options -> 1. Search by Product , 2. Search by Seller
-        // Get the choice  [DATA VALIDATION]
-        // After validation and checking the choice get the search term
+        Out:
+        do{
+            // Present Options -> 1. Search by Product , 2. Search by Seller
+            System.out.print("(1) for search by product\n(2) for search by seller\nEnter command:");
+            
+            // Get the choice  [DATA VALIDATION]
+            
+            switch(input.nextLine().charAt(0)){
+                // After validation and checking the choice get the search term
+                case '1':
+                    searchByProduct = true;
+                    // continue run the code in case '2'
+                case '2':
+                    //only search for frist 15 characters
+                    term = input.nextLine().substring(0, 15);
+                    break Out;
+                default:
+                    System.out.println("Invalid input");
+            }
+        }while(true);
+
+        // require a method in class ProductDao to return an ArrayList contain all Product in database, will raise as an issue
+        ArrayList<Product> list = productDao.listOfProduct();
+        
         // Search through the ArrayList of Product , if it matches the search term
-        // **Return the results which have similar keywords
+        // Test and  get the size of list outside the loop to improve preformance
+        // *Focus on for loop to improve preformance
+        // The code has linear order of grow for size of list,may slow if list contain too many element
+        // ***Don't use the code with list with too many element like more than ten thousand 
+        long size =  list.size();
+        if(searchByProduct){
+            for (long i = 0; i < size; i++){
+                Product temp = list.get((int) i)
+                //check does name of product contain term or term contain name of product
+                if(temp.getProductName().contains(term) || term.contains(temp.getProductName()))
+                    //if true,add product into array list
+                    searchResult.add(temp);
+            }
+        }
+        else{
+            for (long i = 0; i < size; i++){
+                Product temp = list.get((int) i)
+                // check does name of seller contain term or term contain name of seller 
+                // dont use function getListOfThisSeller
+                // to enable user input Tan , seller Tan Chun Hong and James Tan came out(two different seller)
+                if(temp.getProductSellerUsername().contains(term) || term.contains(temp.getProductSellerUsername()))
+                    searchResult.add(temp);
+            }
+        }
+        // Now the arraylist searchResult contain the results which have similar keywords
+        
         // Then display list of products based on that search term
-        // Get user choice of product
-        // Then direct Product Display Page
-
+        int index = 0;
+        nextPage:
+        do{
+            System.out.println("Product ID     Name           Category       Price");
+            for(int i = 0; i < 20 && index < list.size(); i++, index++)
+                System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f\n", list.get(index).getProductID(), list.get(index).getProductName(), list.get(index).getProductCategory(), 
+                list.get(index).getProductPrice());
+            
+            // Get user choice of product
+            System.out.print("(1) for next page\n(2) for exit\nEnter product id to view product:");
+            String id = input.next();
+            switch(id.charAt(0)){
+                case '1':
+                    break nextPage;
+                case '2':
+                    return;
+                default:
+                    // Then direct Product Display Page
+                    productDisplayPage(id);
+            }
+        }while(true);
     }
 
     public static void walletPage() {
@@ -433,12 +502,12 @@ public class Main {
         /**Receive an object of ProductDoaImp from invoke method, so all operation can be done on same database*/
 
         // get a list of seller product from ProjectDoa
-        Product[] product = sessionSeller.getSellerProduct();
+        Product[] product = productDao.getListOfProductOfThisSeller(sessionSeller.getSellerUsername());
 
         // View list of products and stock counts
         System.out.println("Prosuct ID     Name           Category       Price          Stock");
         for (int i = 0; i < product.length; i++){
-            System.out.printf("%15s%15s%15s%15s%15s\n", product[i].getProductID(), product[i].getProductCategory(), product[i].getProductName()
+            System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f%-15d\n", product[i].getProductID(), product[i].getProductCategory(), product[i].getProductName()
             , product[i].getProductPrice(), product[i].getProductStockCount());
         }
 
