@@ -296,20 +296,92 @@ public class Main {
     }
 
     public static void categoryPage() {
-
+        System.out.println("########----- W A L L E T  P A G E-----########");
+        boolean validInput=true;
+        char userChoice;
+        ProductDaoImp p1 =new ProductDaoImp();
         //Array of Strings that contains all the categories String categories = {".." , "..."}
+        String[] category = new String[]{"Women Clothes","Men Clothes","Health & Beauty","Mobile & Accessories","Baby & Toys","Watches","Home & Living","Home Appliances","Wonmen's Bags","Men's Bags & Wallets","Muslim Fashion","Computer & Accessories","Groceries & Pets","Sport & Outdoor","Women Shoes","Men Shoes","Fashion Accessories","Games, Books & Hobbies","Automotive","Tickets & Vouchers"};
         // Display list of Categories // Options -> 1. Men Clothes , 2.Women Clothes.... R.Return
-        // Get user choice  [DATA VALIDATION]
+        for (int i=0; i< category.length; i++)
+            System.out.println(i+1+". "+category[i]);
+        do {
+            // Get user choice  [DATA VALIDATION]
+            System.out.println("\nYour option : ");
+            userChoice = input.next().charAt(0);
+            System.out.println("Product List: ");
+            switch(userChoice){
+                case '1'->{
+                    for (int i=0;i<productDatabase.size();i++){
+                        p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[0]);
+                        System.out.println(i+1+productDatabase.get(i).getProductName());
+                    }
+                    ;}
+                case '2'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[1]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '3'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[2]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '4'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[3]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '5'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[4]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '6'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[5]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '7'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[6]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '8'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[7]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                case '9'->{for (int i=0;i<productDatabase.size();i++){
+                    p1.getProduct(productDatabase.get(i).getProductCategory().equals(category[8]);
+                    System.out.println(i+1+productDatabase.get(i).getProductName());
+                };}
+                //case '10'->{pTop3.getTop3SellingProduct();}
+            }
+            //-> R. Return Home Page
+            if (userChoice != 'R') {
+                System.out.print("Oops wrong value, please enter range in 1 - 20 only.");
+                validInput = false;
+            }
+        }while (!validInput);
         // If the uses chooses to view category
         // Loop all productDatabase that matches the category in the array
         // Search through the ArrayList of Product , if it matches the category
         // Then display list of products based on that category
         // Present Options - 1.View Product 2.Return
-        // If the uses chooses to view product
-        // Get user choice of product to view a particular product ( pass it to productDisplayPage( String productID) )
-        // Then direct Product Display Page
-
-
+        validInput = true;
+        System.out.println("1. View Product \n2. Return");
+        do {
+            // Get user choice  [DATA VALIDATION]
+            System.out.println("\nYour option : ");
+            userChoice = input.next().charAt(0);
+            // If the uses chooses to view product
+            // Get user choice of product to view a particular product ( pass it to productDisplayPage( String productID) )
+            // Then direct Product Display Page
+            if (userChoice == '1'){
+                System.out.println("Product List No : ");
+                userChoice = input.next().charAt(0);
+                productDisplayPage(productDatabase.get(userChoice-1).getProductName());
+            }
+            //-> R. Return Home Page
+            else if (userChoice != 'R') {
+                System.out.print("Oops wrong value, please enter range in 1 - 20 only.");
+                validInput = false;
+            }
+        }while (!validInput);
     }
 
     public static void productDisplayPage(String productID) {
