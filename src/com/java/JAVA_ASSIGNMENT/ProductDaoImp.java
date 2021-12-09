@@ -1,15 +1,17 @@
 package com.java.JAVA_ASSIGNMENT;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ProductDaoImp implements ProductDao{
 
     public static ArrayList<Product> productDatabase= new ArrayList<>();
 
+
+
     @Override
     public Product getProduct(String productID) {
 
-        //Move this logic to getProduct()
         for (int i = 0; i < productDatabase.size(); i++) {
             if (productDatabase.get(i).getProductID().equals(productID)) {
                 return productDatabase.get(i);
@@ -20,17 +22,51 @@ public class ProductDaoImp implements ProductDao{
     }
 
     @Override
+    public ArrayList<Product> getListOfProductsOfThisSeller(String sellerUsername) {
+
+        ArrayList<Product> listOfProductOfThisSeller = new ArrayList<>();
+
+        for (int i = 0; i < productDatabase.size(); i++) {
+            if (productDatabase.get(i).getProductSellerUsername().equals(sellerUsername)) {
+                listOfProductOfThisSeller.add(productDatabase.get(i));
+            }
+        }
+
+        if(listOfProductOfThisSeller.size()==0 ){
+            return null;
+        }else{
+            return listOfProductOfThisSeller;
+        }
+    }
+
+    @Override
+    public String generateProductID() {
+
+        return UUID.randomUUID().toString().substring(0,4);
+    }
+
+
+    @Override
     public void updateProduct(Product product) {
 
+        for (int j = 0; j < productDatabase.size(); j++) {
+
+            if (product.getProductID().equals(productDatabase.get(j).getProductID())) {
+                productDatabase.set(j,product);
+            }
+        }
     }
 
     @Override
     public void deleteProduct(Product product) {
+        productDatabase.remove(product);
 
     }
 
     @Override
     public void addProduct(Product product) {
+
+        productDatabase.add(product);
 
     }
 
@@ -68,6 +104,12 @@ public class ProductDaoImp implements ProductDao{
         }
     }
 
+    @Override
+    public ArrayList<Product>  getListOfAllProduct() {
+
+        return productDatabase;
+    }
+
 
     @Override
     public ArrayList<Product> getTop3SellingProduct() {
@@ -94,5 +136,23 @@ public class ProductDaoImp implements ProductDao{
         }
 
         return top3SellingProducts;
+    }
+
+    @Override
+    public ArrayList<Product> getListOfProductsBasedOnCategory(String categoryName) {
+
+        ArrayList<Product> listOfProductsBasedOnCategory = new ArrayList<>();
+
+        for(int i=1; i < productDatabase.size(); i++){
+            if(productDatabase.get(i).getProductCategory().equals(categoryName)) {
+                listOfProductsBasedOnCategory.add(productDatabase.get(i));
+            }
+        }
+
+        if(listOfProductsBasedOnCategory.size()==0 ){
+            return null;
+        }else{
+            return listOfProductsBasedOnCategory;
+        }
     }
 }

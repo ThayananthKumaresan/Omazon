@@ -68,7 +68,6 @@ public class CustomerDaoImp implements CustomerDao{
     @Override
     public void loginCustomer(Customer cust  ) {
 
-        System.out.println("At login" +customerDatabase.size() );
 
         for (int i = 0; i < customerDatabase.size(); i++) {
 

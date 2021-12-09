@@ -18,7 +18,12 @@ public class CartDaoImp implements CartDao{
                 cartDetailsOfThisUser.add(cart);
             }
         }
-        return cartDetailsOfThisUser;
+        if(cartDetailsOfThisUser.size()==0){
+            return null;
+
+        }else {
+            return cartDetailsOfThisUser;
+        }
     }
 
     @Override

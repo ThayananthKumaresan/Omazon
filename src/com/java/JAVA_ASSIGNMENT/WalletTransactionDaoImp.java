@@ -7,6 +7,7 @@ import static com.java.JAVA_ASSIGNMENT.Main.sessionCustomer;
 public class WalletTransactionDaoImp implements WalletTransactionDao {
     @Override
     public void addWalletTransaction(WalletTransaction transaction) {
+
         sessionCustomer.getUserWallet().addWalletTransaction(transaction);
 
     }

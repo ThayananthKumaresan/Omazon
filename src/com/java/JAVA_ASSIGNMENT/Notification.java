@@ -2,16 +2,27 @@ package com.java.JAVA_ASSIGNMENT;
 
 public class Notification {
 
-    String notificationSellerUsername;
+   boolean notificationReadOrNot;
+   String notificationSellerUsername;
     String notificationOrderId;
     String notificationCustomerName;
     String notificationProductName;
 
-    public Notification(String notificationSellerUsername, String notificationOrderId, String notificationCustomerName, String notificationProductName) {
+    public Notification(boolean notificationReadOrNot,String notificationSellerUsername, String notificationOrderId, String notificationCustomerName, String notificationProductName) {
+
+        this.notificationReadOrNot = notificationReadOrNot;
         this.notificationSellerUsername = notificationSellerUsername;
         this.notificationOrderId = notificationOrderId;
         this.notificationCustomerName = notificationCustomerName;
         this.notificationProductName = notificationProductName;
+    }
+
+    public boolean isNotificationReadOrNot() {
+        return notificationReadOrNot;
+    }
+
+    public void setNotificationReadOrNot(boolean notificationReadOrNot) {
+        this.notificationReadOrNot = notificationReadOrNot;
     }
 
     public String getNotificationSellerUsername() {

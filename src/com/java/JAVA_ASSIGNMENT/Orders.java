@@ -1,14 +1,10 @@
 package com.java.JAVA_ASSIGNMENT;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 public class Orders {
 
     String orderStatus;
     String orderID;
     String orderDate;
-    double orderTotalPaid;
     String orderCustomerUserName;
     boolean orderReceivedOrNot;
     String orderTrackingID;
@@ -20,11 +16,10 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(String orderStatus, String orderID, String orderDate, double orderTotalPaid, String orderCustomerUserName, boolean orderReceivedOrNot, String orderTrackingID, boolean orderRatedOrNot, String orderSellerUsername, Product orderProduct , int orderQuantity) {
+    public Orders(String orderStatus, String orderID, String orderDate, String orderCustomerUserName, boolean orderReceivedOrNot, String orderTrackingID, boolean orderRatedOrNot, String orderSellerUsername, Product orderProduct, int orderQuantity) {
         this.orderStatus = orderStatus;
         this.orderID = orderID;
         this.orderDate = orderDate;
-        this.orderTotalPaid = orderTotalPaid;
         this.orderCustomerUserName = orderCustomerUserName;
         this.orderReceivedOrNot = orderReceivedOrNot;
         this.orderTrackingID = orderTrackingID;
@@ -59,32 +54,16 @@ public class Orders {
         this.orderDate = orderDate;
     }
 
-    public double getOrderTotalPaid() {
-        return orderTotalPaid;
-    }
 
-    public void setOrderTotalPaid(double orderTotalPaid) {
-        this.orderTotalPaid = orderTotalPaid;
-    }
-
-
-    public String getOrderCustomerName() {
+    public String getOrderCustomerUserName() {
         return orderCustomerUserName;
     }
 
-    public void setOrderCustomerName(String orderCustomerUserName) {
+    public void setOrderCustomerUserName(String orderCustomerUserName) {
         this.orderCustomerUserName = orderCustomerUserName;
     }
 
-    public String getOrderCustomer() {
-        return orderCustomerUserName;
-    }
-
-    public void setOrderCustomer(String orderCustomerUserName) {
-        this.orderCustomerUserName = orderCustomerUserName;
-    }
-
-    public boolean getOrderReceivedOrNot() {
+    public boolean isOrderReceivedOrNot() {
         return orderReceivedOrNot;
     }
 
@@ -100,7 +79,7 @@ public class Orders {
         this.orderTrackingID = orderTrackingID;
     }
 
-    public boolean getOrderRatedOrNot() {
+    public boolean isOrderRatedOrNot() {
         return orderRatedOrNot;
     }
 
@@ -114,22 +93,6 @@ public class Orders {
 
     public void setOrderSellerUsername(String orderSellerUsername) {
         this.orderSellerUsername = orderSellerUsername;
-    }
-
-    public String getOrderCustomerUserName() {
-        return orderCustomerUserName;
-    }
-
-    public void setOrderCustomerUserName(String orderCustomerUserName) {
-        this.orderCustomerUserName = orderCustomerUserName;
-    }
-
-    public boolean isOrderReceivedOrNot() {
-        return orderReceivedOrNot;
-    }
-
-    public boolean isOrderRatedOrNot() {
-        return orderRatedOrNot;
     }
 
     public Product getOrderProduct() {
