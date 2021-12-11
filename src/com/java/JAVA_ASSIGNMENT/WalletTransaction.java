@@ -1,21 +1,22 @@
 package com.java.JAVA_ASSIGNMENT;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 public class WalletTransaction {
 
     String transactionID;
     double transactionAmount;
-    String transactionSellerName;
-    String transactionOrderID;
-    Date transactionDateTime;
+    String transactionDateTime;
+    String customerName;
 
-    public WalletTransaction(String transactionID, double transactionAmount, String transactionSellerName, String transactionOrderID, Date transactionDateTime) {
+    public WalletTransaction() {
+    }
+
+    public WalletTransaction(String transactionID, double transactionAmount, String transactionDateTime, String customerName) {
         this.transactionID = transactionID;
         this.transactionAmount = transactionAmount;
-        this.transactionSellerName = transactionSellerName;
-        this.transactionOrderID = transactionOrderID;
         this.transactionDateTime = transactionDateTime;
+        this.customerName = customerName;
     }
 
     public String getTransactionID() {
@@ -34,31 +35,11 @@ public class WalletTransaction {
         this.transactionAmount = transactionAmount;
     }
 
-    public String getTransactionSellerName() {
-        return transactionSellerName;
-    }
-
-    public void setTransactionSellerName(String transactionSellerName) {
-        this.transactionSellerName = transactionSellerName;
-    }
-
-    public String getTransactionOrderID() {
-        return transactionOrderID;
-    }
-
-    public void setTransactionOrderID(String transactionOrderID) {
-        this.transactionOrderID = transactionOrderID;
-    }
-
-    public Date getTransactionDateTime() {
+    public String getTransactionDateTime() {
         return transactionDateTime;
     }
 
-    public void setTransactionDateTime(Date transactionDateTime) {
+    public void setTransactionDateTime(String transactionDateTime) {
         this.transactionDateTime = transactionDateTime;
-    }
-
-    public WalletTransaction() {
-
     }
 }

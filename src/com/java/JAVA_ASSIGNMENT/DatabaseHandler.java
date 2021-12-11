@@ -18,8 +18,9 @@ public class DatabaseHandler {
         Connection connection = null;
         try {
             connection= DriverManager.getConnection(url, username, password);
-            String sql ="CREATE table donkey";
-
+            String sql ="SELECT table donkey"; //querying
+            //execute(sql)
+            // it might return some dage
             System.out.println("Yes , fine");
 
         } catch (SQLException e) {

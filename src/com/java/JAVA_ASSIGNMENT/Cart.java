@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Cart {
 
-    Product cartProduct;
+    String cartProductID;
     int cartQuantity;
     String cartUser;
 
@@ -12,18 +12,18 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Product cartProduct, int cartQuantity, String cartUser) {
-        this.cartProduct = cartProduct;
+    public Cart(String cartProductID, int cartQuantity, String cartUser) {
+        this.cartProductID = cartProductID;
         this.cartQuantity = cartQuantity;
         this.cartUser = cartUser;
     }
 
-    public Product getCartProduct() {
-        return cartProduct;
+    public String getCartProductID() {
+        return cartProductID;
     }
 
-    public void setCartProduct(Product cartProduct) {
-        this.cartProduct = cartProduct;
+    public void setCartProductID(String cartProduct) {
+        this.cartProductID = cartProductID;
     }
 
     public int getCartQuantity() {

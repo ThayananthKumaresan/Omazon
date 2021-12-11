@@ -6,7 +6,6 @@ public class Feedback {
 
 
     Product feedbackProduct;
-    String feedbackID;
     String feedbackReview;
     int feedbackRating;
     String feedbackCommentBySeller;
@@ -16,22 +15,13 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(String feedbackID,Product feedbackProduct, String feedbackReview, String feedbackCommentBySeller, String feedbackCustomerName,int feedbackRating) {
-        this.feedbackID = feedbackID;
+    public Feedback(Product feedbackProduct, String feedbackReview, String feedbackCommentBySeller, String feedbackCustomerName,int feedbackRating) {
         this.feedbackProduct = feedbackProduct;
         this.feedbackReview = feedbackReview;
         this.feedbackCommentBySeller = feedbackCommentBySeller;
         this.feedbackCustomerName = feedbackCustomerName;
         this.feedbackRating = feedbackRating;
 
-    }
-
-    public String getFeedbackID() {
-        return feedbackID;
-    }
-
-    public void setFeedbackID(String feedbackID) {
-        this.feedbackID = feedbackID;
     }
 
     public Product getFeedbackProduct() {

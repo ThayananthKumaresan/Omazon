@@ -9,7 +9,31 @@ title __OMAZON's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.CartDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.CartDaoImp {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Customer {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.CustomerDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.CustomerDaoImp {
     }
   }
   
@@ -27,7 +51,31 @@ title __OMAZON's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.FavoritesDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.FavoritesDaoImp {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Feedback {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.FeedbackDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.FeedbackDaoImp {
     }
   }
   
@@ -45,7 +93,31 @@ title __OMAZON's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.NotificationDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.NotificationDaoImp {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.OrderDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Orders {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.OrdersDaoImp {
     }
   }
   
@@ -57,7 +129,31 @@ title __OMAZON's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.ProductDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.ProductDaoImp {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
     class com.java.JAVA_ASSIGNMENT.Seller {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.SellerDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.SellerDaoImp {
     }
   }
   
@@ -69,13 +165,19 @@ title __OMAZON's Class Diagram__\n
   
 
   namespace com.java.JAVA_ASSIGNMENT {
-    class com.java.JAVA_ASSIGNMENT.UserHandler {
+    class com.java.JAVA_ASSIGNMENT.Wallet {
     }
   }
   
 
   namespace com.java.JAVA_ASSIGNMENT {
-    class com.java.JAVA_ASSIGNMENT.Wallet {
+    interface com.java.JAVA_ASSIGNMENT.WalletDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.WalletDaoImp {
     }
   }
   
@@ -86,12 +188,34 @@ title __OMAZON's Class Diagram__\n
   }
   
 
+  namespace com.java.JAVA_ASSIGNMENT {
+    interface com.java.JAVA_ASSIGNMENT.WalletTransactionDao {
+    }
+  }
+  
+
+  namespace com.java.JAVA_ASSIGNMENT {
+    class com.java.JAVA_ASSIGNMENT.WalletTransactionDaoImp {
+    }
+  }
+  
+
   com.java.JAVA_ASSIGNMENT.Cart o-- com.java.JAVA_ASSIGNMENT.Product : cartProduct
+  com.java.JAVA_ASSIGNMENT.CartDaoImp .up.|> com.java.JAVA_ASSIGNMENT.CartDao
   com.java.JAVA_ASSIGNMENT.Customer -up-|> com.java.JAVA_ASSIGNMENT.User
   com.java.JAVA_ASSIGNMENT.Customer o-- com.java.JAVA_ASSIGNMENT.Wallet : userWallet
+  com.java.JAVA_ASSIGNMENT.CustomerDaoImp .up.|> com.java.JAVA_ASSIGNMENT.CustomerDao
   com.java.JAVA_ASSIGNMENT.Favorites o-- com.java.JAVA_ASSIGNMENT.Product : favoritesProduct
+  com.java.JAVA_ASSIGNMENT.FavoritesDaoImp .up.|> com.java.JAVA_ASSIGNMENT.FavoritesDao
   com.java.JAVA_ASSIGNMENT.Feedback o-- com.java.JAVA_ASSIGNMENT.Product : feedbackProduct
+  com.java.JAVA_ASSIGNMENT.FeedbackDaoImp .up.|> com.java.JAVA_ASSIGNMENT.FeedbackDao
+  com.java.JAVA_ASSIGNMENT.NotificationDaoImp .up.|> com.java.JAVA_ASSIGNMENT.NotificationDao
+  com.java.JAVA_ASSIGNMENT.OrdersDaoImp .up.|> com.java.JAVA_ASSIGNMENT.OrderDao
+  com.java.JAVA_ASSIGNMENT.ProductDaoImp .up.|> com.java.JAVA_ASSIGNMENT.ProductDao
   com.java.JAVA_ASSIGNMENT.Seller -up-|> com.java.JAVA_ASSIGNMENT.User
+  com.java.JAVA_ASSIGNMENT.SellerDaoImp .up.|> com.java.JAVA_ASSIGNMENT.SellerDao
+  com.java.JAVA_ASSIGNMENT.WalletDaoImp .up.|> com.java.JAVA_ASSIGNMENT.WalletDao
+  com.java.JAVA_ASSIGNMENT.WalletTransactionDaoImp .up.|> com.java.JAVA_ASSIGNMENT.WalletTransactionDao
 
 
 right footer
