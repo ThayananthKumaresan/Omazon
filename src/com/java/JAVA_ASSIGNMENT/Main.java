@@ -680,32 +680,40 @@ public class Main {
     public static void manageFeedbackPage() {
 
         ArrayList<Feedback> feedbackOfThisSeller = new ArrayList<>();
-        for (int i = 0; i < feedbackDataBase.size(); i++) {
-
-            if (feedbackDataBase.get(i).getFeedbackProduct().getProductSellerUsername().equals(sessionSeller)) {
+        for (int i = 0; i < feedbackDataBase.size(); i++) 
+            if (feedbackDataBase.get(i).getFeedbackProduct().getProductSellerUsername().equals(sessionSeller))
                 feedbackOfThisSeller.add(feedbackDataBase.get(i));
-            }
-
-        }
 
         for (int i = 0; i < feedbackOfThisSeller.size(); i++) {
-
-            System.out.println(feedbackOfThisSeller.get(i).getFeedbackProduct().getProductName() +
-                    feedbackOfThisSeller.get(i).getFeedbackReview() +
-                    feedbackOfThisSeller.get(i).getFeedbackRating() +
-                    feedbackOfThisSeller.get(i).getFeedbackCustomerName() +
+            System.out.println(feedbackOfThisSeller.get(i).getFeedbackProduct().getProductName() + " " +
+                    feedbackOfThisSeller.get(i).getFeedbackReview() + " " +
+                    feedbackOfThisSeller.get(i).getFeedbackRating() + " " +
+                    feedbackOfThisSeller.get(i).getFeedbackCustomerName() + " " +
                     feedbackOfThisSeller.get(i).getFeedbackCommentBySeller()
             );
         }
 
-        //Ask if seller would like to comment for any feedback
-        // Options -> 1.Would you like to comment ? 2. Return
-
-
-        // IF user chose to comment , ask for Feedback ID
-        //Get the comment , then set it using the setter function
-
-
+        do{
+            //Ask if seller would like to comment for any feedback
+            System.out.println("Would you like to comment for any feedback ?\n1 for Yes\n2 for exit");
+            String str = input.nextLine();
+            // Options -> 1.Would you like to comment ? 2. Return
+            switch(str.charAt(0)){
+                case '1':
+                    // IF user chose to comment , ask for Feedback ID
+                    System.out.print("Please enter Feedback ID that you want to comment:");
+                    String id = input.nextLine().trim();
+                    //Get the comment , then set it using the setter function
+                    System.out.println("Please enter the comment below");
+                    String comment = input.nextLine();
+                    feedbackDAO.getFeedback(id).setFeedbackCommentBySeller(comment);
+                    break;
+                case '2':
+                    return;
+                default:
+                    System.out.println("Oops wrong value, please enter either 1 or 2 only.");
+            }
+        }while(true);
     }
 
     public static void managePaymentPage() {
