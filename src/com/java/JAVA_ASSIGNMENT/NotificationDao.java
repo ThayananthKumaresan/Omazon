@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 public interface NotificationDao {
 
-    public void deleteNotification(Notification notification);
+    public void deleteNotification(int notificationID);
     public void addNotification (Notification  notification);
-    public ArrayList<Notification> getListOfNotificationOfSeller ( String sellerUsername);
-    public void updateNotification (Notification  notification);
+    public ArrayList<Notification> getListOfNotificationOfSeller ( int sellerID);
 
 
 }

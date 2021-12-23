@@ -1,52 +1,44 @@
 package com.java.JAVA_ASSIGNMENT;
 
 
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import static com.java.JAVA_ASSIGNMENT.CartDaoImp.userCartDatabase;
-import static com.java.JAVA_ASSIGNMENT.FavoritesDaoImp.userFavoritesDatabase;
-import static com.java.JAVA_ASSIGNMENT.FeedbackDaoImp.feedbackDataBase;
-import static com.java.JAVA_ASSIGNMENT.OrdersDaoImp.orderDatabase;
-import static com.java.JAVA_ASSIGNMENT.ProductDaoImp.productDatabase;
-import static com.java.JAVA_ASSIGNMENT.CustomerDaoImp.customerDatabase;
-import static com.java.JAVA_ASSIGNMENT.SellerDaoImp.sellerDatabase;
-import static com.java.JAVA_ASSIGNMENT.NotificationDaoImp.sellerNotificationDatabase;
-import static com.java.JAVA_ASSIGNMENT.SellerTransactionDaoImp.sellerTransactionDatabase;
 
 
 public class Main {
 
-    public static Customer sessionCustomer;
-    public static Seller sessionSeller;
+    public static Customer sessionCustomer = new Customer();
+    public static Seller sessionSeller = new Seller();
     public static Scanner input = new Scanner(System.in);
     static CartDao cartDAO = new CartDaoImp();
     static ProductDao productDAO = new ProductDaoImp();
     static WalletDao walletDAO = new WalletDaoImp();
-    static OrderDao orderDAO = new OrdersDaoImp();
-    static WalletTransactionDao walletTransactionDAO = new WalletTransactionDaoImp();
-    static SellerTransactionDao sellerTransactionDAO = new SellerTransactionDaoImp();
+    static OrdersDao ordersDAO = new OrdersDaoImp();
+    static TransactionDao transactionDAO = new TransactionDaoImp();
     static CustomerDao customerDAO = new CustomerDaoImp();
     static SellerDao sellerDAO = new SellerDaoImp();
     static NotificationDao notificationDAO = new NotificationDaoImp();
     static FeedbackDao feedbackDAO = new FeedbackDaoImp();
     static FavoritesDao favoriteDAO = new FavoritesDaoImp();
-
+static DecimalFormat df = new DecimalFormat("0.00");
     static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
 
-
-
-    public static void promptEnterKey(){
-        System.out.println("Press \"ENTER\" to continue...");
+    public static void promptEnterKey() {
+        System.out.println("Press \"ENTER\" to return...");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
     }
 
 
-    public static void mainMenuPage() {
+    public static void clrScr() {
+        for (int i = 0; i < 5; ++i) System.out.println();
 
+    }
+
+    public static void mainMenuPage() {
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ OMAZON ONLINE SHOPPING APP ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
         System.out.println("----------------------------------------------------------------------------------");
@@ -59,35 +51,42 @@ public class Main {
 
         char userRole = 'n';
         boolean validInput;
-        do{  //
+        do {  //
             System.out.print("\nYour are ? : ");
             userRole = input.next().charAt(0);
 
-            if(userRole == 'S' || userRole == 'C' ){
+            if (userRole == 'S' || userRole == 'C') {
                 validInput = true;
-            }else{
+            } else {
                 System.out.print("Oops wrong value, please enter either S or C.");
                 validInput = false;
             }
-        }while(!validInput);
+        } while (!validInput);
 
 
         System.out.println("Before showing your shopping ability , please choose to ");
         System.out.println("1. Login");
         System.out.println("2. Register");
 
-        int userChoice;
-        do{
-            System.out.print("\nYour option : ");
-             userChoice = input.nextInt();
-
-            if(userChoice == 1 || userChoice == 2 ){
+        int userChoice = 0;
+        do {
+            try {
+                System.out.print("\nYour option : ");
+                userChoice = input.nextInt();
                 validInput = true;
-            }else{
-                System.out.print("Oops wrong value, please enter either 1 or 2.");
+
+                if (userChoice < 1 || userChoice > 2) {
+                    System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                    validInput = false;
+                    input.nextLine();
+                }
+            } catch (InputMismatchException ex) {
+                System.out.println("You have entered an invalid format of input");
                 validInput = false;
+                input.nextLine();
             }
-        }while(!validInput);
+
+        } while (!validInput);
 
 
         if (userRole == 'S') {
@@ -113,6 +112,7 @@ public class Main {
 
     public static void loginPage(char userRole) {
 
+
         System.out.println("########----- L O G I N  P A G E-----########");
 
         String inputEmail = "";
@@ -124,41 +124,46 @@ public class Main {
         //2. Check if this customer is found in the customerDatabase
         //3. If found then copy to sessionCustomer
         //4. Redirect user to  Home Page
-        if (userRole =='C')
-        {
-            System.out.print("Your email : ");
-            inputEmail = input.next();
+        if (userRole == 'C') {
+            Customer loginCustomer;
+            do {
+                System.out.print("Your email : ");
+                inputEmail = input.next();
 
-            System.out.print("Your Password : ");
-            inputPassword = input.next();
+                System.out.print("Your Password : ");
+                inputPassword = input.next();
 
-            Customer loginCustomer = new Customer(inputEmail,inputPassword);
-            customerDAO.loginCustomer(loginCustomer);
+                loginCustomer = new Customer(inputEmail, inputPassword);
+
+            } while (!customerDAO.loginCustomer(loginCustomer));
+
 
             homePage();
-        }else{
+        } else {
 
-            System.out.print("Enter your email : ");
-            inputEmail = input.next();
+            Seller loginSeller = null;
+            do {
+                System.out.print("Enter your email : ");
+                inputEmail = input.next();
 
-            System.out.print("Password : ");
-            inputPassword = input.next();
+                System.out.print("Password : ");
+                inputPassword = input.next();
 
-            Seller loginSeller = new Seller(inputEmail,inputPassword);
-            sellerDAO.loginSeller(loginSeller);
+                loginSeller = new Seller(inputEmail, inputPassword);
+
+            } while (!sellerDAO.loginSeller(loginSeller));
 
             sellerDashboardPage();
         }
 
     }
 
-    public static void logOutPage(char userRole){
+    public static void logOutPage(char userRole) {
 
-        if (userRole =='C')
-        {
+        if (userRole == 'C') {
             System.out.print("Thank you for shopping. You have been logged out. You will be now redirected to Main Menu Page");
 
-        }else{
+        } else {
 
             System.out.print("Thank you for your service. You have been logged out.You will be now redirected to Main Menu Page");
         }
@@ -169,25 +174,24 @@ public class Main {
     }
 
 
-
     public static void registerPage(char userRole) {
+
         System.out.println("########----- R E G I S T R A T I O N  P A G E-----########");
 
         String inputEmail = "";
 
-        if (userRole =='C')
-        {
+        if (userRole == 'C') {
             Customer registerCustomer = new Customer();
 
             System.out.print("Your Email : ");
-            inputEmail=input.next();
+            inputEmail = input.next();
             //Perform Data validation for email , then only set it
             registerCustomer.setEmail(inputEmail);
 
             System.out.print("Your Password : ");
             registerCustomer.setPassword(input.next());
             System.out.print("Your Username : ");
-            registerCustomer.setUsername(input.next());
+            registerCustomer.setUserName(input.next());
             System.out.print("Your First Name : ");
             registerCustomer.setFirstName(input.next());
             System.out.print("Your Last Name : ");
@@ -199,8 +203,7 @@ public class Main {
 
             CustomerDao customerDAO = new CustomerDaoImp();
             customerDAO.registerCustomer(registerCustomer);
-        }
-        else{
+        } else {
 
             Seller registerSeller = new Seller();
 
@@ -211,7 +214,7 @@ public class Main {
             registerSeller.setPassword(input.next());
 
             System.out.print("Your Username : ");
-            registerSeller.setUsername(input.next());
+            registerSeller.setUserName(input.next());
 
             System.out.print("Your IC Number : ");
             registerSeller.setSellerIC(input.next());
@@ -232,258 +235,734 @@ public class Main {
         }
 
 
-
-
-
     }
 
 
     public static void homePage() {
 
-        System.out.println("########----- H O M E  P A G E-----########");
+        // Get the choice
+        boolean returnToDashboard = true;
 
+        do {
+            System.out.println("\n\n########----- H O M E  P A G E-----########");
 
-        ProductDao productDAO = new ProductDaoImp();
-        ArrayList<Product> top3SellingProducts = productDAO.getTop3SellingProduct();
-        // List 3 Best Selling Products ( A , B , C)  getTop3SellingProduct()
-        System.out.println("TOP SELLING PRODUCTS");
-        for (int i = 0; i < top3SellingProducts.size(); i++) {
+            ProductDao productDAO = new ProductDaoImp();
+            ArrayList<Product> top3SellingProducts = productDAO.getTop3SellingProduct();
+            System.out.println("TOP SELLING PRODUCTS");
+            for (int i = 0; i < top3SellingProducts.size(); i++)
+                System.out.println("NO." + (i + 1) + " - " + "Product ID = "+ top3SellingProducts.get(i).getProductID()+ " Product Name = "+top3SellingProducts.get(i).getProductName());
 
-            System.out.println( "NO."+(i+1)+" - "+ top3SellingProducts.get(i).getProductName());
+            System.out.println("\n1.Search Page");
+            System.out.println("2.Check Wallet");
+            System.out.println("3.View Cart");
+            System.out.println("4.View Favorites");
+            System.out.println("5.View Categories");
+            System.out.println("6.View details of a product from Top Selling List");
+            System.out.println("7.Order History");
+            System.out.println("8.Profile Page");
+            System.out.println("9.Log Out");
 
-        }
+            int userChoice = 99;
+            boolean validInput;
 
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
 
-        System.out.println("1.Search");
-        System.out.println("2.Check Wallet");
-        System.out.println("3.View Cart");
-        System.out.println("4.View Favorites");
-        System.out.println("5.View Categories");
-        System.out.println("6.Log Out");
-        System.out.println("Your choice : ");
-        int userChoice = input.nextInt();         // Get the choice
-
-        boolean validInput;
-        do{
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput=true;
-
-                if(userChoice < 1 || userChoice  > 5 ){
-                    System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
+                    if (userChoice < 1 || userChoice > 9) {
+                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 or 9 only.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
                     validInput = false;
                     input.nextLine();
                 }
+
+            } while (!validInput);
+
+
+            switch (userChoice) {
+                case 1:
+                    searchPage();
+                    break;
+                case 2:
+                    walletPage();
+                    break;
+                case 3:
+                    cartPage();
+                    break;
+                case 4:
+                    favoritesPage();
+                    break;
+                case 5:
+                    categoryPage();
+                    break;
+                case 6:
+                    int productID=0;
+
+                    do {
+                        try {
+                            System.out.print("\nEnter product ID to view details of the product :");
+                            productID = input.nextInt();
+                            validInput = true;
+
+                            if (productID != top3SellingProducts.get(0).getProductID() && productID != top3SellingProducts.get(1).getProductID() && productID != top3SellingProducts.get(2).getProductID() ) {
+                                System.out.print("Oops you entered have entered an invalid ID ,  please only enter products ID's that can be found in the list above.");
+                                validInput = false;
+                            }
+                        } catch (InputMismatchException ex) {
+                            System.out.println("You have entered an invalid format of input");
+                            validInput = false;
+                            input.nextLine();
+                        }
+
+                    } while (!validInput);
+
+                    productDisplayPage(productID);
+
+                    break;
+                case 7: orderHistoryPage();
+                    break;
+                case 8: userProfilePage();
+                    break;
+
+                case 9:
+                    returnToDashboard = false;
+                    break;
+
             }
-            catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput=false;
-                input.nextLine();
-            }
+        } while (returnToDashboard);
 
-        }while(!validInput);
-
-
-
-        switch (userChoice) {
-            case 1:
-                System.out.println("This is search Page ");
-                searchPage();
-                break;
-            case 2:
-                System.out.println("This is wallet Page ");
-                walletPage(sessionCustomer.getUsername());
-                break;
-            case 3:
-                System.out.println("This is cart Page ");
-                cartPage();
-                break;
-            case 4:
-                System.out.println("This is  favorites Page ");
-                favoritesPage();
-                break;
-            case 5:
-                System.out.println("This is category Page ");
-                categoryPage();
-                break;
-            case 6:
-                System.out.println("This is logout Page ");
-                logOutPage('C');
-                break;
-
-        }
-
+        System.out.println("You will be now logged out ....");
+        logOutPage('C');
 
     }
 
     public static void searchPage() {
 
-        boolean searchByProduct = false;
-        String term;
 
-        //result of searching simillar term
+        //result of searching similar term
         ArrayList<Product> searchResult = new ArrayList<>();
-
-        Out:
-        do{
-            // Present Options -> 1. Search by Product , 2. Search by Seller
-            System.out.print("1. Search by product\n2. Search by seller\nEnter command:");
-
-            // Get the choice  [DATA VALIDATION]
-
-            switch(input.nextLine().charAt(0)){
-                // After validation and checking the choice get the search term
-                case '1':
-                    searchByProduct = true;
-                    // continue run the code in case '2'
-                case '2':
-                    //only search for frist 15 characters
-                    term = input.nextLine().substring(0, 15);
-                    break Out;
-                default:
-                    System.out.println("Invalid input");
-            }
-        }while(true);
-
         // require a method in class ProductDao to return an ArrayList contain all Product in database, will raise as an issue
-        ArrayList<Product> list = productDAO.getListOfAllProduct();
+        ArrayList<Product> listOfAllProducts = productDAO.getListOfAllProduct();
+
+        int cont = 0;
+
+        do {
+            System.out.println("\n########----- S E A R C H  P A G E-----########");
+            System.out.print("1. Search by product\n2. Search by seller\n3. Return ");
+
+            int userChoice = 0;
+            boolean validInput;
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    input.nextLine();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 3) {
+                        System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
+                }
+
+            } while (!validInput);
+
+
+            switch (userChoice) {
+
+                // TODO : THE SEARCH DOESN'T RETURN RELEVANT TERMS
+                // After validation and checking the choice get the search term
+                case 1:
+                    System.out.print("Enter your search term  : ");
+                    String term = input.nextLine();
+                    for (int i = 0; i < listOfAllProducts.size(); i++) {
+                        Product temp = listOfAllProducts.get(i);
+                        //check does name of product contain term or term contain name of product
+                        if (temp.getProductName().contains(term) || term.contains(temp.getProductName()))
+                            searchResult.add(temp);  //if true,add product into arrayList searchResult
+                    }
+                    break;
+                case 2:
+                    System.out.print("Enter your search term  : ");
+                    term = input.nextLine();
+                    for (int i = 0; i < listOfAllProducts.size(); i++) {
+                        Product temp = listOfAllProducts.get(i);
+                        // check does name of seller contain term or term contain name of seller
+                        // dont use function getListOfThisSeller
+                        // to enable user input Tan , seller Tan Chun Hong and James Tan came out(two different seller)
+                        if (productDAO.getProductSellerUsername(temp.getProductID()).contains(term) || term.contains(productDAO.getProductSellerUsername(temp.getProductID())))
+                            searchResult.add(temp);
+
+                    }
+                    break;
+                case 3:
+                    promptEnterKey();
+                    cont = 0;
+                    break;
+            }
+
+            if (userChoice == 1 || userChoice == 2) {
+
+                if (searchResult.size() == 0) {
+
+                    System.out.println("Oops nothing found , please enter a correct a term");
+                    System.out.println("\nWould you like to continue search or return ? \n1. To continue search \n2. To Return");
+
+                    do {
+                        try {
+                            System.out.print("\nYour option : ");
+                            cont = input.nextInt();
+                            validInput = true;
+
+                            if (cont < 1 || cont > 2) {
+                                System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                                validInput = false;
+                                input.nextLine();
+                            }
+                        } catch (InputMismatchException ex) {
+                            System.out.println("You have entered an invalid format of input");
+                            validInput = false;
+                            input.nextLine();
+                        }
+
+                    } while (!validInput);
+
+                } else {
+                    System.out.println("Product ID     Name           Category       Price");
+                    for (int i = 0; i < searchResult.size(); i++)
+                        System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f\n",
+                                searchResult.get(i).getProductID(),
+                                searchResult.get(i).getProductName(),
+                                searchResult.get(i).getProductCategory(),
+                                searchResult.get(i).getProductPrice());
+
+                    System.out.println("\nWhat would you like to do ? ");
+                    System.out.println("1. View Details of an product");
+                    System.out.println("2. Return");
+
+                    do {
+                        try {
+                            System.out.print("\nYour option : ");
+                            userChoice = input.nextInt();
+                            validInput = true;
+
+                            if (userChoice < 1 || userChoice > 2) {
+                                System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                                validInput = false;
+                                input.nextLine();
+                            }
+                        } catch (InputMismatchException ex) {
+                            System.out.println("You have entered an invalid format of input");
+                            validInput = false;
+                            input.nextLine();
+                        }
+
+                    } while (!validInput);
+
+                    if (userChoice == 1) {
+
+                        System.out.print("Enter product ID to view details of the product :");
+                        productDisplayPage(input.nextInt());
+                    }
+                    cont = 1;
+
+                }
+            }
+
+        } while (cont == 1);
 
         // Search through the ArrayList of Product , if it matches the search term
-        // Test and  get the size of list outside the loop to improve preformance
-        // *Focus on for loop to improve preformance
-        // The code has linear order of grow for size of list,may slow if list contain too many element
-        // ***Don't use the code with list with too many element like more than ten thousand
-        long size =  list.size();
-        if(searchByProduct){
-            for (long i = 0; i < size; i++){
-                Product temp = list.get((int) i);
-                //check does name of product contain term or term contain name of product
-                if(temp.getProductName().contains(term) || term.contains(temp.getProductName()))
-                    //if true,add product into array list
-                    searchResult.add(temp);
-            }
-        }
-        else{
-            for (long i = 0; i < size; i++){
-                Product temp = list.get((int) i);
-                // check does name of seller contain term or term contain name of seller
-                // dont use function getListOfThisSeller
-                // to enable user input Tan , seller Tan Chun Hong and James Tan came out(two different seller)
-                if(temp.getProductSellerUsername().contains(term) || term.contains(temp.getProductSellerUsername()))
-                    searchResult.add(temp);
-            }
-        }
-        // Now the arraylist searchResult contain the results which have similar keywords
+        // Test and  get the size of listOfAllProducts outside the loop to improve performance
+        // *Focus on for loop to improve performance
+        // The code has linear order of grow for size of listOfAllProducts,may slow if listOfAllProducts contain too many element
+        // ***Don't use the code with listOfAllProducts with too many element like more than ten thousand
+        // Now the arraylistOfAllProducts searchResult contain the results which have similar keywords
+        // Then display listOfAllProducts of products based on that search term
 
-        // Then display list of products based on that search term
-        int index = 0;
-        nextPage:
-        do{
-            System.out.println("Product ID     Name           Category       Price");
-            for(int i = 0; i < 20 && index < list.size(); i++, index++)
-                System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f\n", list.get(index).getProductID(), list.get(index).getProductName(), list.get(index).getProductCategory(),
-                        list.get(index).getProductPrice());
-
-            // Get user choice of product
-            System.out.print("(1) for next page\n(2) for exit\nEnter product id to view product:");
-            String id = input.next();
-            switch(id.charAt(0)){
-                case '1':
-                    break nextPage;
-                case '2':
-                    return;
-                default:
-                    // Then direct Product Display Page
-                    productDisplayPage(id);
-            }
-        }while(true);
     }
 
 
-       public static void walletPage(String userName) {
+    public static void walletPage() {
 
-        System.out.println("########----- W A L L E T  P A G E-----########");
-        WalletDao userWallet = new WalletDaoImp();
-        WalletTransactionDao walletTransactionDAO = new WalletTransactionDaoImp();
-
-        char userChoice;
-        boolean validInput=true;
-        // Display current balance
-        CustomerDao customerDAO=new CustomerDaoImp();
-        System.out.print("Current Balance : RM ");
-
-        System.out.println(customerDAO.getCustomer(userName).getUserWallet());
-        System.out.println("1. Top Up Balance");
-        System.out.println("2. View Transaction");
-        System.out.println("R. Return Home Page");
-
+        boolean redirectToTopFlag = true;
         do {
-            System.out.println("\nYour option : ");
-            userChoice = input.next().charAt(0);
-            //-> 1. Top Up Balance    , userWallet.topUpWalletBalance(0.00);
-            if (userChoice == '1') {
-                validInput = true;
-                System.out.print("Enter the amount to top up : RM ");
-                userWallet.topUpWalletBalance(input.nextDouble());
-                System.out.print("Top up Successful");
+            System.out.println("\n\n########----- W A L L E T  P A G E-----########");
 
-            }
-            //-> 2. View Transactions ,  walletTransactionDAO.getWalletTransaction()
-            else if (userChoice == '2') {
-                validInput = true;
-                System.out.println("No      Transaction ID        Amount       Date & Time");
+            int userChoice = 0;
+            boolean validInput = true;
 
-                // If user chose to view transactions
-                for (int i = 0; i < walletTransactionDAO.getWalletTransaction().size(); i++) {
-                    WalletTransaction printTransaction = walletTransactionDAO.getWalletTransaction().get(i);
+            // Display current balance
+            System.out.print("Current Balance : RM ");
+            System.out.println(df.format(sessionCustomer.getUserWallet().getWalletBalance()));
 
-                    System.out.println((i+1)+
-                            printTransaction.getTransactionID() +
-                                    printTransaction.getTransactionAmount() +
-                                    printTransaction.getTransactionDateTime()
-                    );
+            System.out.println("\n1. Top Up Balance");
+            System.out.println("2. View Transaction");
+            System.out.println("3. Return to Home Page");
+
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 3) {
+                        System.out.print("Oops wrong value, please enter either 1 / 2 or 3 only.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
                 }
 
+            } while (!validInput);
+
+
+            switch (userChoice) {
+                case 1:
+                    System.out.print("Enter the amount to top up : RM ");
+                    walletDAO.topUpWalletBalance(sessionCustomer.getUserWallet(), input.nextDouble());
+                    System.out.print("Top up Successful !!!");
+                    break;
+
+                case 2:
+                    if (sessionCustomer.getUserWallet().getWalletTransaction() == null) {
+                        System.out.println("Oops no transaction yet ! ");
+                    } else {
+                        System.out.println("No      Transaction ID        Amount       Date & Time");
+                        for (int i = 0; i < sessionCustomer.getUserWallet().getWalletTransaction().size(); i++) {
+                            Transaction printTransaction = sessionCustomer.getUserWallet().getWalletTransaction().get(i);
+                            System.out.print(i + 1 + "      ");
+                            System.out.print("TR"+printTransaction.getTransactionID() + "                    ");
+                            //TODO FORMAT PRINTING HERE
+                            System.out.println(
+                                    "RM "+ printTransaction.getTransactionAmount() + "     "+
+                                    printTransaction.getTransactionDateTime()
+                            );
+                        }
+                    }
+                    break;
+                case 3:
+                    promptEnterKey();
+                    redirectToTopFlag = false;
+                    break;
             }
-            //-> R. Return Home Page
-            else if (userChoice != 'R') {
-                System.out.print("Oops wrong value, please enter either 1 or 2.");
-                validInput = false;
-            }
-        }while (!validInput);
+
+
+        } while (redirectToTopFlag);
+
+
     }
 
 
     public static void cartPage() {
 
 
-            ArrayList<Cart> cartDetailsOfThisUser = cartDAO.getCart(sessionCustomer.getUsername());
+        System.out.println("\n########----- C A R T  P A G E-----########");
 
-            if( cartDetailsOfThisUser !=null){
-                double totalAmount = 0.0;
+        ArrayList<Cart> listOfCartOfThisCustomer = cartDAO.getListOfCartOfThisCustomer(sessionCustomer.getCustomerID());
 
-                System.out.println("No      Product Name        Price       Quantity");
-                for (int i = 0; i < cartDetailsOfThisUser.size(); i++) {
+        if (listOfCartOfThisCustomer != null) {
+            double totalAmount = 0.0;
 
-                    Cart cart = cartDetailsOfThisUser.get(i);
-                    Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
-                    System.out.println((i + 1) + "      " +
-                            productsInCartToDisplay.getProductName() + "      " +
-                            productsInCartToDisplay.getProductPrice() + "      " +
-                            cart.getCartQuantity());
+            System.out.println("No      Product Name        Price       Quantity");
+            for (int i = 0; i < listOfCartOfThisCustomer.size(); i++) {
 
-                    totalAmount += productsInCartToDisplay.getProductPrice();
+                Cart cart = listOfCartOfThisCustomer.get(i);
+                Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
 
+                System.out.println((i + 1) + "      " +
+                        productsInCartToDisplay.getProductName() + "      "
+                        + "RM " + productsInCartToDisplay.getProductPrice() + "      " +
+                        cart.getCartQuantity());
+
+                totalAmount += productsInCartToDisplay.getProductPrice() * cart.getCartQuantity();
+
+            }
+
+            System.out.printf("\n\nTotal Amount in Cart : RM %.2f", totalAmount);
+            System.out.println("\n\nWhat would you like to do ?");
+            System.out.println("1. Checkout Now");
+            System.out.println("2. Return to Home");
+
+            boolean validInput;
+            int userChoice = 0;
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 2) {
+                        System.out.print("Oops wrong value, please enter either 1 or 2.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
                 }
 
-                System.out.printf("Total Amount in Cart : RM %.2f", totalAmount);
-                System.out.println("What would you like to do ?");
-                System.out.println("1. Checkout Now");
-                System.out.println("2. Return to Home");
+            } while (!validInput);
 
-                boolean validInput;
-                int userChoice = 0;
+
+            if (userChoice == 1) {
+                System.out.println("You will be now directed to Checkout page");
+                checkoutPage(listOfCartOfThisCustomer, totalAmount);
+
+            } else {
+                System.out.println("You will be now directed to Home page");
+            }
+
+        } else {
+            System.out.println("Ooops , there is no products in your cart. Please add products in your cart !\nYou will be now redirected to to Home Page");
+            promptEnterKey();
+        }
+
+
+    }
+
+    public static void favoritesPage() {
+
+        //using for loop on userFavoritesDatabase
+        //display all objects that matches with the current user
+        // if no then display necessary message
+
+        System.out.println("\n########----- F A V O R I T E S   P A G E-----########");
+
+        ArrayList<Favorites> listOfFavorites = favoriteDAO.getListOfFavorites(sessionCustomer.getCustomerID());
+
+        if (listOfFavorites != null) {
+
+            System.out.println("No      Product Name        Price ");
+            for (int i = 0; i < listOfFavorites.size(); i++) {
+
+                Favorites favorite = listOfFavorites.get(i);
+
+                System.out.println((i + 1) + "      " +
+                        productDAO.getProduct(favorite.getFavoritesProductID()).getProductName() + "      " +
+                        productDAO.getProduct(favorite.getFavoritesProductID()).getProductPrice());
+            }
+
+        } else {
+            System.out.println("Oops sorry , no products added to your favorites");
+        }
+
+        System.out.println("You will be now redirected to to Home Page");
+        promptEnterKey();
+    }
+
+    public static void categoryPage() {
+
+ boolean cont = false;
+        do{
+            System.out.println("########----- C A T E G O R Y   P A G E-----########");
+
+            //Array of Strings that contains all the categories String categories = {".." , "..."}
+            String[] category = new String[]{"Women Clothes", "Men Clothes", "Health & Beauty", "Mobile & Accessories",
+                    "Baby & Toys", "Watches", "Home & Living", "Home Appliances", "Women's Bags", "Men's Bags & Wallets",
+                    "Muslim Fashion", "Computer & Accessories", "Groceries & Pets", "Sport & Outdoor", "Women Shoes",
+                    "Men Shoes", "Fashion Accessories", "Games, Books & Hobbies", "Automotive", "Tickets & Vouchers"};
+
+
+            // Display list of Categories // Options -> 1. Men Clothes , 2.Women Clothes.... R.Return
+            System.out.println("Category ID    Category Name");
+            for (int i = 0; i < category.length; i++) {
+                System.out.println(i + 1 + "            "+category[i]);
+            }
+
+
+            // Get user choice  [DATA VALIDATION]
+            int userChoice = 0;
+            boolean validInput;
+
+            System.out.println("\n\nWhat would you like to do ?");
+            System.out.println("1. Choose a category to view the products");
+            System.out.println("2. Return to Home");
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 2) {
+                        System.out.print("Oops wrong value, please enter either 1 or 2.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
+                }
+
+            } while (!validInput);
+
+
+            if (userChoice == 1) {
+
+                System.out.print("Type the Category ID : ");
+                int categoryNo = input.nextInt();
+
+                ArrayList<Product> listOfProductsBasedOnCategory = productDAO.getListOfProductsBasedOnCategory(category[categoryNo-1]);
+
+                if (listOfProductsBasedOnCategory != null) {
+
+                    System.out.println("\n\nList of Products in " + category[categoryNo-1]);
+                    System.out.println("Product ID    Product Name");
+
+                    for (int i = 0; i < listOfProductsBasedOnCategory.size(); i++) {
+                        System.out.println(listOfProductsBasedOnCategory.get(i).getProductID() + "             " + listOfProductsBasedOnCategory.get(i).getProductName());
+                    }
+
+                    System.out.println("\n\nWhat would you like to do ?");
+                    System.out.println("1. View a product");
+                    System.out.println("2. Return   ");
+
+                    do {
+                        try {
+                            System.out.print("\nYour option : ");
+                            userChoice = input.nextInt();
+                            validInput = true;
+
+                            if (userChoice < 1 || userChoice > 2) {
+                                System.out.print("Oops wrong value, please enter either 1 or 2.");
+                                validInput = false;
+                                input.nextLine();
+                            }
+                        } catch (InputMismatchException ex) {
+                            System.out.println("You have entered an invalid format of input");
+                            validInput = false;
+                            input.nextLine();
+                        }
+
+                    } while (!validInput);
+
+                    if (userChoice == 1) {
+                        System.out.print("Type the Product ID : ");
+                        int productID = input.nextInt();
+                        productDisplayPage(productID);
+
+                    } else {
+                         cont=true;
+                    }
+                } else {
+                    System.out.println("Oops sorry , no products yet. They're on the way");
+                    System.out.println("You will be now redirected to to Home Page");
+                    promptEnterKey();
+                }
+
+
+            } else {
+                cont=false;
+                System.out.println("You will be now redirected to to Home Page");
+                promptEnterKey();
+            }
+
+        }while(cont);
+
+
+    }
+
+    public static void productDisplayPage(int productID) {
+
+
+        System.out.println("\n########----- P R O D U C T  P A G E-----########");
+
+        Product searchedProduct = productDAO.getProduct(productID);
+        if (searchedProduct != null) {
+
+            System.out.println(
+                    "\n\nProduct Name : " + searchedProduct.getProductName() + "\n" +
+                            "Product Category :  " + searchedProduct.getProductCategory() + "\n" +
+                            "Product Price : RM " + searchedProduct.getProductPrice() + "\n" +
+                            "Stock Available : " + searchedProduct.getProductStockCount());
+            if (searchedProduct.getProductSalesCount() == 0) {
+                System.out.println("Sold Quantity : No Sales Yet");
+                System.out.println("Product Rating : No rating yet");
+            } else {
+                System.out.println("Product Rating : " + feedbackDAO.getAverageRatingOfThisProduct(productID));
+                System.out.println("Sold Quantity : " + searchedProduct.getProductSalesCount());
+            }
+
+            System.out.println("Product Description : " + searchedProduct.getProductDescription());
+            System.out.println("Product Reviews : ");
+            ArrayList<Feedback> searchedProductFeedback = feedbackDAO.getListOfFeedbackOfThisProduct(productID);
+
+            if (searchedProductFeedback != null) {
+                for (int i = 0; i < searchedProductFeedback.size(); i++) {
+                    System.out.println("------------------------------------------------------------------------------------");
+                    System.out.println(
+                            "User " + searchedProductFeedback.get(i).getFeedbackCustomerName() + ": \n" +
+                                    searchedProductFeedback.get(i).getFeedbackReview() +
+                                    "Comment By Seller : \n" + searchedProductFeedback.get(i).getFeedbackCommentBySeller()
+                    );
+                    System.out.println("------------------------------------------------------------------------------------");
+
+                }
+            } else {
+                System.out.println("No Reviews yet :(");
+
+            }
+
+            System.out.println("\nWhat would you like to do ?");
+            System.out.println("1. Add to cart");
+            System.out.println("2. Add to favorites");
+            System.out.println("3. Return");
+
+            int userChoice = 0, cartQuantity = 0;
+            boolean validInput;
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 3) {
+                        System.out.print("Oops wrong value, please enter either 1 / 2 or 3.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
+                }
+
+            } while (!validInput);
+
+
+            if (userChoice == 1) {
+
+                do {
+                    try {
+                        System.out.print("\nEnter quantity in digits (Eg :25) :");
+                        cartQuantity = input.nextInt();
+                        validInput = true;
+
+                    } catch (InputMismatchException ex) {
+                        System.out.println("You have entered an invalid format of input");
+                        validInput = false;
+                        input.nextLine();
+                    }
+
+                    Cart addToCart = new Cart(productID, cartQuantity, sessionCustomer.getCustomerID());
+                    cartDAO.addCart(addToCart);
+
+                    System.out.println("Great this product is added to cart with the quantity " + cartQuantity);
+                    System.out.println("You will be now directed to Home Page ");
+
+                    promptEnterKey();
+                } while (!validInput);
+
+            } else if (userChoice == 2) {
+
+                Favorites addToFavorites = new Favorites(searchedProduct.getProductID(), sessionCustomer.getCustomerID());
+                favoriteDAO.addFavorites(addToFavorites);
+                System.out.println("Great this product is added to favorites !");
+                System.out.println("You will be redirected to Home Page");
+                promptEnterKey();
+
+            } else {
+                System.out.println("You will be redirected to Home Page");
+                promptEnterKey();
+            }
+
+        } else {
+
+            System.out.println("Oops sorry couldn't find the product you're looking for. Please enter the product ID correctly");
+        }
+
+
+    }
+
+
+    public static void checkoutPage(ArrayList<Cart> listOfCartOfThisCustomer, double totalCheckoutAmount) {
+
+
+        System.out.println("\n########----- C H E C K O U T   P A G E-----########");
+
+        // todo : shipping fees
+        for (int i = 0; i < listOfCartOfThisCustomer.size(); i++) {
+
+            Cart cart = listOfCartOfThisCustomer.get(i);
+            Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
+            System.out.println((i + 1) + "      " +
+                    productsInCartToDisplay.getProductName() + "      " +
+                    productsInCartToDisplay.getProductPrice() + "      " +
+                    cart.getCartQuantity());
+
+
+        }
+        System.out.println("\n\nTotal Amount to Checkout : RM " + df.format(totalCheckoutAmount));
+
+
+        System.out.println("\n\nWhat would you like to do ?");
+        System.out.println("1. Pay Now");
+        System.out.println("2. Return to Home");
+
+        boolean validInput;
+        int userChoice = 0;
+
+        do {
+            try {
+                System.out.print("\nYour option : ");
+                userChoice = input.nextInt();
+                validInput = true;
+
+                if (userChoice < 1 || userChoice > 2) {
+                    System.out.print("Oops wrong value, please enter either 1 or 2.");
+                    validInput = false;
+                    input.nextLine();
+                }
+            } catch (InputMismatchException ex) {
+                System.out.println("You have entered an invalid format of input");
+                validInput = false;
+                input.nextLine();
+            }
+
+        } while (!validInput);
+
+
+        if (userChoice == 1) {
+
+            String paymentPassword;
+            do {
+                System.out.print("Enter your payment password : ");
+                paymentPassword = input.next();
+
+                if (!customerDAO.checkPaymentPassword(paymentPassword)) {
+                    System.out.println("Uh Oh , wrong password. Try again:");
+                }
+
+            } while (!customerDAO.checkPaymentPassword(paymentPassword));
+
+
+            while (sessionCustomer.getUserWallet().getWalletBalance() < totalCheckoutAmount) {
+
+                System.out.println("\nInsufficient Balance , please Top Up. Your balance in wallet is RM " + df.format(sessionCustomer.getUserWallet().getWalletBalance()));
+
+                System.out.println("\n\nWhat would you like to do ?");
+                System.out.println("1. Top Up my Wallet and Proceed Payment");
+                System.out.println("2. Cancel this transaction");
 
                 do {
                     try {
@@ -504,355 +983,16 @@ public class Main {
 
                 } while (!validInput);
 
-
-                if (userChoice == 1) {
-                    System.out.println("You will be now directed to Checkout page");
-                    checkoutPage(cartDetailsOfThisUser, totalAmount);
-
-                } else {
-                    System.out.println("You will be now directed to Home page");
-                }
-
-            }else{
-                System.out.println("Ooops , there is no products in your cart. Please add products in your cart !");
-            }
-
-
-
-    }
-
-    public static void favoritesPage() {
-
-        //using for loop on userFavoritesDatabase
-        //display all objects that matches with the current user
-        // if no then display necessary message
-
-        ArrayList<Favorites> listOfFavorites = favoriteDAO.getListOfFavorites(sessionCustomer.getUsername());
-
-        if (listOfFavorites != null) {
-
-            System.out.println("No      Product Name        Price ");
-            for (int i = 0; i < listOfFavorites.size(); i++) {
-
-                Favorites favorite = listOfFavorites.get(i);
-
-                System.out.println((i + 1) + "      " +
-                        favorite.getFavoritesProduct().getProductName() + "      " +
-                        favorite.getFavoritesProduct().getProductPrice());
-            }
-
-        }else{
-            System.out.println("Oops sorry , no products added to your favorites");
-        }
-
-        System.out.println("You will be now redirected to to Home Page");
-        promptEnterKey();
-    }
-
-    public static void categoryPage() {
-        System.out.println("########----- C A T E G O R Y  P A G E-----########");
-
-        //Array of Strings that contains all the categories String categories = {".." , "..."}
-        String[] category = new String[]{"Women Clothes","Men Clothes","Health & Beauty","Mobile & Accessories",
-                "Baby & Toys","Watches","Home & Living","Home Appliances","Women's Bags","Men's Bags & Wallets",
-                "Muslim Fashion","Computer & Accessories","Groceries & Pets","Sport & Outdoor","Women Shoes",
-                "Men Shoes","Fashion Accessories","Games, Books & Hobbies","Automotive","Tickets & Vouchers"};
-
-
-        // Display list of Categories // Options -> 1. Men Clothes , 2.Women Clothes.... R.Return
-        for (int i=0; i< category.length; i++){
-            System.out.println("Category ID    Category Name");
-            System.out.println(i+1+". "+category[i]);
-        }
-
-
-        //LAGU AMARAN
-
-            // Get user choice  [DATA VALIDATION]
-            int userChoice=0;
-            boolean validInput;
-
-            System.out.println("What would you like to do ?");
-            System.out.println("1. Choose a category to view the products");
-            System.out.println("2. Return to Home");
-            userChoice = input.nextInt();
-
-
-        do{
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput=true;
-
-                if(userChoice < 1 || userChoice  > 2 ){
-                    System.out.print("Oops wrong value, please enter either 1 or 2.");
-                    validInput = false;
-                    input.nextLine();
-                }
-            }
-            catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput=false;
-                input.nextLine();
-            }
-
-        }while(!validInput);
-
-
-        if( userChoice ==1){
-
-            System.out.println("Type the category No : ");
-            int categoryNo = input.nextInt();
-
-         ArrayList<Product> listOfProductsBasedOnCategory = productDAO.getListOfProductsBasedOnCategory(category[categoryNo]);
-
-         if(listOfProductsBasedOnCategory != null ){
-
-             System.out.println("List of Products in "+ category[categoryNo] );
-             System.out.println("Product ID    Product Name");
-
-             for (int i = 0; i < listOfProductsBasedOnCategory.size(); i++) {
-                 System.out.println(listOfProductsBasedOnCategory.get(i).getProductID() +". "+listOfProductsBasedOnCategory.get(i).getProductName() );
-             }
-
-             System.out.println("What would you like to do ?");
-             System.out.println("1. View a product");
-             System.out.println("2. Return   ");
-             userChoice = input.nextInt();
-
-             do{
-                 try {
-                     System.out.print("\nYour option : ");
-                     userChoice = input.nextInt();
-                     validInput=true;
-
-                     if(userChoice < 1 || userChoice  > 2 ){
-                         System.out.print("Oops wrong value, please enter either 1 or 2.");
-                         validInput = false;
-                         input.nextLine();
-                     }
-                 }
-                 catch (InputMismatchException ex) {
-                     System.out.println("You have entered an invalid format of input");
-                     validInput=false;
-                     input.nextLine();
-                 }
-
-             }while(!validInput);
-
-             if(userChoice ==1){
-                 System.out.println("Type the Product ID : ");
-                 String productID = input.nextLine();
-
-                 productDisplayPage(productID);
-
-             }else{
-                 //return
-             }
-         }else{
-             System.out.println("Oops sorry , no products yet. They're on the way");
-
-         }
-
-
-
-        }else{
-
-            //return home page
-        }
-
-    }
-
-    public static void productDisplayPage(String productID) {
-
-        System.out.println("########----- P R O D U C T  P A G E-----########");
-
-        Product searchedProduct =productDAO.getProduct(productID);
-        if ( searchedProduct != null){
-
-            System.out.println(
-                    searchedProduct.getProductName() +
-                            searchedProduct.getProductCategory() +
-                            searchedProduct.getProductDescription() +
-                            searchedProduct.getProductPrice()
-            );
-
-            Feedback searchedProductFeedback =feedbackDAO.getFeedback(productID);
-
-            System.out.println(
-                    searchedProductFeedback.getFeedbackReview() +
-                            searchedProductFeedback.getFeedbackCommentBySeller()
-            );
-
-
-            System.out.println("What would you like to do ?");
-            System.out.println("1. Add to cart");
-            System.out.println("2. Add to favorites");
-
-            int userChoice=0,cartQuantity=0;
-            boolean validInput;
-
-            do{
-                try {
-                    System.out.print("\nYour option : ");
-                    userChoice = input.nextInt();
-                    validInput=true;
-
-                    if(userChoice < 1 || userChoice  > 2 ){
-                        System.out.print("Oops wrong value, please enter either 1 or 2.");
-                        validInput = false;
-                        input.nextLine();
-                    }
-                }
-                catch (InputMismatchException ex) {
-                    System.out.println("You have entered an invalid format of input");
-                    validInput=false;
-                    input.nextLine();
-                }
-
-            }while(!validInput);
-
-
-            if (userChoice == 1) {
-
-                do{
-                    try {
-                        System.out.print("\nEnter quantity in digits (Eg :25");
-                        cartQuantity= input.nextInt();
-                        validInput=true;
-
-                    }
-                    catch (InputMismatchException ex) {
-                        System.out.println("You have entered an invalid format of input");
-                        validInput=false;
-                        input.nextLine();
-                    }
-
-                    Cart addToCart = new Cart(productID,cartQuantity,sessionCustomer.getUsername());
-                    CartDao cartDAO = new CartDaoImp();
-                    cartDAO.addCart(addToCart);
-
-                    System.out.println("Great this product is added to cart with the quantity !" + cartQuantity);
-
-                }while(!validInput);
-
-            } else {
-
-                Favorites addToFavorites = new Favorites(searchedProduct,sessionCustomer.getUsername());
-                FavoritesDao favoritesDAO = new FavoritesDaoImp();
-                favoritesDAO.addFavorites(addToFavorites);
-                System.out.println("Great this product is added to favorites !");
-            }
-
-        }else{
-
-            System.out.println("Oops sorry couldn't find the product you're looking for. Please enter the product ID correctly");
-        }
-
-
-    }
-
-
-    public static void checkoutPage(ArrayList<Cart> cartDetailsOfThisUser, double totalCheckoutAmount) {
-
-
-        // todo : shipping fees
-        for (int i = 0; i < cartDetailsOfThisUser.size(); i++) {
-
-            Cart cart = cartDetailsOfThisUser.get(i);
-            Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
-            System.out.println((i+1)+"      "+
-                    productsInCartToDisplay.getProductName() +"      "+
-                    productsInCartToDisplay.getProductPrice()+"      " +
-                    cart.getCartQuantity());
-
-
-        }
-        System.out.println("Total Amount to Checkout : " + totalCheckoutAmount);
-
-
-        System.out.println("What would you like to do ?");
-        System.out.println("1. Pay Now");
-        System.out.println("2. Return to Home");
-
-        boolean validInput;
-        int userChoice=0;
-
-        do{
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput=true;
-
-                if(userChoice < 1 || userChoice  > 2 ){
-                    System.out.print("Oops wrong value, please enter either 1 or 2.");
-                    validInput = false;
-                    input.nextLine();
-                }
-            }
-            catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput=false;
-                input.nextLine();
-            }
-
-        }while(!validInput);
-
-
-        if (userChoice == 1) {
-
-            // TODO : FORGOT PASSWORD
-            String paymentPassword;
-            do {
-                System.out.println("Enter your payment password :");
-                 paymentPassword = input.next();
-
-                 if (!customerDAO.checkPaymentPassword(paymentPassword) ){
-                     System.out.println("Uh Oh , wrong password. Try again:");
-                 }
-
-            }while(!customerDAO.checkPaymentPassword(paymentPassword));
-
-
-
-            while(sessionCustomer.getUserWallet().getWalletBalance() < totalCheckoutAmount){
-
-                System.out.println("Insufficient Balance , please Top Up. Your balance in wallet is "+sessionCustomer.getUserWallet().getWalletBalance());
-
-                System.out.println("What would you like to do ?");
-                System.out.println("1. Top Up my Wallet and Proceed Payment");
-                System.out.println("2. Cancel this transaction");
-
-                do{
-                    try {
-                        System.out.print("\nYour option : ");
-                        userChoice = input.nextInt();
-                        validInput=true;
-
-                        if(userChoice < 1 || userChoice  > 2 ){
-                            System.out.print("Oops wrong value, please enter either 1 or 2.");
-                            validInput = false;
-                            input.nextLine();
-                        }
-                    }
-                    catch (InputMismatchException ex) {
-                        System.out.println("You have entered an invalid format of input");
-                        validInput=false;
-                        input.nextLine();
-                    }
-
-                }while(!validInput);
-
                 if (userChoice == 1) {
 
                     WalletDao walltetDao = new WalletDaoImp();
                     //TODO: Input Validation
-                    System.out.println("Enter the amount you would like to top up : RM ");
+                    System.out.print("Enter the amount you would like to top up : RM ");
                     double topUpAmount = input.nextDouble();
-                    walltetDao.topUpWalletBalance(topUpAmount);
+                    walltetDao.topUpWalletBalance(sessionCustomer.getUserWallet(), topUpAmount);
 
-                }else{
-                        break;
+                } else {
+                    break;
                 }
 
             }
@@ -863,68 +1003,64 @@ public class Main {
             String formattedDate = myDateObj.format(myFormatObj);
 
             //Add New Order
-            ArrayList <Orders> ListofOrdersForTransaction = new ArrayList<>();
+            ArrayList<Orders> listOfOrdersForTransaction = new ArrayList<>();
 
-            for (int i = 0; i < cartDetailsOfThisUser.size(); i++) {
+            for (int i = 0; i < listOfCartOfThisCustomer.size(); i++) {
 
-                Cart cart = cartDetailsOfThisUser.get(i);
+                Cart cart = listOfCartOfThisCustomer.get(i);
                 Product productsInCartForOrders = productDAO.getProduct(cart.getCartProductID());
-                String uniqueID = UUID.randomUUID().toString().substring(0,8);
 
                 Orders order = new Orders(
-                        "Unprocessed" ,
-                        "OD"+uniqueID,
+                        "Unprocessed",
                         formattedDate,
-                        sessionCustomer.getUsername(),
+                        sessionCustomer.getCustomerID(),
                         false,
                         "Track Not Set",
                         false,
-                        productsInCartForOrders.getProductSellerUsername(),
-                        productsInCartForOrders,
+                        productsInCartForOrders.getProductSellerID(),
+                        productsInCartForOrders.getProductID(),
                         cart.getCartQuantity()
-                        );
+                );
                 // Add Orders
-                ListofOrdersForTransaction.add(order);
-                orderDAO.addOrders(order);
+                listOfOrdersForTransaction.add(order);
+                ordersDAO.addOrders(order);
 
                 //Increase Sales Count of this product
-                productDAO.reduceProductStock(productsInCartForOrders,cart.getCartQuantity());
+                productDAO.reduceProductStock(productsInCartForOrders, cart.getCartQuantity());
 
                 //Reduce Stock Count of this product
-                productDAO.addProductSalesCount(productsInCartForOrders,cart.getCartQuantity());
+                productDAO.addProductSalesCount(productsInCartForOrders, cart.getCartQuantity());
 
                 //Removing from user's cart
-                cartDAO.deleteCart(cartDetailsOfThisUser.get(i));
+                cartDAO.deleteCart(listOfCartOfThisCustomer.get(i).getCartID());
 
                 // Notify the seller
-                Notification notificationSeller = new Notification(false,productsInCartForOrders.getProductSellerUsername(),"OD"+uniqueID,sessionCustomer.getFirstName()+" "+sessionCustomer.getLastName(),productsInCartForOrders.getProductName());
+                Notification notificationSeller = new Notification(productsInCartForOrders.getProductSellerID(), order.getOrderID(), sessionCustomer.getFirstName() + " " + sessionCustomer.getLastName(), productsInCartForOrders.getProductName());
                 notificationDAO.addNotification(notificationSeller);
 
+                // TODO : ADD CUSTOMER/SELLER FLAG
                 // Add transaction for seller
-                String uniqueTransactionID = UUID.randomUUID().toString().substring(0,8);
-                SellerTransaction sellerTransaction = new SellerTransaction(
-                        "TRS"+uniqueTransactionID,
+                Transaction transaction = new Transaction(
                         productsInCartForOrders.getProductPrice(),
                         formattedDate,
-                        productsInCartForOrders.getProductSellerUsername());
-                sellerTransactionDAO.addSellerTransaction(sellerTransaction);
-                sellerDAO.updateSellerProfit( productsInCartForOrders.getProductSellerUsername(),productsInCartForOrders.getProductPrice());
+                        productsInCartForOrders.getProductSellerID());
+                transactionDAO.addTransaction(transaction);
+
+                sellerDAO.updateSellerProfit(productsInCartForOrders.getProductSellerID(), productsInCartForOrders.getProductPrice());
 
             }
 
 
             //Reduce Wallet Balance
-            walletDAO.reduceWalletBalance(totalCheckoutAmount);
+            walletDAO.reduceWalletBalance(sessionCustomer.getUserWallet(), totalCheckoutAmount);
 
             //Add Wallet Transaction
-            String uniqueID = UUID.randomUUID().toString().substring(0,8);
-            WalletTransaction transaction = new WalletTransaction(
-                    "TR"+uniqueID ,
+            Transaction transaction = new Transaction(
                     totalCheckoutAmount,
                     formattedDate,
-                    sessionCustomer.getUsername()
-                    );
-            walletTransactionDAO.addWalletTransaction(transaction);
+                    sessionCustomer.getCustomerID()
+            );
+            transactionDAO.addTransaction(transaction);
 
             System.out.println("Payment Successful , you will be now directed to Order History page");
 
@@ -935,110 +1071,130 @@ public class Main {
         }
 
 
-
-
-
     }
 
     public static void orderHistoryPage() {
 
-        System.out.println("########----- P R O D U C T  P A G E-----########");
 
-        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Seller");
+        System.out.println("\n\n########----- ORDER HISTORY  P A G E-----########");
 
-        ArrayList <Orders> listOfOrders = orderDAO.getListOfOrdersOfCustomer(sessionCustomer.getUsername());
+        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Seller Username");
+
+        ArrayList<Orders> listOfOrders = ordersDAO.getListOfOrdersOfCustomer(sessionCustomer.getCustomerID());
         for (int i = 0; i < listOfOrders.size(); i++) {
-            System.out.println((i + 1) + "      " +
-                    listOfOrders.get(i).getOrderID() + "      " +
+            System.out.println((i + 1) + "       " +
+                    listOfOrders.get(i).getOrderID() + "           " +
                     listOfOrders.get(i).getOrderDate() + "      " +
-                    listOfOrders.get(i).getOrderProduct().getProductName() + "      " +
-                    listOfOrders.get(i).getOrderProduct().getProductPrice() + "      " +
-                    listOfOrders.get(i).getOrderQuantity() + "      " +
-                    listOfOrders.get(i).getOrderSellerUsername());
+                    productDAO.getProduct(listOfOrders.get(i).getOrderProductID()).getProductName() + "      " +
+                    listOfOrders.get(i).getOrderStatus() + "      " +
+                    sellerDAO.getSellerUsername(listOfOrders.get(i).getOrderSellerID()));
         }
 
-        System.out.println("1.View details of an Order");
-        System.out.println("2.Return to home page");
-        System.out.println("Your option : ");
-        int userChoice= input.nextInt();         // Get the choice
-
+        System.out.println("\n1. View details of an Order");
+        System.out.println("2. Return to home page");
+        int userChoice =0;         // Get the choice
 
         boolean validInput;
-        do{
+        do {
             try {
                 System.out.print("\nYour option : ");
                 userChoice = input.nextInt();
-                validInput=true;
+                validInput = true;
 
-                if(userChoice < 1 || userChoice  > 2 ){
+                if (userChoice < 1 || userChoice > 2) {
                     System.out.print("Oops wrong value, please enter either 1 or 2 only.");
                     validInput = false;
                     input.nextLine();
                 }
-            }
-            catch (InputMismatchException ex) {
+            } catch (InputMismatchException ex) {
                 System.out.println("You have entered an invalid format of input");
-                validInput=false;
+                validInput = false;
                 input.nextLine();
             }
 
-        }while(!validInput);
+        } while (!validInput);
 
 
-        if(userChoice ==1){
+        if (userChoice == 1) {
 
-            System.out.println("Enter the Order ID to view the details : ");
-            String orderID= input.next();
+            System.out.print("Enter the Order ID to view the details : ");
+            int orderID = input.nextInt();
 
             //If want to view more details
-
-            Orders order= orderDAO.getOrders(orderID);
+            Orders order = ordersDAO.getOrders(orderID);
 
             System.out.println(
-                        "Order ID     : "+ order.getOrderID() + "\n" +
-                        "Order Date   : "+order.getOrderDate() + "\n" +
-                        "Order Status : "+order.getOrderStatus()+ "\n" +
-                        "Product Name : "+order.getOrderProduct().getProductName() + "\n" +
-                        "Product Price    : "+order.getOrderProduct().getProductPrice() + "\n" +
-                        "Quantity Ordered : "+order.getOrderQuantity() + "\n");
+                    "Order ID     : " + order.getOrderID() + "\n" +
+                            "Order Date   : " + order.getOrderDate() + "\n" +
+                            "Order Status : " + order.getOrderStatus() + "\n" +
+                            "Product Name : " + productDAO.getProduct(order.getOrderProductID()).getProductName() + "\n" +
+                            "Product Price    : " + productDAO.getProduct(order.getOrderProductID()).getProductPrice() + "\n" +
+                            "Quantity Ordered : " + order.getOrderQuantity());
 
-            if(!Objects.equals(order.getOrderStatus(), "Unprocessed")){
-                System.out.println("Tracking ID : "+order.getOrderStatus()+ "\n" );
+            if (order.getOrderStatus().equals("Shipping/Processing")) {
+                System.out.println("Tracking ID : " + order.getOrderTrackingID() + "\n");
+                System.out.println("Please update the Delivery of this Order");
+                System.out.print("Have you received the order ? Y = Yes or N = No : ");
+                char orderReceivedConfirmation = input.next().charAt(0);
 
-                System.out.println("\nPlease update the Delivery of this Order");
+                if (orderReceivedConfirmation == 'Y') {
+                    System.out.println("Thank you for your confirmation !");
 
-                    System.out.println("Have you received the order ? Y = Yes or N = No");
-                    char orderReceivedConfirmation = input.next().charAt(0);
+                    order.setOrderStatus("Delivered");
+                    order.setOrderReceivedOrNot(true);
+                    ordersDAO.updateOrders(order);
 
-                    if (orderReceivedConfirmation == 'Y'){
-                        System.out.println("Thank you for confirmation");
-                        order.setOrderStatus("Delivered");
-                        order.setOrderReceivedOrNot(true);
-                        //TODO : DATA VALIDATION
-                        System.out.println("\nPlease rate this order from 1 - 5");
-                        int prodRating = input.nextInt();
+                    System.out.println("\nPlease rate this order from 1 - 5 : ");
+                    int prodRating = 0;
 
-                        System.out.println("\nPlease leave your feedback ");
-                        String prodfeedback = input.nextLine();
+                    do {
+                        try {
+                            System.out.print("\nYour Rating : ");
+                            prodRating = input.nextInt();
+                            validInput = true;
 
-                        Feedback fdbkProd = new Feedback(
-                                order.getOrderProduct(),
-                                prodfeedback,
-                                "None",
-                                sessionCustomer.getFirstName()+" "+sessionCustomer.getLastName(),
-                                prodRating);
-                    }
+                            if (prodRating < 1 || prodRating > 5) {
+                                System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 or 5 only.");
+                                validInput = false;
+                                input.nextLine();
+                            }
+                        } catch (InputMismatchException ex) {
+                            System.out.println("You have entered an invalid format of input");
+                            validInput = false;
+                            input.nextLine();
+                        }
 
+                    } while (!validInput);
+
+                    System.out.println("\nPlease leave your feedback ");
+                    String productFeedback = input.nextLine();
+
+                    //TODO : TO THINK WHETHER THIS COMES EARLIER OR NOT
+                    Feedback feedbackProduct = new Feedback(
+                            productDAO.getProduct(order.getOrderProductID()).getProductID(),
+                            productFeedback,
+                            "None",
+                            sessionCustomer.getUserName(),
+                            prodRating);
+                    feedbackDAO.addFeedback(feedbackProduct);
+                }
+
+            }else if (order.getOrderStatus().equals("Unprocessed")){
+
+                System.out.println("\nYour order is yet to be processed by the seller");
+                System.out.println("You will be redirected to Home Page");
+                promptEnterKey();
+            }
+            else{
+                System.out.println("You will be redirected to Home Page");
+                promptEnterKey();
             }
 
 
-
-        }else{
+        } else {
+            promptEnterKey();
             System.out.println("You will be redirected to Home Page");
         }
-
-
-
 
 
     }
@@ -1059,96 +1215,96 @@ public class Main {
 
         boolean validInput;
 
+
         System.out.println("########----- P R O F I L E   P A G E-----########");
         System.out.println("1.Change Username");
         System.out.println("2.Change Email");
         System.out.println("3.Change Password");
         System.out.println("4.Update address");
         System.out.println("5.Delete Account");
-        System.out.println("Your option : ");
-       int userChoice= input.nextInt();         // Get the choice
+
+        int userChoice = 0;         // Get the choice
 
 
-        do{
+        do {
             try {
                 System.out.print("\nYour option : ");
                 userChoice = input.nextInt();
-                validInput=true;
+                validInput = true;
 
-                if(userChoice < 1 || userChoice  > 5 ){
+                if (userChoice < 1 || userChoice > 5) {
                     System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 or 5 only.");
                     validInput = false;
-                    input.nextLine();
                 }
-            }
-            catch (InputMismatchException ex) {
+            } catch (InputMismatchException ex) {
                 System.out.println("You have entered an invalid format of input");
-                validInput=false;
+                validInput = false;
                 input.nextLine();
             }
 
-        }while(!validInput);
+        } while (!validInput);
 
 
-
-
+        Customer customer = sessionCustomer;
         switch (userChoice) {
             case 1:
-                    System.out.println("Your new username: ");
-                    String username = input.next();
-                    customerDAO.updateUsername(username);
-                    break;
+                System.out.print("Your new username : ");
+                String username = input.next();
+                customer.setUserName(username);
+                customerDAO.updateCustomer(customer);
+                break;
             case 2:
-                    System.out.println("Your new Email: ");
-                    String email = input.next();
-                    customerDAO.updateEmail(email);
-                    break;
+                System.out.print("Your new Email : ");
+                String email = input.next();
+                customer.setEmail(email);
+                customerDAO.updateCustomer(customer);
+                break;
             case 3:
-                    System.out.println("Your new Password: ");
-                    String password = input.next();
-                    customerDAO.updatePassword(password);
-                    break;
+                System.out.print("Your new Password : ");
+                String password = input.next();
+                customer.setPassword(password);
+                customerDAO.updateCustomer(customer);
+                break;
             case 4:
-                    System.out.println("Your new Address: ");
-                    String address = input.nextLine();
-                    customerDAO.updateAddress(address);
-                    break;
+                System.out.print("Your new Address : ");
+                String address = input.nextLine();
+                customer.setAddress(address);
+                customerDAO.updateCustomer(customer);
+                break;
             default:
-                    System.out.println("Are you sure to delete the account?");
-                    System.out.println("1. Yes");
-                    System.out.println("2. No");
+                System.out.println("Are you sure to delete the account?");
+                System.out.println("1. Yes");
+                System.out.println("2. No");
 
-                    int deleteConfirmation= 0;
-                    do{
-                        try {
-                            System.out.print("\nYour option : ");
-                            deleteConfirmation = input.nextInt();
-                            validInput=true;
+                int deleteConfirmation = 0;
+                do {
+                    try {
+                        System.out.print("\nYour option : ");
+                        deleteConfirmation = input.nextInt();
+                        validInput = true;
 
-                            if(deleteConfirmation < 1 || deleteConfirmation  > 2 ){
-                                System.out.print("Oops wrong value, please enter either 1 or 2.");
-                                validInput = false;
-                                input.nextLine();
-                            }
-                        }
-                        catch (InputMismatchException ex) {
-                            System.out.println("You have entered an invalid format of input");
-                            validInput=false;
+                        if (deleteConfirmation < 1 || deleteConfirmation > 2) {
+                            System.out.print("Oops wrong value, please enter either 1 or 2.");
+                            validInput = false;
                             input.nextLine();
                         }
-
-                    }while(!validInput);
-
-                    if (deleteConfirmation == 1) {
-                        customerDAO.deleteCustomer(sessionCustomer);
-                    } else {
-                        // back to the userProfilePage!!! Then choice again!
+                    } catch (InputMismatchException ex) {
+                        System.out.println("You have entered an invalid format of input");
+                        validInput = false;
+                        input.nextLine();
                     }
+
+                } while (!validInput);
+
+                if (deleteConfirmation == 1) {
+                    customerDAO.deleteCustomer(sessionCustomer);
+                    mainMenuPage();
+                } else {
+                    // back to the userProfilePage!!! Then choice again!
+                }
                 break;
 
         }
-
-
 
 
     }
@@ -1158,18 +1314,26 @@ public class Main {
     }
 
 
+
+
+
+
+
+
     public static void sellerDashboardPage() {
 
-        boolean returnToDashboard =true ;
 
-        do{
-            System.out.println("########----- D A S H B O A R D   P A G E-----########");
+        boolean returnToDashboard = true;
+
+        do {
+            System.out.println("\n########----- D A S H B O A R D   P A G E-----########");
             System.out.println("1. Manage Orders");
             System.out.println("2. Manage Products");
             System.out.println("3. Manage Feedbacks");
             System.out.println("4. Manage Payment");
             System.out.println("5. Manage Profile");
-            System.out.println("6. Log Out");
+            System.out.println("6. Manage Notification");
+            System.out.println("7. Log Out");
 
             int userChoice = 0;
             boolean validInput;
@@ -1179,8 +1343,8 @@ public class Main {
                     userChoice = input.nextInt();
                     validInput = true;
 
-                    if (userChoice < 1 || userChoice > 6) {
-                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
+                    if (userChoice < 1 || userChoice > 7) {
+                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 / 6 or 7 only.");
                         validInput = false;
                         input.nextLine();
                     }
@@ -1195,193 +1359,47 @@ public class Main {
 
             switch (userChoice) {
 
-                case 1: manageOrdersPage();
+                case 1:
+                    manageOrdersPage();
                     break;
-                case 2: manageProductPage();
+                case 2:
+                    manageProductPage();
                     break;
-                case 3: manageFeedbackPage();
+                case 3:
+                    manageFeedbackPage();
                     break;
-                case 4: managePaymentPage();
+                case 4:
+                    managePaymentPage();
                     break;
-                case 5:manageSellerProfilePage();
+                case 5:
+                    manageSellerProfilePage();
                     break;
-                case 6: returnToDashboard=false;
+                case 6:
+                    manageSellerNotificationPage();
+                    break;
+                case 7:
+                    returnToDashboard = false;
                     break;
             }
 
 
-        }while(returnToDashboard);
+        } while (returnToDashboard);
 
+        System.out.println("You will be now logged out ....");
         logOutPage('s');
 
     }
 
-
-
-
-    public static void addProductPage(){
-
-        //Generate product id, SHOULD HAVE A METHOD IN ProductDOA DO THIS
-        String productID = productDAO.generateProductID();
-
-        // Get the name, using nextLine to allow have space between name of product
-        System.out.print("Enter the name of product:");
-        String name = input.nextLine();
-
-        System.out.print("Enter the category of product:");
-        String category = input.nextLine();
-
-        System.out.print("Enter the description of product:");
-        String descrip = input.nextLine();
-
-        System.out.print("Enter the price of product:");
-        double price = input.nextDouble();
-
-        System.out.print("Enter the stock of product:");
-        int stock = input.nextInt();
-
-        //Get productDOA in seller class, write a method to return object of ProductDOA
-        productDAO.addProduct(new Product(productID, name, descrip, category, sessionSeller.getSellerUsername(),price, stock, 0));
-
-        System.out.println("Successfully add product");
-    }
-
-    public static void updateProductPage( ){
-
-        char contUpdateConfirmation ='N';
-        do {
-            System.out.print("Enter the Product ID to update :");
-            String productID = input.next();
-
-            Product product = productDAO.getProduct(productID);
-
-            if (product != null) {
-
-                System.out.println("1.Update Name\n2.Update Description \n3. Update Category\n4.Update Stock\n5. Update Price\n6. Return");
-                int userChoice = 0;
-                boolean validInput;
-                do {
-                    try {
-                        System.out.print("\nYour option : ");
-                        userChoice = input.nextInt();
-                        validInput = true;
-
-                        if (userChoice < 1 || userChoice > 6) {
-                            System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
-                            validInput = false;
-                            input.nextLine();
-                        }
-                    } catch (InputMismatchException ex) {
-                        System.out.println("You have entered an invalid format of input");
-                        validInput = false;
-                        input.nextLine();
-                    }
-
-                } while (!validInput);
-
-
-                switch (userChoice) {
-
-                    case 1:
-                        product.setProductName(input.nextLine());
-                        productDAO.updateProduct(product);
-                        break;
-                    case 2:
-                        product.setProductDescription(input.nextLine());
-                        productDAO.updateProduct(product);
-                        break;
-                    case 3:
-                        product.setProductCategory(input.nextLine());
-                        productDAO.updateProduct(product);
-                        break;
-                    case 4:
-                        product.setProductStockCount(input.nextInt());
-                        productDAO.updateProduct(product);
-                        break;
-                    case 5:
-                        product.setProductPrice(input.nextDouble());
-                        productDAO.updateProduct(product);
-                        break;
-
-                }
-
-                System.out.print("Product Updated successfully !");
-
-            } else {
-                System.out.print("Uh oh , product is not found please enter correct product ID");
-                System.out.print("Do you still want to update ? Press 'Y' for YES  and Press 'N' for NO");
-                contUpdateConfirmation = input.next().charAt(0);
-            }
-
-        }while(contUpdateConfirmation=='Y');
-
-
-    }
-
-    public static void deleteProductPage(){
-        System.out.print("Enter the Product ID to delete :");
-        String productID = input.next();
-
-       Product product =  productDAO.getProduct(productID);
-        char contUpdateConfirmation ='N';
-
-        do{
-        if (product != null) {
-            productDAO.deleteProduct(product);
-            System.out.println("Successfully deleted product");
-
-        }else {
-            System.out.print("Uh oh , product is not found please enter correct product ID");
-            System.out.print("Do you still want to delete ? Press 'Y' for YES  and Press 'N' for NO");
-            contUpdateConfirmation = input.next().charAt(0);
-        }
-
-        }while(contUpdateConfirmation=='Y');
-
-    }
-
-
-
-    public  static void searchAndDisplayProductPage(){
-        System.out.print("Enter the Product ID to search:");
-        String productID = input.next();
-
-        Product product =  productDAO.getProduct(productID);
-        char contUpdateConfirmation ='N';
-
-        do{
-            if (product != null) {
-                System.out.println(
-                        product.getProductName() +
-                                product.getProductCategory() +
-                                product.getProductDescription() +
-                                product.getProductPrice()
-                );
-
-                Feedback searchedProductFeedback =feedbackDAO.getFeedback(productID);
-
-                System.out.println(
-                        searchedProductFeedback.getFeedbackReview() +
-                                searchedProductFeedback.getFeedbackCommentBySeller()
-                );
-            }else {
-                System.out.print("Uh oh , product is not found please enter correct product ID");
-                System.out.print("Do you still want to search ? Press 'Y' for YES  and Press 'N' for NO");
-                contUpdateConfirmation = input.next().charAt(0);
-            }
-
-        }while(contUpdateConfirmation=='Y');
-    }
 
     public static void manageProductPage() {
 
         boolean returnToManageProductPage = true;
 
         do {
-            System.out.println("########----- MANAGE PRODUCT PAGE-----########");
+
+            System.out.println("\n########----- MANAGE PRODUCT PAGE-----########");
 
             System.out.println("1.View list of products \n2.Add product  \n3.Update product  \n4.Delete product  \n5.Search a product \n6.Return to Dashboard");
-            System.out.println("Your choice :");
 
             int userChoice = 0;
             boolean validInput;
@@ -1409,17 +1427,19 @@ public class Main {
             //Get input of a whole line and take the frist character
             switch (userChoice) {
                 case 1:
-                    ArrayList<Product> listOfProductOfThisSeller = productDAO.getListOfProductsOfThisSeller(sessionSeller.getSellerUsername());
+                    ArrayList<Product> listOfProductOfThisSeller = productDAO.getListOfProductsOfThisSeller(sessionSeller.getSellerID());
 
                     // View list of products and stock counts
-                    System.out.println("Product ID     Name           Category       Price          Stock");
+                    System.out.println("Product ID     Name           Category       Price          Stock          Sales");
                     for (int i = 0; i < listOfProductOfThisSeller.size(); i++) {
-                        System.out.printf("%15s%15s%15s%15s%15s\n",
+                        System.out.printf("%s%18s%18s%13s%14s%14s\n",
                                 listOfProductOfThisSeller.get(i).getProductID(),
+                                listOfProductOfThisSeller.get(i).getProductName(),
                                 listOfProductOfThisSeller.get(i).getProductCategory(),
-                                listOfProductOfThisSeller.get(i).getProductName()
-                                , listOfProductOfThisSeller.get(i).getProductPrice(),
-                                listOfProductOfThisSeller.get(i).getProductStockCount());
+                                listOfProductOfThisSeller.get(i).getProductPrice(),
+                                listOfProductOfThisSeller.get(i).getProductStockCount(),
+                                listOfProductOfThisSeller.get(i).getProductSalesCount());
+
                     }
 
                     break;
@@ -1446,154 +1466,367 @@ public class Main {
 
             }
 
-        }while(returnToManageProductPage);
-
-
+        } while (returnToManageProductPage);
 
 
     }
+
+    public static void addProductPage() {
+
+
+        // Get the name, using nextLine to allow have space between name of product
+        System.out.print("Enter the name of product : ");
+        input.nextLine();
+        String name = input.nextLine();
+
+        System.out.print("Enter the category of product : ");
+        String category = input.nextLine();
+
+        System.out.print("Enter the description of product : ");
+        String descrip = input.nextLine();
+
+        System.out.print("Enter the price of product : RM ");
+        double price = input.nextDouble();
+
+        System.out.print("Enter the stock of product : ");
+        int stock = input.nextInt();
+
+        //Get productDOA in seller class, write a method to return object of ProductDOA
+        productDAO.addProduct(new Product(sessionSeller.getSellerID(), 0, name, descrip, category, price, stock, 0));
+
+    }
+
+    public static void updateProductPage() {
+
+        char contUpdateConfirmation = 'N';
+        do {
+            System.out.print("Enter the Product ID to update : ");
+            int productID = input.nextInt();
+
+            Product product = productDAO.getProduct(productID);
+
+            if (product != null) {
+
+                System.out.println("1. Update Name\n2. Update Description \n3. Update Category\n4. Update Stock\n5. Update Price\n6. Return");
+                int userChoice = 0;
+                boolean validInput;
+                do {
+                    try {
+                        System.out.print("\nYour option : ");
+                        userChoice = input.nextInt();
+                        validInput = true;
+
+                        if (userChoice < 1 || userChoice > 6) {
+                            System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
+                            validInput = false;
+                            input.nextLine();
+                        }
+                    } catch (InputMismatchException ex) {
+                        System.out.println("You have entered an invalid format of input");
+                        validInput = false;
+                        input.nextLine();
+                    }
+
+                } while (!validInput);
+
+                input.nextLine();
+                switch (userChoice) {
+
+                    case 1:
+                        System.out.print("New Product Name : ");
+                        String productName = input.nextLine();
+                        product.setProductName(productName);
+                        productDAO.updateProduct(product);
+                        break;
+                    case 2:
+                        System.out.print("New Product Description : ");
+                        String productDescription = input.nextLine();
+                        product.setProductDescription(productDescription);
+                        productDAO.updateProduct(product);
+                        break;
+                    case 3:
+                        System.out.print("New Product Description : ");
+                        String productCategory = input.nextLine();
+                        product.setProductCategory(productCategory);
+                        productDAO.updateProduct(product);
+                        break;
+                    case 4:
+                        System.out.print("New Product Stock Count : ");
+                        int productStockCount = input.nextInt();
+                        product.setProductStockCount(productStockCount);
+                        productDAO.updateProduct(product);
+                        break;
+                    case 5:
+                        System.out.print("New Product Price : RM ");
+                        double productPrice = input.nextDouble();
+                        product.setProductPrice(productPrice);
+                        productDAO.updateProduct(product);
+                        break;
+
+                }
+
+            } else {
+                System.out.print("Uh oh , product is not found please enter correct product ID");
+                System.out.print("Do you still want to update ? Press 'Y' for YES  and Press 'N' for NO");
+                contUpdateConfirmation = input.next().charAt(0);
+            }
+
+        } while (contUpdateConfirmation == 'Y');
+
+
+    }
+
+    public static void deleteProductPage() {
+        System.out.print("Enter the Product ID to delete :");
+        int productID = input.nextInt();
+
+        Product product = productDAO.getProduct(productID);
+        char contUpdateConfirmation = 'N';
+
+        do {
+            if (product != null) {
+                productDAO.deleteProduct(product);
+                System.out.println("Successfully deleted product");
+
+            } else {
+                System.out.print("Uh oh , product is not found please enter correct product ID");
+                System.out.print("Do you still want to delete ? Press 'Y' for YES  and Press 'N' for NO");
+                contUpdateConfirmation = input.next().charAt(0);
+            }
+
+        } while (contUpdateConfirmation == 'Y');
+
+    }
+
+    public static void searchAndDisplayProductPage() {
+        System.out.print("Enter the Product ID to search : ");
+        int productID = input.nextInt();
+
+        Product product = productDAO.getProduct(productID);
+        char contUpdateConfirmation = 'N';
+
+        do {
+            if (product != null) {
+                System.out.println(
+                        "Product Name : " + product.getProductName() +
+                                "Product Category :  " + product.getProductCategory() +
+                                "Product Price : RM " + product.getProductPrice() +
+                                "Stock Available : " + product.getProductStockCount() +
+                                "Sold Quantity : " + product.getProductSalesCount() +
+                                "Product Rating : " + feedbackDAO.getAverageRatingOfThisProduct(productID) +
+                                "Product Description : " + product.getProductDescription()
+                );
+
+
+                System.out.println("Product Reviews : ");
+                ArrayList<Feedback> searchedProductFeedback = feedbackDAO.getListOfFeedbackOfThisProduct(productID);
+                if (searchedProductFeedback != null) {
+
+                    for (int i = 0; i < searchedProductFeedback.size(); i++) {
+                        System.out.println("------------------------------------------------------------------------------------");
+                        System.out.println(
+                                "User " + searchedProductFeedback.get(i).getFeedbackCustomerName() + ": \n" +
+                                        searchedProductFeedback.get(i).getFeedbackReview() +
+                                        "Comment By You : \n" + searchedProductFeedback.get(i).getFeedbackCommentBySeller()
+                        );
+                        System.out.println("------------------------------------------------------------------------------------");
+
+                    }
+                }else{
+                    System.out.println("No Reviews yet :(");
+
+                }
+            } else {
+                System.out.print("Uh oh , product is not found please enter correct product ID");
+                System.out.print("Do you still want to search ? Press 'Y' for YES  and Press 'N' for NO");
+                contUpdateConfirmation = input.next().charAt(0);
+            }
+
+        } while (contUpdateConfirmation == 'Y');
+    }
+
+
+
+
 
 
 
 
     public static void manageOrdersPage() {
 
+
         System.out.println("########----- P R O D U C T  P A G E-----########");
 
-        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Customer");
+        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Customer Username");
 
         //First list all the orders that matches the seller
-        ArrayList <Orders> listOfOrders = orderDAO.getListOfOrdersOfSeller(sessionSeller.getSellerUsername());
+        ArrayList<Orders> listOfOrders = ordersDAO.getListOfOrdersOfSeller(sessionSeller.getSellerID());
         for (int i = 0; i < listOfOrders.size(); i++) {
             System.out.println((i + 1) + "      " +
                     listOfOrders.get(i).getOrderID() + "      " +
                     listOfOrders.get(i).getOrderDate() + "      " +
-                    listOfOrders.get(i).getOrderProduct().getProductName() + "      " +
+                    productDAO.getProduct(listOfOrders.get(i).getOrderProductID()).getProductName() + "      " +
                     listOfOrders.get(i).getOrderStatus() + "      " +
-                    listOfOrders.get(i).getOrderCustomerUserName());
+                    listOfOrders.get(i).getOrderCustomerID());
         }
 
-        System.out.println("1.View details of an Order");
+        System.out.println("\n1.View details of an Order");
         System.out.println("2.Return to home page");
-        System.out.println("Your option : ");
-        int userChoice= input.nextInt();         // Get the choice
+        int userChoice = 0;         // Get the choice
 
 
         boolean validInput;
-        do{
+        do {
             try {
                 System.out.print("\nYour option : ");
                 userChoice = input.nextInt();
-                validInput=true;
+                validInput = true;
 
-                if(userChoice < 1 || userChoice  > 2 ){
+                if (userChoice < 1 || userChoice > 2) {
                     System.out.print("Oops wrong value, please enter either 1 or 2 only.");
                     validInput = false;
                     input.nextLine();
                 }
-            }
-            catch (InputMismatchException ex) {
+            } catch (InputMismatchException ex) {
                 System.out.println("You have entered an invalid format of input");
-                validInput=false;
+                validInput = false;
                 input.nextLine();
             }
 
-        }while(!validInput);
+        } while (!validInput);
 
 
-        if(userChoice ==1){
+        if (userChoice == 1) {
 
-            System.out.println("Enter the Order ID to view the details : ");
-            String orderID= input.next();
+            System.out.print("Enter the Order ID to view the details : ");
+            int orderID = input.nextInt();
 
             //If want to view more details
 
-            Orders order= orderDAO.getOrders(orderID);
+            Orders order = ordersDAO.getOrders(orderID);
 
             System.out.println(
-                    "Order ID     : "+ order.getOrderID() + "\n" +
-                            "Order Date   : "+order.getOrderDate() + "\n" +
-                            "Order Status : "+order.getOrderStatus()+ "\n" +
-                            "Product Name : "+order.getOrderProduct().getProductName() + "\n" +
-                            "Product Price    : "+order.getOrderProduct().getProductPrice() + "\n" +
-                            "Quantity Ordered : "+order.getOrderQuantity() + "\n");
+                    "Order ID     : " + order.getOrderID() + "\n" +
+                            "Order Date   : " + order.getOrderDate() + "\n" +
+                            "Order Status : " + order.getOrderStatus() + "\n" +
+                            "Product Name : " + productDAO.getProduct(order.getOrderProductID()).getProductName() + "\n" +
+                            "Product Price    : " + productDAO.getProduct(order.getOrderProductID()).getProductPrice() + "\n" +
+                            "Quantity Ordered : " + order.getOrderQuantity());
 
 
-            if(Objects.equals(order.getOrderStatus(), "Unprocessed")){
+            if (Objects.equals(order.getOrderStatus(), "Unprocessed")) {
 
-                System.out.println("Would you like to update the order ? Y = Yes or N = No");
+                System.out.println("\nWould you like to update the order ? Y = Yes or N = No");
                 char orderReceivedConfirmation = input.next().charAt(0);
+                input.nextLine();
 
-                if (orderReceivedConfirmation == 'Y'){
-                    System.out.println("Enter the tracking ID : ");
+                if (orderReceivedConfirmation == 'Y') {
+                    System.out.println("Enter the Tracking ID : ");
                     order.setOrderTrackingID(input.nextLine());
                     order.setOrderStatus("Processing / Shipping");
 
-                    orderDAO.updateOrders(order);
+                    ordersDAO.updateOrders(order);
                 }
 
             }
-
-
-        }else{
-            System.out.println("You will be redirected to Home Page");
+            else{
+                System.out.println("Tracking ID     : " + order.getOrderTrackingID());
+            }
         }
-
+        System.out.println("\nYou will be redirected to Home Page");
+        promptEnterKey();
 
     }
 
     public static void manageFeedbackPage() {
 
-        ArrayList<Feedback> feedbackOfThisSeller = new ArrayList<>();
-        for (int i = 0; i < feedbackDataBase.size(); i++) {
+        ArrayList<Feedback> feedbackOfThisSeller = feedbackDAO.getListOfFeedbackOfThisSeller(sessionSeller.getSellerID());
 
-            if (feedbackDataBase.get(i).getFeedbackProduct().getProductSellerUsername().equals(sessionSeller)) {
-                feedbackOfThisSeller.add(feedbackDataBase.get(i));
+        if( feedbackOfThisSeller!= null){
+            for (int i = 0; i < feedbackOfThisSeller.size(); i++) {
+                System.out.println(feedbackOfThisSeller.get(i).getFeedbackID() + " " +
+                        feedbackOfThisSeller.get(i).getFeedbackProductID() + " " +
+                        productDAO.getProduct(feedbackOfThisSeller.get(i).getFeedbackProductID()).getProductName() + " " +
+                        feedbackOfThisSeller.get(i).getFeedbackReview() + " " +
+                        feedbackOfThisSeller.get(i).getFeedbackRating() + " " +
+                        feedbackOfThisSeller.get(i).getFeedbackCustomerName() + " " +
+                        feedbackOfThisSeller.get(i).getFeedbackCommentBySeller()
+                );
             }
 
+            //Ask if seller would like to comment for any feedback
+            System.out.println("Would you like to comment for any feedback ?\n1. To comment\n2. To Return");
+            int userChoice = 99;
+            boolean validInput;
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 2) {
+                        System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
+                    validInput = false;
+                    input.nextLine();
+                }
+
+            } while (!validInput);
+
+
+            if (userChoice == 1) {// IF user chose to comment , ask for Feedback ID
+                System.out.print("Please enter Feedback ID that you want to comment:");
+                int feedbackID = input.nextInt();
+                //Get the comment , then set it using the setter function
+                System.out.println("Please enter your comment below : ");
+                String comment = input.nextLine();
+                Feedback feedbackToUpdate = feedbackDAO.getFeedback(feedbackID);
+                feedbackToUpdate.setFeedbackCommentBySeller(comment);
+                feedbackDAO.updateFeedback(feedbackToUpdate);
+            }
+        }else{
+            System.out.println("\nYay , there's no feedback to comment");
+
         }
 
-        for (int i = 0; i < feedbackOfThisSeller.size(); i++) {
-
-            System.out.println(feedbackOfThisSeller.get(i).getFeedbackProduct().getProductName() +
-                    feedbackOfThisSeller.get(i).getFeedbackReview() +
-                    feedbackOfThisSeller.get(i).getFeedbackRating() +
-                    feedbackOfThisSeller.get(i).getFeedbackCustomerName() +
-                    feedbackOfThisSeller.get(i).getFeedbackCommentBySeller()
-            );
-        }
-
-        //Ask if seller would like to comment for any feedback
-        // Options -> 1.Would you like to comment ? 2. Return
-
-
-        // IF user chose to comment , ask for Feedback ID
-        //Get the comment , then set it using the setter function
-
+        System.out.println("\nYou will be redirected to Home Page");
+        promptEnterKey();
 
     }
 
     public static void managePaymentPage() {
 
+        System.out.println("\n########----- P A Y M E N T  P A G E-----########");
 
         System.out.println("Total Profit : RM" + sessionSeller.getSellerProfit() + "\n");
 
         System.out.println("No      Transaction ID        Amount       Date & Time");
 
-        ArrayList <SellerTransaction> listOfSellerTransaction = sellerTransactionDAO.getListOfSellerTransaction(sessionSeller.getSellerUsername());
+        ArrayList<Transaction> listOfTransaction = sessionSeller.getSellerTransaction();
 
-        for (int i = 0; i < listOfSellerTransaction.size(); i++) {
+        if (listOfTransaction!= null){
+            for (int i = 0; i < listOfTransaction.size(); i++) {
 
-            System.out.println((i+1) + "      " +
-                    listOfSellerTransaction.get(i).getSellerTransactionID()  + "      " +
-                    listOfSellerTransaction.get(i).getSellerTransactionAmount()  + "      " +
-                    listOfSellerTransaction.get(i).getSellerTransactionDateTime()
-            );
+                System.out.println((i + 1) + "      " +
+                        listOfTransaction.get(i).getTransactionID() + "      " +
+                        listOfTransaction.get(i).getTransactionAmount() + "      " +
+                        listOfTransaction.get(i).getTransactionDateTime()
+                );
 
 
+            }
+
+        }else{
+            System.out.println("\nNo transactions yet !");
         }
 
-        System.out.println("You will be now redirected to Dashboard Page");
+
+        System.out.println("\n\nYou will be now redirected to Dashboard Page");
         promptEnterKey();
 
 
@@ -1603,6 +1836,7 @@ public class Main {
 
         boolean validInput;
 
+
         System.out.println("########----- P R O F I L E   P A G E-----########");
         System.out.println("1.Change Username");
         System.out.println("2.Change Email");
@@ -1611,46 +1845,43 @@ public class Main {
         System.out.println("5.Change Phone Number");
         System.out.println("6.Change Bank Account");
         System.out.println("Your option : ");
-        int userChoice= input.nextInt();         // Get the choice
+        int userChoice = 0;         // Get the choice
 
 
-        do{
+        do {
             try {
                 System.out.print("\nYour option : ");
                 userChoice = input.nextInt();
-                validInput=true;
+                validInput = true;
 
-                if(userChoice < 1 || userChoice  > 6 ){
+                if (userChoice < 1 || userChoice > 6) {
                     System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
                     validInput = false;
-                    input.nextLine();
                 }
-            }
-            catch (InputMismatchException ex) {
+            } catch (InputMismatchException ex) {
                 System.out.println("You have entered an invalid format of input");
-                validInput=false;
+                validInput = false;
                 input.nextLine();
             }
 
-        }while(!validInput);
-
+        } while (!validInput);
 
 
         switch (userChoice) {
             case 1:
                 System.out.println("Your new username : ");
                 String username = input.next();
-                sessionSeller.setSellerUsername(username);
+                sessionSeller.setUserName(username);
                 break;
             case 2:
                 System.out.println("Your new Email : ");
                 String email = input.next();
-                sessionSeller.setSellerEmail(email);
+                sessionSeller.setEmail(email);
                 break;
             case 3:
                 System.out.println("Your new Password : ");
                 String password = input.next();
-                sessionSeller.setSellerPassword(password);
+                sessionSeller.setPassword(password);
                 break;
             case 4:
                 System.out.println("Your new Address : ");
@@ -1675,21 +1906,19 @@ public class Main {
 
     public static void manageSellerNotificationPage() {
 
-        boolean validInput;
 
-        System.out.println("########----- N O T I F I C A T I O N   P A G E-----########");
+        System.out.println("\n########----- N O T I F I C A T I O N   P A G E-----########");
 
-        ArrayList<Notification> listOfNotificationOfSeller = notificationDAO.getListOfNotificationOfSeller(sessionSeller.getSellerUsername());
+        ArrayList<Notification> listOfNotificationOfSeller = notificationDAO.getListOfNotificationOfSeller(sessionSeller.getSellerID());
 
-        if( listOfNotificationOfSeller != null){
+        if (listOfNotificationOfSeller != null) {
 
-            for (int i = 0; i <listOfNotificationOfSeller.size(); i++) {
-                System.out.println(i+1+".   "+"New Order("+listOfNotificationOfSeller.get(i).getNotificationOrderId()+") arrived for "+listOfNotificationOfSeller.get(i).getNotificationProductName()+" from "+listOfNotificationOfSeller.get(i).getNotificationCustomerName());
-                listOfNotificationOfSeller.get(i).setNotificationReadOrNot(true);
-                notificationDAO.updateNotification(listOfNotificationOfSeller.get(i));
+            for (int i = 0; i < listOfNotificationOfSeller.size(); i++) {
+                System.out.println(i + 1 + ".   " + "New Order(" + listOfNotificationOfSeller.get(i).getNotificationOrderId() + ") arrived for " + listOfNotificationOfSeller.get(i).getNotificationProductName() + " from " + listOfNotificationOfSeller.get(i).getNotificationCustomerName());
+                notificationDAO.deleteNotification(listOfNotificationOfSeller.get(i).getNotificationID());
             }
-        }else{
-            System.out.println("Yay there's no notification to display !");
+        } else {
+            System.out.println("\nYay there's no notification to display !");
 
         }
 
@@ -1699,14 +1928,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        sessionCustomer= new Customer();
-        sessionCustomer.setUsername("juju");
-        cartPage();
-        sellerDashboardPage();
 
-        //mainMenuPage();
-        //productDisplayPage("iii")     ;
-        //ADD SOME TEST DATA TO THE DATABASE
+        mainMenuPage();
 
 
     }

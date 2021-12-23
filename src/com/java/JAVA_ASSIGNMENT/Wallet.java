@@ -2,21 +2,36 @@ package com.java.JAVA_ASSIGNMENT;
 
 import java.util.ArrayList;
 
+import static com.java.JAVA_ASSIGNMENT.Main.sessionCustomer;
+import static com.java.JAVA_ASSIGNMENT.Main.transactionDAO;
+
 public class Wallet {
 
+    int walletID ;
     double walletBalance;
-    ArrayList<WalletTransaction> userWalletTransaction ;
+    ArrayList<Transaction> walletTransaction ;
 
     public Wallet() {
         this.walletBalance = 0.0;
-        this.userWalletTransaction = new ArrayList<>();
+        this.walletTransaction = new ArrayList<>();
     }
 
-    //TODO : Note to Thaya - Later think of how you can retrive the initial data. Can be either file or database.
-//    public Wallet(String username) { // Ignore this
-//        this.walletBalance = 88.00; // retrieve from database or file
-//        userWalletTransaction = null; // // retrieve from database or file
-//    }
+    public int getWalletID() {
+        return walletID;
+    }
+
+    public void setWalletID(int walletID) {
+        this.walletID = walletID;
+    }
+
+    public void setWalletTransaction(ArrayList<Transaction> walletTransaction) {
+        this.walletTransaction = walletTransaction;
+    }
+
+    public ArrayList<Transaction> getWalletTransaction() {
+
+        return this.walletTransaction;
+    }
 
 
     public double getWalletBalance() {
@@ -25,14 +40,6 @@ public class Wallet {
 
     public void setWalletBalance(double walletBalance) {
         this.walletBalance = walletBalance;
-    }
-
-    public ArrayList<com.java.JAVA_ASSIGNMENT.WalletTransaction> getWalletTransaction() {
-        return userWalletTransaction;
-    }
-
-    public void addWalletTransaction(WalletTransaction addWalletTransaction) {
-        userWalletTransaction.add(addWalletTransaction);
     }
 
 

@@ -2,7 +2,7 @@ package com.java.JAVA_ASSIGNMENT;
 
 public class User {
 
-    private String username;
+    private String userName;
     private String email;
     private String password;
     private String firstName;
@@ -24,12 +24,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {

@@ -7,10 +7,6 @@ import java.sql.SQLException;
 public class DatabaseHandler {
     public static void main(String[] args) {
 
-
-
-
-
         String url ="jdbc:mysql://localhost:3306/sakila";
         String username ="root";
         String password = "admin";
@@ -18,7 +14,8 @@ public class DatabaseHandler {
         Connection connection = null;
         try {
             connection= DriverManager.getConnection(url, username, password);
-            String sql ="SELECT table donkey"; //querying
+            String sql ="INSERT INTO `customer` (`customerID`, ) VALUES (NULL, 'thaya123', 'thayananthkumaresan@gmail.com', 'thaya123', 'thayananth', 'kumaresan', 'thaya123', 'thaya123');"; //querying
+
             //execute(sql)
             // it might return some dage
             System.out.println("Yes , fine");
@@ -36,4 +33,8 @@ public class DatabaseHandler {
         }
 
     }
+
+
+
+
 }

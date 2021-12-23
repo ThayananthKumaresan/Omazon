@@ -4,15 +4,14 @@ import java.util.ArrayList;
 
 public class Seller  extends User{
 
+    private int sellerID;
     private double sellerProfit;
-    public String sellerUsername;
-    public String sellerEmail;
     public String sellerPhoneNumber;
     public String sellerBankAccount;
     public String sellerAddress;
-    public String sellerPassword;
     public String sellerIC;
     public String sellerBusinessRegistrationNumber;
+    public ArrayList<Transaction> sellerTransactions;
 
 
     // For user to login
@@ -24,19 +23,33 @@ public class Seller  extends User{
 
     public Seller() {
 
+    }
 
+    public Seller(int sellerID, double sellerProfit, String sellerPhoneNumber, String sellerBankAccount, String sellerAddress, String sellerIC, String sellerBusinessRegistrationNumber) {
+        this.sellerID = sellerID;
+        this.sellerProfit = sellerProfit;
+        this.sellerPhoneNumber = sellerPhoneNumber;
+        this.sellerBankAccount = sellerBankAccount;
+        this.sellerAddress = sellerAddress;
+        this.sellerIC = sellerIC;
+        this.sellerBusinessRegistrationNumber = sellerBusinessRegistrationNumber;
     }
 
     public Seller(double sellerProfit, String sellerUsername, String sellerEmail, String sellerPhoneNumber, String sellerBankAccount, String sellerAddress, String sellerPassword, String sellerIC, String sellerBusinessRegistrationNumber) {
         this.sellerProfit = sellerProfit;
-        this.sellerUsername = sellerUsername;
-        this.sellerEmail = sellerEmail;
         this.sellerPhoneNumber = sellerPhoneNumber;
         this.sellerBankAccount = sellerBankAccount;
         this.sellerAddress = sellerAddress;
-        this.sellerPassword = sellerPassword;
         this.sellerIC = sellerIC;
         this.sellerBusinessRegistrationNumber = sellerBusinessRegistrationNumber;
+    }
+
+    public int getSellerID() {
+        return sellerID;
+    }
+
+    public void setSellerID(int sellerID) {
+        this.sellerID = sellerID;
     }
 
     public double getSellerProfit() {
@@ -45,22 +58,6 @@ public class Seller  extends User{
 
     public void setSellerProfit(double sellerProfit) {
         this.sellerProfit = sellerProfit;
-    }
-
-    public String getSellerUsername() {
-        return sellerUsername;
-    }
-
-    public void setSellerUsername(String sellerUsername) {
-        this.sellerUsername = sellerUsername;
-    }
-
-    public String getSellerEmail() {
-        return sellerEmail;
-    }
-
-    public void setSellerEmail(String sellerEmail) {
-        this.sellerEmail = sellerEmail;
     }
 
     public String getSellerPhoneNumber() {
@@ -87,14 +84,6 @@ public class Seller  extends User{
         this.sellerAddress = sellerAddress;
     }
 
-    public String getSellerPassword() {
-        return sellerPassword;
-    }
-
-    public void setSellerPassword(String sellerPassword) {
-        this.sellerPassword = sellerPassword;
-    }
-
     public String getSellerIC() {
         return sellerIC;
     }
@@ -109,5 +98,13 @@ public class Seller  extends User{
 
     public void setSellerBusinessRegistrationNumber(String sellerBusinessRegistrationNumber) {
         this.sellerBusinessRegistrationNumber = sellerBusinessRegistrationNumber;
+    }
+
+    public ArrayList<Transaction> getSellerTransaction() {
+        return this.sellerTransactions;
+    }
+
+    public void setSellerTransaction(ArrayList<Transaction> sellerTransactions) {
+        this.sellerTransactions = sellerTransactions;
     }
 }

@@ -1,35 +1,41 @@
 package com.java.JAVA_ASSIGNMENT;
 
-import java.util.ArrayList;
-
 public class Feedback {
 
-
-    Product feedbackProduct;
+    int feedbackID;
+    int feedbackProductID;
     String feedbackReview;
     int feedbackRating;
     String feedbackCommentBySeller;
-    String feedbackCustomerName;
+    String feedbackCustomerUserName;
 
 
     public Feedback() {
     }
 
-    public Feedback(Product feedbackProduct, String feedbackReview, String feedbackCommentBySeller, String feedbackCustomerName,int feedbackRating) {
-        this.feedbackProduct = feedbackProduct;
+    public Feedback(int feedbackProductID, String feedbackReview, String feedbackCommentBySeller, String feedbackCustomerUserName, int feedbackRating) {
+        this.feedbackProductID = feedbackProductID;
         this.feedbackReview = feedbackReview;
         this.feedbackCommentBySeller = feedbackCommentBySeller;
-        this.feedbackCustomerName = feedbackCustomerName;
+        this.feedbackCustomerUserName = feedbackCustomerUserName;
         this.feedbackRating = feedbackRating;
 
     }
 
-    public Product getFeedbackProduct() {
-        return feedbackProduct;
+    public int getFeedbackID() {
+        return feedbackID;
     }
 
-    public void setFeedbackProduct(Product feedbackProduct) {
-        this.feedbackProduct = feedbackProduct;
+    public void setFeedbackID(int feedbackID) {
+        this.feedbackID = feedbackID;
+    }
+
+    public int getFeedbackProductID() {
+        return feedbackProductID;
+    }
+
+    public void setFeedbackProductID(int feedbackProductID) {
+        this.feedbackProductID = feedbackProductID;
     }
 
     public String getFeedbackReview() {
@@ -49,11 +55,11 @@ public class Feedback {
     }
 
     public String getFeedbackCustomerName() {
-        return feedbackCustomerName;
+        return feedbackCustomerUserName;
     }
 
-    public void setFeedbackCustomerName(String feedbackCustomerName) {
-        this.feedbackCustomerName = feedbackCustomerName;
+    public void setFeedbackCustomerName(String feedbackCustomerUserName) {
+        this.feedbackCustomerUserName = feedbackCustomerUserName;
     }
 
     public int getFeedbackRating() {

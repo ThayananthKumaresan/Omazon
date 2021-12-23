@@ -2,42 +2,46 @@ package com.java.JAVA_ASSIGNMENT;
 
 public class Notification {
 
-   boolean notificationReadOrNot;
-   String notificationSellerUsername;
-    String notificationOrderId;
+    int notificationID ;
+    int notificationSellerID;
+    int notificationOrderId;
     String notificationCustomerName;
     String notificationProductName;
 
-    public Notification(boolean notificationReadOrNot,String notificationSellerUsername, String notificationOrderId, String notificationCustomerName, String notificationProductName) {
 
-        this.notificationReadOrNot = notificationReadOrNot;
-        this.notificationSellerUsername = notificationSellerUsername;
+    public Notification(int notificationSellerID, int notificationOrderId, String notificationCustomerName, String notificationProductName) {
+
+        this.notificationSellerID = notificationSellerID;
         this.notificationOrderId = notificationOrderId;
         this.notificationCustomerName = notificationCustomerName;
         this.notificationProductName = notificationProductName;
     }
 
-    public boolean isNotificationReadOrNot() {
-        return notificationReadOrNot;
+    public Notification() {
     }
 
-    public void setNotificationReadOrNot(boolean notificationReadOrNot) {
-        this.notificationReadOrNot = notificationReadOrNot;
+
+    public int getNotificationID() {
+        return notificationID;
     }
 
-    public String getNotificationSellerUsername() {
-        return notificationSellerUsername;
+    public void setNotificationID(int notificationID) {
+        this.notificationID = notificationID;
     }
 
-    public void setNotificationSellerUsername(String notificationSellerUsername) {
-        this.notificationSellerUsername = notificationSellerUsername;
+    public int getNotificationSellerID() {
+        return notificationSellerID;
     }
 
-    public String getNotificationOrderId() {
+    public void setNotificationSellerID(int notificationSellerID) {
+        this.notificationSellerID = notificationSellerID;
+    }
+
+    public int getNotificationOrderId() {
         return notificationOrderId;
     }
 
-    public void setNotificationOrderId(String notificationOrderId) {
+    public void setNotificationOrderId(int notificationOrderId) {
         this.notificationOrderId = notificationOrderId;
     }
 

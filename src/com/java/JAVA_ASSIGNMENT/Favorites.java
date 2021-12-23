@@ -1,34 +1,44 @@
 package com.java.JAVA_ASSIGNMENT;
 
 
-import java.util.ArrayList;
-
 public class Favorites {
 
-    Product favoritesProduct;
-    String favoritesUser;
+    int favoriteID;
+    int favoritesProductID;
+    int favoritesCustomerID;
+
+
+    public Favorites(int favoritesProductID, int favoritesCustomerID) {
+        this.favoritesProductID = favoritesProductID;
+        this.favoritesCustomerID = favoritesCustomerID;
+    }
 
     public Favorites() {
+        this.favoritesProductID = 0;
+        this.favoritesCustomerID = 0;
     }
 
-    public Favorites(Product favoritesProduct, String favoritesUser) {
-        this.favoritesProduct = favoritesProduct;
-        this.favoritesUser = favoritesUser;
+    public int getFavoritesProductID() {
+        return favoritesProductID;
     }
 
-    public Product getFavoritesProduct() {
-        return favoritesProduct;
+    public void setFavoritesProductID(int favoritesProductID) {
+        this.favoritesProductID = favoritesProductID;
     }
 
-    public void setFavoritesProduct(Product favoritesProduct) {
-        this.favoritesProduct = favoritesProduct;
+    public int getFavoritesCustomerID() {
+        return favoritesCustomerID;
     }
 
-    public String getFavoritesUser() {
-        return favoritesUser;
+    public void setFavoritesCustomerID(int favoritesCustomerID) {
+        this.favoritesCustomerID = favoritesCustomerID;
     }
 
-    public void setFavoritesUser(String favoritesUser) {
-        this.favoritesUser = favoritesUser;
+    public int getFavoriteID() {
+        return favoriteID;
+    }
+
+    public void setFavoriteID(int favoriteID) {
+        this.favoriteID = favoriteID;
     }
 }

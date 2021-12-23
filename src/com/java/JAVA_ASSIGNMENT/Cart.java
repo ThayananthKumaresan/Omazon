@@ -1,28 +1,42 @@
 package com.java.JAVA_ASSIGNMENT;
 
-import java.util.ArrayList;
-
 public class Cart {
 
-    String cartProductID;
+    int cartID;
+    int cartProductID;
+    int cartCustomerID;
     int cartQuantity;
-    String cartUser;
-
 
     public Cart() {
     }
 
-    public Cart(String cartProductID, int cartQuantity, String cartUser) {
+    public Cart(int cartProductID, int cartQuantity, int cartCustomerID) {
         this.cartProductID = cartProductID;
         this.cartQuantity = cartQuantity;
-        this.cartUser = cartUser;
+        this.cartCustomerID = cartCustomerID;
     }
 
-    public String getCartProductID() {
+    public int getCartID() {
+        return cartID;
+    }
+
+    public void setCartID(int cartID) {
+        this.cartID = cartID;
+    }
+
+    public int getCartCustomerID() {
+        return cartCustomerID;
+    }
+
+    public void setCartCustomerID(int cartCustomerID) {
+        this.cartCustomerID = cartCustomerID;
+    }
+
+    public int getCartProductID() {
         return cartProductID;
     }
 
-    public void setCartProductID(String cartProduct) {
+    public void setCartProductID(int cartProductID) {
         this.cartProductID = cartProductID;
     }
 
@@ -34,11 +48,4 @@ public class Cart {
         this.cartQuantity = cartQuantity;
     }
 
-    public String getCartUser() {
-        return cartUser;
-    }
-
-    public void setCartUser(String cartUser) {
-        this.cartUser = cartUser;
-    }
 }

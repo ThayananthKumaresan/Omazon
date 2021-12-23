@@ -8,7 +8,7 @@ public interface FavoritesDao {
     public void updateFavorites(Favorites favorite);
     public void deleteFavorites(Favorites favorite);
     public void addFavorites(Favorites favorite);
-    public ArrayList<Favorites> getListOfFavorites(String customerUsername);
+    public ArrayList<Favorites> getListOfFavorites(int customerID);
 
 
 

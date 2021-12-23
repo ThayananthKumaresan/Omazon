@@ -1,29 +1,26 @@
 package com.java.JAVA_ASSIGNMENT;
 
-import java.util.ArrayList;
+public class Transaction {
 
-public class WalletTransaction {
-
-    String transactionID;
+    int transactionID;
     double transactionAmount;
     String transactionDateTime;
-    String customerName;
+    int userID;
 
-    public WalletTransaction() {
-    }
-
-    public WalletTransaction(String transactionID, double transactionAmount, String transactionDateTime, String customerName) {
-        this.transactionID = transactionID;
+    public Transaction(double transactionAmount, String transactionDateTime, int userID) {
         this.transactionAmount = transactionAmount;
         this.transactionDateTime = transactionDateTime;
-        this.customerName = customerName;
+        this.userID = userID;
     }
 
-    public String getTransactionID() {
+    public Transaction() {
+    }
+
+    public int getTransactionID() {
         return transactionID;
     }
 
-    public void setTransactionID(String transactionID) {
+    public void setTransactionID(int transactionID) {
         this.transactionID = transactionID;
     }
 
@@ -40,6 +37,15 @@ public class WalletTransaction {
     }
 
     public void setTransactionDateTime(String transactionDateTime) {
+
         this.transactionDateTime = transactionDateTime;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 }

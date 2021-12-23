@@ -6,15 +6,15 @@ public class Customer extends User{
 
     private String paymentPassword;
     private String address ;
+    private int customerID;
     private Wallet userWallet;
-    boolean firstTimeLogin ;
 
 // For new user when register
     public Customer( ) {
+        this.customerID = 0;
         this.paymentPassword = "";
         this.address =  "";
         this.userWallet =  new Wallet();
-        this.firstTimeLogin = true;
     }
 
     // For user to login
@@ -24,12 +24,12 @@ public class Customer extends User{
     }
 
 
-    public Customer( String paymentPassword, String address ,Wallet userWallet , boolean firstTimeLogin) {
-        this.paymentPassword = paymentPassword;
-        this.address = address;
-        this.userWallet = userWallet;
-        this.firstTimeLogin = firstTimeLogin;
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
 
+    public int getCustomerID() {
+        return customerID;
     }
 
     public Wallet getUserWallet() {

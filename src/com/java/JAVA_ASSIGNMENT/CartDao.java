@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 public interface CartDao {
 
-    public ArrayList<Cart> getCart(String cartUser);
+    public ArrayList<Cart> getListOfCartOfThisCustomer(int cartCustomerID);
     public void updateCart(Cart cart);
-    public void deleteCart(Cart cart);
+    public void deleteCart(int cartID);
     public void addCart(Cart cart);
-
 
 
 }

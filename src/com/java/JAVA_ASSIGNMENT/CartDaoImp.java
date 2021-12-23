@@ -1,28 +1,63 @@
 package com.java.JAVA_ASSIGNMENT;
 
+import java.sql.*;
 import java.util.ArrayList;
 
-import static com.java.JAVA_ASSIGNMENT.Main.sessionCustomer;
 
 public class CartDaoImp implements CartDao{
 
-    public static ArrayList<Cart> userCartDatabase = new ArrayList<>();
+    private static final String FIND_LIST_OF_CART_BY_CUSTOMER = "SELECT * FROM cart WHERE cartCustomerID=?";
+    private static final String INSERT = "INSERT INTO cart (cartCustomerID ,cartProductID , cartQuantity) VALUES (?,?,?)";
+    private static final String INSERT_WHEN_PRODUCT_IS_PRESENT = "UPDATE cart SET  cartQuantity=? WHERE cartCustomerID=? and cartProductID=?";
+    private static final String DELETE = "DELETE FROM cart WHERE cartID=?";
+    private static final String FIND_PRESENCE_OF_PRODUCT = "SELECT * FROM cart WHERE cartCustomerID=? and cartProductID=?";
 
 
     @Override
-    public  ArrayList<Cart> getCart(String cartUser) {
+    public  ArrayList<Cart> getListOfCartOfThisCustomer(int cartCustomerID) {
 
-        ArrayList<Cart> cartDetailsOfThisUser = new ArrayList<>();
-        for (Cart cart : userCartDatabase) {
-            if (cart.getCartUser().equals(sessionCustomer.getUsername())) {
-                cartDetailsOfThisUser.add(cart);
+        ArrayList<Cart> listOfCartOfThisCustomer = new ArrayList<>();
+
+        ResultSet rs = null;
+        Connection conn;
+        PreparedStatement stmnt;
+        Cart cart = new Cart();
+
+        try {
+
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_LIST_OF_CART_BY_CUSTOMER);
+
+            stmnt.setInt(1, cartCustomerID);
+            rs = stmnt.executeQuery(); // Executing the sql query
+
+            while (rs.next()) {
+                cart.setCartCustomerID(rs.getInt("cartCustomerID"));
+                cart.setCartID(rs.getInt("cartID"));
+                cart.setCartQuantity(rs.getInt("cartQuantity"));
+                cart.setCartProductID(rs.getInt("cartProductID"));
+
+                listOfCartOfThisCustomer.add(cart);
+            }
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
         }
-        if(cartDetailsOfThisUser.size()==0){
+
+
+
+        if(listOfCartOfThisCustomer.size()==0){
             return null;
 
         }else {
-            return cartDetailsOfThisUser;
+            return listOfCartOfThisCustomer;
         }
     }
 
@@ -32,16 +67,96 @@ public class CartDaoImp implements CartDao{
     }
 
     @Override
-    public void deleteCart(Cart cart) {
+    public void deleteCart(int cartID) {
 
-        userCartDatabase.remove(cart);
+        PreparedStatement stmnt = null;
+        Connection conn = null;
+
+        try {
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(DELETE);
+            stmnt.setInt(1, cartID);
+
+            stmnt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (stmnt != null) stmnt.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
 
     }
 
     @Override
     public void addCart(Cart cart) {
 
-        userCartDatabase.add(cart);
+        boolean foundProductFlag = false;
+
+        ResultSet rs = null;
+        Connection conn;
+        PreparedStatement stmnt;
+
+        try {
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_PRESENCE_OF_PRODUCT);
+
+            stmnt.setInt(1, cart.getCartCustomerID());
+            stmnt.setInt(2, cart.getCartProductID());
+            rs = stmnt.executeQuery(); // Executing the sql query
+
+            while (rs.next()) {
+                foundProductFlag= true;
+            }
+
+            if(foundProductFlag){
+                stmnt = conn.prepareStatement(INSERT_WHEN_PRODUCT_IS_PRESENT);
+
+                stmnt.setInt(1, cart.getCartQuantity());
+                stmnt.setInt(2, cart.getCartCustomerID());
+                stmnt.setInt(3, cart.getCartProductID());
+
+                stmnt.executeUpdate();
+
+            }else{
+
+                stmnt = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+
+                stmnt.setInt(1, cart.getCartCustomerID());
+                stmnt.setInt(2, cart.getCartProductID());
+                stmnt.setInt(3, cart.getCartQuantity());
+
+                stmnt.executeUpdate(); // Executing the sql query
+
+                rs = stmnt.getGeneratedKeys();
+
+                if (rs.next()) {
+                    cart.setCartID(rs.getInt(1)); //Setting the product ID
+                }
+            }
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
     }
+
+
 }

@@ -5,20 +5,19 @@ import java.util.ArrayList;
 public class Product {
 
 
-    private String productID;
+    private int productID;
     private String productName;
     private String productDescription;
     private String productCategory;
-    private String productSellerUsername;
     private double productPrice;
     private int productStockCount;
     private int productSalesCount;
-
+    private int productSellerID;
 
     public Product() {
     }
 
-    public Product(String productID,String productName, String productDescription, double productPrice) {
+    public Product(int productID,String productName, String productDescription, double productPrice) {
         this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -26,7 +25,7 @@ public class Product {
 
     }
 
-    public Product(String productID,String productName, String productDescription, String productCategory ,String productSellerUsername, double productPrice, int productStockCount, int productSalesCount) {
+    public Product(int productSellerID, int productID,String productName, String productDescription, String productCategory ,double productPrice, int productStockCount, int productSalesCount) {
         this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -34,15 +33,15 @@ public class Product {
         this.productStockCount = productStockCount;
         this.productSalesCount = productSalesCount;
         this.productCategory = productCategory;
-        this.productSellerUsername = productSellerUsername;
+        this.productSellerID = productSellerID;
 
     }
 
-    public String getProductID() {
+    public int getProductID() {
         return productID;
     }
 
-    public void setProductID(String productID) {
+    public void setProductID(int productID) {
         this.productID = productID;
     }
 
@@ -94,13 +93,16 @@ public class Product {
         this.productSalesCount = productSalesCount;
     }
 
-    public String getProductSellerUsername() {
-        return productSellerUsername;
+    public int getProductSellerID() {
+        return productSellerID;
     }
 
-    public void setProductSellerUsername(String productSellerUsername) {
-        this.productSellerUsername = productSellerUsername;
+    public void setProductSellerID(int productSellerID) {
+        this.productSellerID = productSellerID;
     }
+
+
+
 }
 
 
