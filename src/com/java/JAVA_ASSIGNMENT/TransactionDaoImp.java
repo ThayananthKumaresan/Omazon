@@ -49,7 +49,7 @@ public class TransactionDaoImp implements TransactionDao {
     }
 
     @Override
-    public ArrayList<Transaction>  getListOfSellerTransactionOfThisSeller(int sellerID) {
+    public ArrayList<Transaction> getListOfSellerTransaction(int sellerID) {
 
         ArrayList<Transaction> listOfTransactionOfThisSeller = new ArrayList<>();
 
@@ -96,7 +96,7 @@ public class TransactionDaoImp implements TransactionDao {
     }
 
     @Override
-    public ArrayList<Transaction> getListOfSellerTransactionOfThisCustomer(int customerID) {
+    public ArrayList<Transaction> getListOfCustomerTransaction(int customerID) {
         ArrayList<Transaction> listOfTransactionOfThisCustomer = new ArrayList<>();
 
         ResultSet rs = null;

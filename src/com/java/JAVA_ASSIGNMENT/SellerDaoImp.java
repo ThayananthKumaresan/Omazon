@@ -1,7 +1,6 @@
 package com.java.JAVA_ASSIGNMENT;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 import static com.java.JAVA_ASSIGNMENT.Main.sessionSeller;
 import static com.java.JAVA_ASSIGNMENT.Main.transactionDAO;
@@ -15,10 +14,7 @@ public class SellerDaoImp implements SellerDao {
             "sellerPhoneNumber, sellerBankAccount, sellerAddress, " +
             "sellerIC, sellerBusinessRegistrationNumber, sellerProfit ) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)";
-    private static final String UPDATE_SELLER_PROFILE = "UPDATE seller " +
-            "SET userName=?, email=?, password=?, firstName=?, lastName=?, sellerPhoneNumber=?, " +
-            "sellerBankAccount=?, sellerAddress=?, sellerIC=?, sellerBusinessRegistrationNumber=?" +
-            "WHERE sellerID=?";
+    private static final String UPDATE_SELLER_PROFILE = "UPDATE seller SET userName=?, email=?, password=?, firstName=?, lastName=?, sellerPhoneNumber=?, sellerBankAccount=?, sellerAddress=?, sellerIC=?, sellerBusinessRegistrationNumber=? WHERE sellerID=?";
     private static final String UPDATE_SELLER_PROFIT = "UPDATE seller " +
             "SET  sellerProfit=?" +
             "WHERE sellerID=?";
@@ -70,6 +66,7 @@ public class SellerDaoImp implements SellerDao {
             conn = MySQLJDBCUtil.getConnection();
             stmnt = conn.prepareStatement(UPDATE_SELLER_PROFILE);
 
+            // ADDING SHOP NAME IN DB AND HERE
             stmnt.setString(1, seller.getUserName());
             stmnt.setString(2, seller.getEmail());
             stmnt.setString(3, seller.getPassword());
@@ -80,7 +77,8 @@ public class SellerDaoImp implements SellerDao {
             stmnt.setString(8, seller.getSellerAddress());
             stmnt.setString(9, seller.getSellerIC());
             stmnt.setString(10, seller.getSellerBusinessRegistrationNumber());
-            stmnt.setInt(11, seller.getSellerID());
+            stmnt.setString(11, seller.getSellerBusinessRegistrationNumber());
+            stmnt.setInt(12, seller.getSellerID());
 
 
 
@@ -168,7 +166,6 @@ public class SellerDaoImp implements SellerDao {
     public boolean loginSeller(Seller seller) {
         boolean loginSuccessFlag = false;
 
-
         ResultSet rs = null;
         PreparedStatement stmnt = null;
         Connection conn = null;
@@ -181,7 +178,6 @@ public class SellerDaoImp implements SellerDao {
 
             rs = stmnt.executeQuery();
             if (rs.next()) {
-
                 sessionSeller.setSellerID(rs.getInt("sellerID"));
                 sessionSeller.setUserName(rs.getString("userName"));
                 sessionSeller.setEmail(rs.getString("email"));
@@ -192,6 +188,7 @@ public class SellerDaoImp implements SellerDao {
                 sessionSeller.setSellerBankAccount(rs.getString("sellerBankAccount"));
                 sessionSeller.setSellerAddress(rs.getString("sellerAddress"));
                 sessionSeller.setSellerIC(rs.getString("sellerIC"));
+                sessionSeller.setSellerBusinessRegistrationNumber(rs.getString("sellerBusinessRegistrationNumber"));
                 sessionSeller.setSellerProfit(rs.getDouble("sellerProfit"));
 
                 System.out.println("Successful login , welcome dear " + sessionSeller.getFirstName() + " " + sessionSeller.getLastName());
@@ -223,12 +220,8 @@ public class SellerDaoImp implements SellerDao {
 
         }
 
-        sessionSeller.setSellerTransaction(transactionDAO.getListOfSellerTransactionOfThisSeller(sessionSeller.getSellerID()));
-
+        sessionSeller.setSellerTransactions(transactionDAO.getListOfSellerTransaction(sessionSeller.getSellerID()));
         return loginSuccessFlag;
-
-
-
 
     }
 

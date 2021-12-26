@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class NotificationDaoImp implements NotificationDao{
 
     public static ArrayList<Notification> sellerNotificationDatabase = new ArrayList<>();
-    private static final String INSERT = "INSERT INTO notification (notificationSellerID ,notificationOrderId,notificationCustomerName,notificationProductName) VALUES (?,?,?,?)";
+    private static final String INSERT = "INSERT INTO notification (notificationSellerID ,notificationOrderId,notificationCustomerID,notificationProductID) VALUES (?,?,?,?)";
     private static final String FIND_LIST_OF_NOTIFICATION_BY_SELLER = "SELECT * FROM notification WHERE notificationSellerID=?";
     private static final String UPDATE = "UPDATE notification SET notificationReadOrNot=? WHERE notificationID=?";
     private static final String DELETE = "DELETE FROM notification WHERE notificationID=?";
@@ -54,8 +54,8 @@ public class NotificationDaoImp implements NotificationDao{
 
             stmnt.setInt(1, notification.getNotificationSellerID());
             stmnt.setInt(2, notification.getNotificationOrderId());
-            stmnt.setString(3, notification.getNotificationCustomerName());
-            stmnt.setString(4, notification.getNotificationProductName());
+            stmnt.setInt(3, notification.getNotificationCustomerID());
+            stmnt.setInt(4, notification.getNotificationProductID());
 
             stmnt.executeUpdate(); // Executing the sql query
 
@@ -108,8 +108,8 @@ public class NotificationDaoImp implements NotificationDao{
                 notification.setNotificationSellerID(rs.getInt("notificationSellerID"));
                 notification.setNotificationID(rs.getInt("notificationID"));
                 notification.setNotificationOrderId(rs.getInt("notificationOrderId"));
-                notification.setNotificationProductName(rs.getString("notificationProductName"));
-                notification.setNotificationCustomerName(rs.getString("notificationCustomerName"));
+                notification.setNotificationProductID(rs.getInt("notificationProductID"));
+                notification.setNotificationCustomerID(rs.getInt("notificationCustomerID"));
                 listOfNotificationOfThisSeller.add(notification);
             }
 

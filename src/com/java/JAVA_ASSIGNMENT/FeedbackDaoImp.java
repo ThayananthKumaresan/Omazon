@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class FeedbackDaoImp implements FeedbackDao{
     public static ArrayList<Feedback> feedbackDataBase = new ArrayList<>();
 
-    private static final String FIND_BY_ID = "SELECT * FROM product WHERE feedbackID=?";
+    private static final String FIND_BY_ID = "SELECT * FROM feedback WHERE feedbackID=?";
     private static final String FIND_LIST_OF_FEEDBACK_BY_PRODUCT = "SELECT * FROM feedback WHERE feedbackProductID=?";
     private static final String FIND_LIST_OF_FEEDBACK_BY_SELLER = "SELECT * FROM `feedback` ,`product` " +
             "WHERE feedbackProductID=product.productID and product.productSellerID=?";
     private static final String FIND_LIST_OF_RATING_OF_THIS_PRODUCT = "SELECT feedbackRating FROM feedback WHERE feedbackProductID=?";
     private static final String INSERT = "INSERT INTO feedback (feedbackProductID , " +
-            "feedbackRating, feedbackReview, feedbackCommentBySeller,feedbackCustomerUserName) VALUES (?,?,?,?,?)";
+            "feedbackRating, feedbackReview, feedbackCommentBySeller,feedbackCustomerID) VALUES (?,?,?,?,?)";
     private static final String UPDATE_FEEDBACK = "UPDATE feedback SET feedbackCommentBySeller=? WHERE feedbackID=?";
 
     @Override
@@ -34,11 +34,13 @@ public class FeedbackDaoImp implements FeedbackDao{
             rs = stmnt.executeQuery(); // Executing the sql query
 
             while (rs.next()) {
+
+                feedback.setFeedbackID(rs.getInt("feedbackID"));
                 feedback.setFeedbackProductID(rs.getInt("feedbackProductID"));
                 feedback.setFeedbackRating(rs.getInt("feedbackRating"));
                 feedback.setFeedbackReview(rs.getString("feedbackReview"));
                 feedback.setFeedbackCommentBySeller(rs.getString("feedbackCommentBySeller"));
-                feedback.setFeedbackCustomerName(rs.getString("feedbackCustomerName"));
+                feedback.setFeedbackCustomerID(rs.getInt("feedbackCustomerID"));
                 listOfFeedback.add(feedback);
             }
 
@@ -79,11 +81,12 @@ public class FeedbackDaoImp implements FeedbackDao{
             rs = stmnt.executeQuery(); // Executing the sql query
 
             while (rs.next()) {
+                feedback.setFeedbackID(rs.getInt("feedbackID"));
                 feedback.setFeedbackProductID(rs.getInt("feedbackProductID"));
                 feedback.setFeedbackRating(rs.getInt("feedbackRating"));
                 feedback.setFeedbackReview(rs.getString("feedbackReview"));
                 feedback.setFeedbackCommentBySeller(rs.getString("feedbackCommentBySeller"));
-                feedback.setFeedbackCustomerName(rs.getString("feedbackCustomerName"));
+                feedback.setFeedbackCustomerID(rs.getInt("feedbackCustomerID"));
                 listOfFeedback.add(feedback);
             }
 
@@ -165,11 +168,12 @@ public class FeedbackDaoImp implements FeedbackDao{
             conn = MySQLJDBCUtil.getConnection();
             stmnt = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
 
+
             stmnt.setInt(1, feedback.getFeedbackProductID());
-            stmnt.setString(2, feedback.getFeedbackReview());
-            stmnt.setString(3, feedback.getFeedbackCustomerName());
+            stmnt.setInt(2, feedback.getFeedbackRating());
+            stmnt.setString(3, feedback.getFeedbackReview());
             stmnt.setString(4, feedback.getFeedbackCommentBySeller());
-            stmnt.setInt(5, feedback.getFeedbackRating());
+            stmnt.setInt(5, feedback.getFeedbackCustomerID());
 
             stmnt.executeUpdate(); // Executing the sql query
 
@@ -179,7 +183,6 @@ public class FeedbackDaoImp implements FeedbackDao{
                 feedback.setFeedbackID(rs.getInt(1)); //Setting the product ID
 
             }
-            System.out.println("Successfully add product");
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -241,14 +244,14 @@ public class FeedbackDaoImp implements FeedbackDao{
             rs = stmnt.executeQuery(); // Executing the sql query
 
             while (rs.next()) {
+                feedback.setFeedbackID(rs.getInt("feedbackID"));
                 feedback.setFeedbackProductID(rs.getInt("feedbackProductID"));
                 feedback.setFeedbackRating(rs.getInt("feedbackRating"));
                 feedback.setFeedbackReview(rs.getString("feedbackReview"));
                 feedback.setFeedbackCommentBySeller(rs.getString("feedbackCommentBySeller"));
-                feedback.setFeedbackCustomerName(rs.getString("feedbackCustomerName"));
+                feedback.setFeedbackCustomerID(rs.getInt("feedbackCustomerID"));
 
             }
-
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

@@ -5,16 +5,16 @@ public class Notification {
     int notificationID ;
     int notificationSellerID;
     int notificationOrderId;
-    String notificationCustomerName;
-    String notificationProductName;
+    int notificationCustomerID;
+    int notificationProductID;
 
 
-    public Notification(int notificationSellerID, int notificationOrderId, String notificationCustomerName, String notificationProductName) {
+    public Notification(int notificationSellerID, int notificationOrderId, int notificationCustomerID, int notificationProductID) {
 
         this.notificationSellerID = notificationSellerID;
         this.notificationOrderId = notificationOrderId;
-        this.notificationCustomerName = notificationCustomerName;
-        this.notificationProductName = notificationProductName;
+        this.notificationCustomerID = notificationCustomerID;
+        this.notificationProductID = notificationProductID;
     }
 
     public Notification() {
@@ -45,19 +45,19 @@ public class Notification {
         this.notificationOrderId = notificationOrderId;
     }
 
-    public String getNotificationCustomerName() {
-        return notificationCustomerName;
+    public int getNotificationCustomerID() {
+        return notificationCustomerID;
     }
 
-    public void setNotificationCustomerName(String notificationCustomerName) {
-        this.notificationCustomerName = notificationCustomerName;
+    public void setNotificationCustomerID(int notificationCustomerID) {
+        this.notificationCustomerID = notificationCustomerID;
     }
 
-    public String getNotificationProductName() {
-        return notificationProductName;
+    public int getNotificationProductID() {
+        return notificationProductID;
     }
 
-    public void setNotificationProductName(String notificationProductName) {
-        this.notificationProductName = notificationProductName;
+    public void setNotificationProductID(int notificationProductID) {
+        this.notificationProductID = notificationProductID;
     }
 }

@@ -44,69 +44,73 @@ static DecimalFormat df = new DecimalFormat("0.00");
         System.out.println("----------------------------------------------------------------------------------");
 
         System.out.println("Welcome digital nomads. We know how important Omazon is in your life to survive this pandemic.");
-        System.out.println("But ... first , tell us who you are ?");
+        System.out.println("But ... first , tell us who you are or press E to exit system");
 
         System.out.println("S. Seller and I'm going to sell great products! ");
         System.out.println("C. Customer and I cant wait to buy ! ");
+        System.out.println("E. Exit system ");
 
-        char userRole = 'n';
+        char userRole ;
         boolean validInput;
         do {  //
-            System.out.print("\nYour are ? : ");
+            System.out.print("\nYour option ? : ");
             userRole = input.next().charAt(0);
 
-            if (userRole == 'S' || userRole == 'C') {
+            if (userRole == 'S' || userRole == 'C'  || userRole == 'E') {
                 validInput = true;
             } else {
-                System.out.print("Oops wrong value, please enter either S or C.");
+                System.out.print("Oops wrong value, please enter either S / C or E.");
                 validInput = false;
             }
         } while (!validInput);
 
 
-        System.out.println("Before showing your shopping ability , please choose to ");
-        System.out.println("1. Login");
-        System.out.println("2. Register");
+        if (userRole == 'S' || userRole == 'C')
+        {
+            System.out.println("Before showing your shopping ability , please choose to ");
+            System.out.println("1. Login");
+            System.out.println("2. Register");
 
-        int userChoice = 0;
-        do {
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput = true;
+            int userChoice = 0;
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
 
-                if (userChoice < 1 || userChoice > 2) {
-                    System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                    if (userChoice < 1 || userChoice > 2) {
+                        System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
                     validInput = false;
                     input.nextLine();
                 }
-            } catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput = false;
-                input.nextLine();
-            }
 
-        } while (!validInput);
+            } while (!validInput);
 
 
-        if (userRole == 'S') {
+            if (userRole == 'S') {
 
-            if (userChoice == 1) {
+                if (userChoice != 1) {
+                    registerPage('S');
+                }
                 loginPage('S');
-            } else {
-                registerPage('S');
-                loginPage('S');
-            }
 
-        } else {
-
-            if (userChoice == 1) {
-                loginPage('C');
             } else {
-                registerPage('C');
+
+                if (userChoice != 1) {
+                    registerPage('C');
+                }
                 loginPage('C');
             }
+
+        }else{
+            exitSystem();
         }
+
 
     }
 
@@ -115,12 +119,12 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
         System.out.println("########----- L O G I N  P A G E-----########");
 
-        String inputEmail = "";
-        String inputPassword = "";
+        String inputEmail;
+        String inputPassword ;
 
 
         // FOR CUSTOMER
-        //1. Get email & password , then create a instance of user and set email and password
+        //1. Get email & password , then create an instance of user and set email and password
         //2. Check if this customer is found in the customerDatabase
         //3. If found then copy to sessionCustomer
         //4. Redirect user to  Home Page
@@ -141,7 +145,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
             homePage();
         } else {
 
-            Seller loginSeller = null;
+            Seller loginSeller ;
             do {
                 System.out.print("Enter your email : ");
                 inputEmail = input.next();
@@ -162,10 +166,10 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
         if (userRole == 'C') {
             System.out.print("Thank you for shopping. You have been logged out. You will be now redirected to Main Menu Page");
-
+            sessionCustomer = null;
         } else {
-
             System.out.print("Thank you for your service. You have been logged out.You will be now redirected to Main Menu Page");
+            sessionSeller = null;
         }
 
         promptEnterKey();
@@ -178,7 +182,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
         System.out.println("########----- R E G I S T R A T I O N  P A G E-----########");
 
-        String inputEmail = "";
+        String inputEmail ;
 
         if (userRole == 'C') {
             Customer registerCustomer = new Customer();
@@ -216,11 +220,14 @@ static DecimalFormat df = new DecimalFormat("0.00");
             System.out.print("Your Username : ");
             registerSeller.setUserName(input.next());
 
+            System.out.print("Your First Name : ");
+            registerSeller.setFirstName(input.next());
+
+            System.out.print("Your Last Name : ");
+            registerSeller.setLastName(input.next());
+
             System.out.print("Your IC Number : ");
             registerSeller.setSellerIC(input.next());
-
-            System.out.print("Your Business Registration Number : ");
-            registerSeller.setSellerBusinessRegistrationNumber(input.next());
 
             System.out.print("Your Phone Number : ");
             registerSeller.setSellerPhoneNumber(input.next());
@@ -228,7 +235,14 @@ static DecimalFormat df = new DecimalFormat("0.00");
             System.out.print("Your Address : ");
             registerSeller.setSellerAddress(input.next());
 
-            System.out.print("Your Bank account : ");
+            System.out.print("Your Shop Name : ");
+            registerSeller.setSellerShopName(input.next());
+
+            System.out.print("Your Business Registration Number : ");
+            registerSeller.setSellerBusinessRegistrationNumber(input.next());
+
+            //TODO : DO WE NEED THIS ?
+            System.out.print("Your Bank Account : ");
             registerSeller.setSellerBankAccount(input.next());
 
             sellerDAO.registerSeller(registerSeller);
@@ -240,8 +254,8 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
     public static void homePage() {
 
-        // Get the choice
         boolean returnToDashboard = true;
+        int userChoice = 0;
 
         do {
             System.out.println("\n\n########----- H O M E  P A G E-----########");
@@ -262,7 +276,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
             System.out.println("8.Profile Page");
             System.out.println("9.Log Out");
 
-            int userChoice = 99;
+
             boolean validInput;
 
             do {
@@ -400,7 +414,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
                     for (int i = 0; i < listOfAllProducts.size(); i++) {
                         Product temp = listOfAllProducts.get(i);
                         // check does name of seller contain term or term contain name of seller
-                        // dont use function getListOfThisSeller
+                        // don't use function getListOfThisSeller
                         // to enable user input Tan , seller Tan Chun Hong and James Tan came out(two different seller)
                         if (productDAO.getProductSellerUsername(temp.getProductID()).contains(term) || term.contains(productDAO.getProductSellerUsername(temp.getProductID())))
                             searchResult.add(temp);
@@ -441,12 +455,12 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
                 } else {
                     System.out.println("Product ID     Name           Category       Price");
-                    for (int i = 0; i < searchResult.size(); i++)
+                    for (Product product : searchResult)
                         System.out.printf("%-15.15s%-15.15s%-15.15s%-15.2f\n",
-                                searchResult.get(i).getProductID(),
-                                searchResult.get(i).getProductName(),
-                                searchResult.get(i).getProductCategory(),
-                                searchResult.get(i).getProductPrice());
+                                product.getProductID(),
+                                product.getProductName(),
+                                product.getProductCategory(),
+                                product.getProductPrice());
 
                     System.out.println("\nWhat would you like to do ? ");
                     System.out.println("1. View Details of an product");
@@ -501,7 +515,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
             System.out.println("\n\n########----- W A L L E T  P A G E-----########");
 
             int userChoice = 0;
-            boolean validInput = true;
+            boolean validInput ;
 
             // Display current balance
             System.out.print("Current Balance : RM ");
@@ -585,7 +599,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
                 Cart cart = listOfCartOfThisCustomer.get(i);
                 Product productsInCartToDisplay = productDAO.getProduct(cart.getCartProductID());
 
-                System.out.println((i + 1) + "      " +
+                System.out.println((i + 1) + "       " +
                         productsInCartToDisplay.getProductName() + "      "
                         + "RM " + productsInCartToDisplay.getProductPrice() + "      " +
                         cart.getCartQuantity());
@@ -623,26 +637,20 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
 
             if (userChoice == 1) {
-                System.out.println("You will be now directed to Checkout page");
+                System.out.println("\nYou will be now directed to Checkout page");
                 checkoutPage(listOfCartOfThisCustomer, totalAmount);
 
-            } else {
-                System.out.println("You will be now directed to Home page");
             }
-
         } else {
-            System.out.println("Ooops , there is no products in your cart. Please add products in your cart !\nYou will be now redirected to to Home Page");
-            promptEnterKey();
-        }
+            System.out.println("\nOops , there is no products in your cart. Please add products in your cart !");
 
+        }
+        System.out.println("\n\nYou will be now directed to Home page");
+        promptEnterKey();
 
     }
 
     public static void favoritesPage() {
-
-        //using for loop on userFavoritesDatabase
-        //display all objects that matches with the current user
-        // if no then display necessary message
 
         System.out.println("\n########----- F A V O R I T E S   P A G E-----########");
 
@@ -661,16 +669,16 @@ static DecimalFormat df = new DecimalFormat("0.00");
             }
 
         } else {
-            System.out.println("Oops sorry , no products added to your favorites");
+            System.out.println("\nOops sorry , no products added to your favorites");
         }
 
-        System.out.println("You will be now redirected to to Home Page");
+        System.out.println("\n\nYou will be now redirected to to Home Page");
         promptEnterKey();
     }
 
     public static void categoryPage() {
 
- boolean cont = false;
+        boolean cont = false;
         do{
             System.out.println("########----- C A T E G O R Y   P A G E-----########");
 
@@ -728,8 +736,8 @@ static DecimalFormat df = new DecimalFormat("0.00");
                     System.out.println("\n\nList of Products in " + category[categoryNo-1]);
                     System.out.println("Product ID    Product Name");
 
-                    for (int i = 0; i < listOfProductsBasedOnCategory.size(); i++) {
-                        System.out.println(listOfProductsBasedOnCategory.get(i).getProductID() + "             " + listOfProductsBasedOnCategory.get(i).getProductName());
+                    for (Product product : listOfProductsBasedOnCategory) {
+                        System.out.println(product.getProductID() + "             " + product.getProductName());
                     }
 
                     System.out.println("\n\nWhat would you like to do ?");
@@ -764,20 +772,18 @@ static DecimalFormat df = new DecimalFormat("0.00");
                          cont=true;
                     }
                 } else {
-                    System.out.println("Oops sorry , no products yet. They're on the way");
-                    System.out.println("You will be now redirected to to Home Page");
-                    promptEnterKey();
+                    System.out.println("\nOops sorry , no products yet. They're on the way");
                 }
 
 
             } else {
                 cont=false;
-                System.out.println("You will be now redirected to to Home Page");
-                promptEnterKey();
+
             }
 
         }while(cont);
-
+        System.out.println("\n\nYou will be now redirected to to Home Page");
+        promptEnterKey();
 
     }
 
@@ -807,12 +813,11 @@ static DecimalFormat df = new DecimalFormat("0.00");
             ArrayList<Feedback> searchedProductFeedback = feedbackDAO.getListOfFeedbackOfThisProduct(productID);
 
             if (searchedProductFeedback != null) {
-                for (int i = 0; i < searchedProductFeedback.size(); i++) {
+                for (Feedback feedback : searchedProductFeedback) {
                     System.out.println("------------------------------------------------------------------------------------");
                     System.out.println(
-                            "User " + searchedProductFeedback.get(i).getFeedbackCustomerName() + ": \n" +
-                                    searchedProductFeedback.get(i).getFeedbackReview() +
-                                    "Comment By Seller : \n" + searchedProductFeedback.get(i).getFeedbackCommentBySeller()
+                            "User " + customerDAO.getCustomerUsername(feedback.getFeedbackCustomerID()) + ": " + feedback.getFeedbackReview() +
+                            "\nComment By Seller : " + feedback.getFeedbackCommentBySeller()
                     );
                     System.out.println("------------------------------------------------------------------------------------");
 
@@ -897,7 +902,6 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
     public static void checkoutPage(ArrayList<Cart> listOfCartOfThisCustomer, double totalCheckoutAmount) {
 
-
         System.out.println("\n########----- C H E C K O U T   P A G E-----########");
 
         // todo : shipping fees
@@ -909,11 +913,8 @@ static DecimalFormat df = new DecimalFormat("0.00");
                     productsInCartToDisplay.getProductName() + "      " +
                     productsInCartToDisplay.getProductPrice() + "      " +
                     cart.getCartQuantity());
-
-
         }
         System.out.println("\n\nTotal Amount to Checkout : RM " + df.format(totalCheckoutAmount));
-
 
         System.out.println("\n\nWhat would you like to do ?");
         System.out.println("1. Pay Now");
@@ -941,7 +942,6 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
         } while (!validInput);
 
-
         if (userChoice == 1) {
 
             String paymentPassword;
@@ -955,11 +955,10 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
             } while (!customerDAO.checkPaymentPassword(paymentPassword));
 
-
+            // This loop is to make sure there is sufficient balance to make the transaction
             while (sessionCustomer.getUserWallet().getWalletBalance() < totalCheckoutAmount) {
 
                 System.out.println("\nInsufficient Balance , please Top Up. Your balance in wallet is RM " + df.format(sessionCustomer.getUserWallet().getWalletBalance()));
-
                 System.out.println("\n\nWhat would you like to do ?");
                 System.out.println("1. Top Up my Wallet and Proceed Payment");
                 System.out.println("2. Cancel this transaction");
@@ -984,12 +983,10 @@ static DecimalFormat df = new DecimalFormat("0.00");
                 } while (!validInput);
 
                 if (userChoice == 1) {
-
-                    WalletDao walltetDao = new WalletDaoImp();
                     //TODO: Input Validation
                     System.out.print("Enter the amount you would like to top up : RM ");
                     double topUpAmount = input.nextDouble();
-                    walltetDao.topUpWalletBalance(sessionCustomer.getUserWallet(), topUpAmount);
+                    walletDAO.topUpWalletBalance(sessionCustomer.getUserWallet(), topUpAmount);
 
                 } else {
                     break;
@@ -997,77 +994,76 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
             }
 
+            if(userChoice ==1){
+                //Once there is Sufficient balance , proceed the checkout process
+                LocalDateTime myDateObj = LocalDateTime.now();
+                String formattedDate = myDateObj.format(myFormatObj);
 
-            //Once there is Sufficient balance , proceed the checkout process
-            LocalDateTime myDateObj = LocalDateTime.now();
-            String formattedDate = myDateObj.format(myFormatObj);
+                //Add New Order
+                //  ArrayList<Orders> listOfOrdersForTransaction = new ArrayList<>();
 
-            //Add New Order
-            ArrayList<Orders> listOfOrdersForTransaction = new ArrayList<>();
+                for (Cart cart : listOfCartOfThisCustomer) {
 
-            for (int i = 0; i < listOfCartOfThisCustomer.size(); i++) {
+                    Product productsInCartForOrders = productDAO.getProduct(cart.getCartProductID());
 
-                Cart cart = listOfCartOfThisCustomer.get(i);
-                Product productsInCartForOrders = productDAO.getProduct(cart.getCartProductID());
+                    Orders order = new Orders(
+                            "Unprocessed",
+                            formattedDate,
+                            sessionCustomer.getCustomerID(),
+                            false,
+                            "Track Not Set",
+                            false,
+                            productsInCartForOrders.getProductSellerID(),
+                            productsInCartForOrders.getProductID(),
+                            cart.getCartQuantity()
+                    );
+                    // Add Orders
+                    // listOfOrdersForTransaction.add(order);
+                    ordersDAO.addOrders(order);
 
-                Orders order = new Orders(
-                        "Unprocessed",
-                        formattedDate,
-                        sessionCustomer.getCustomerID(),
-                        false,
-                        "Track Not Set",
-                        false,
-                        productsInCartForOrders.getProductSellerID(),
-                        productsInCartForOrders.getProductID(),
-                        cart.getCartQuantity()
-                );
-                // Add Orders
-                listOfOrdersForTransaction.add(order);
-                ordersDAO.addOrders(order);
+                    //Increase Sales Count of this product
+                    productDAO.reduceProductStock(productsInCartForOrders, cart.getCartQuantity());
 
-                //Increase Sales Count of this product
-                productDAO.reduceProductStock(productsInCartForOrders, cart.getCartQuantity());
+                    //Reduce Stock Count of this product
+                    productDAO.addProductSalesCount(productsInCartForOrders, cart.getCartQuantity());
 
-                //Reduce Stock Count of this product
-                productDAO.addProductSalesCount(productsInCartForOrders, cart.getCartQuantity());
+                    //Removing from user's cart
+                    cartDAO.deleteCart(cart.getCartID());
 
-                //Removing from user's cart
-                cartDAO.deleteCart(listOfCartOfThisCustomer.get(i).getCartID());
+                    // Notify the seller
+                    Notification notificationSeller = new Notification(productsInCartForOrders.getProductSellerID(), order.getOrderID(), sessionCustomer.getCustomerID(), productsInCartForOrders.getProductID());
+                    notificationDAO.addNotification(notificationSeller);
 
-                // Notify the seller
-                Notification notificationSeller = new Notification(productsInCartForOrders.getProductSellerID(), order.getOrderID(), sessionCustomer.getFirstName() + " " + sessionCustomer.getLastName(), productsInCartForOrders.getProductName());
-                notificationDAO.addNotification(notificationSeller);
+                    // TODO : ADD CUSTOMER/SELLER FLAG
+                    // Add transaction for seller
+                    Transaction transaction = new Transaction(
+                            productsInCartForOrders.getProductPrice()*cart.getCartQuantity(),
+                            formattedDate,
+                            productsInCartForOrders.getProductSellerID());
+                    transactionDAO.addTransaction(transaction);
 
-                // TODO : ADD CUSTOMER/SELLER FLAG
-                // Add transaction for seller
+                    sellerDAO.updateSellerProfit(productsInCartForOrders.getProductSellerID(), productsInCartForOrders.getProductPrice()*cart.getCartQuantity());
+
+                }
+
+
+                //Reduce Wallet Balance
+                walletDAO.reduceWalletBalance(sessionCustomer.getUserWallet(), totalCheckoutAmount);
+
+                // Add transaction for customer
                 Transaction transaction = new Transaction(
-                        productsInCartForOrders.getProductPrice(),
+                        totalCheckoutAmount,
                         formattedDate,
-                        productsInCartForOrders.getProductSellerID());
+                        sessionCustomer.getCustomerID()
+                );
                 transactionDAO.addTransaction(transaction);
 
-                sellerDAO.updateSellerProfit(productsInCartForOrders.getProductSellerID(), productsInCartForOrders.getProductPrice());
+                System.out.println("Payment Successful , you will be now directed to Order History page");
 
+                orderHistoryPage();
             }
 
 
-            //Reduce Wallet Balance
-            walletDAO.reduceWalletBalance(sessionCustomer.getUserWallet(), totalCheckoutAmount);
-
-            //Add Wallet Transaction
-            Transaction transaction = new Transaction(
-                    totalCheckoutAmount,
-                    formattedDate,
-                    sessionCustomer.getCustomerID()
-            );
-            transactionDAO.addTransaction(transaction);
-
-            System.out.println("Payment Successful , you will be now directed to Order History page");
-
-            orderHistoryPage();
-
-        } else {
-            System.out.println("You will be now directed to Home page");
         }
 
 
@@ -1075,86 +1071,59 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
     public static void orderHistoryPage() {
 
+            System.out.println("\n\n########----- ORDER HISTORY  PAGE-----########");
 
-        System.out.println("\n\n########----- ORDER HISTORY  P A G E-----########");
+            ArrayList<Orders> listOfOrders = ordersDAO.getListOfOrdersOfCustomer(sessionCustomer.getCustomerID());
+            if(  listOfOrders != null  ){
+                System.out.println("No      Order ID    Order Date      Product Name       Order Status       Seller Username");
 
-        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Seller Username");
-
-        ArrayList<Orders> listOfOrders = ordersDAO.getListOfOrdersOfCustomer(sessionCustomer.getCustomerID());
-        for (int i = 0; i < listOfOrders.size(); i++) {
-            System.out.println((i + 1) + "       " +
-                    listOfOrders.get(i).getOrderID() + "           " +
-                    listOfOrders.get(i).getOrderDate() + "      " +
-                    productDAO.getProduct(listOfOrders.get(i).getOrderProductID()).getProductName() + "      " +
-                    listOfOrders.get(i).getOrderStatus() + "      " +
-                    sellerDAO.getSellerUsername(listOfOrders.get(i).getOrderSellerID()));
-        }
-
-        System.out.println("\n1. View details of an Order");
-        System.out.println("2. Return to home page");
-        int userChoice =0;         // Get the choice
-
-        boolean validInput;
-        do {
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput = true;
-
-                if (userChoice < 1 || userChoice > 2) {
-                    System.out.print("Oops wrong value, please enter either 1 or 2 only.");
-                    validInput = false;
-                    input.nextLine();
+                for (int i = 0; i < listOfOrders.size(); i++) {
+                    System.out.println((i + 1) + "       " +
+                            listOfOrders.get(i).getOrderID() + "           " +
+                            listOfOrders.get(i).getOrderDate() + "      " +
+                            productDAO.getProduct(listOfOrders.get(i).getOrderProductID()).getProductName() + "      " +
+                            listOfOrders.get(i).getOrderStatus() + "      " +
+                            sellerDAO.getSellerUsername(listOfOrders.get(i).getOrderSellerID()));
                 }
-            } catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput = false;
-                input.nextLine();
-            }
 
-        } while (!validInput);
+                System.out.println("\n1. View details of an Order");
+                System.out.println("2. Return to home page");
+                int userChoice =0;         // Get the choice
+
+                boolean validInput;
+                do {
+                    try {
+                        System.out.print("\nYour option : ");
+                        userChoice = input.nextInt();
+                        validInput = true;
+
+                        if (userChoice < 1 || userChoice > 2) {
+                            System.out.print("Oops wrong value, please enter either 1 or 2 only.");
+                            validInput = false;
+                            input.nextLine();
+                        }
+                    } catch (InputMismatchException ex) {
+                        System.out.println("You have entered an invalid format of input");
+                        validInput = false;
+                        input.nextLine();
+                    }
+
+                } while (!validInput);
 
 
-        if (userChoice == 1) {
+                if (userChoice == 1) {
 
-            System.out.print("Enter the Order ID to view the details : ");
-            int orderID = input.nextInt();
-
-            //If want to view more details
-            Orders order = ordersDAO.getOrders(orderID);
-
-            System.out.println(
-                    "Order ID     : " + order.getOrderID() + "\n" +
-                            "Order Date   : " + order.getOrderDate() + "\n" +
-                            "Order Status : " + order.getOrderStatus() + "\n" +
-                            "Product Name : " + productDAO.getProduct(order.getOrderProductID()).getProductName() + "\n" +
-                            "Product Price    : " + productDAO.getProduct(order.getOrderProductID()).getProductPrice() + "\n" +
-                            "Quantity Ordered : " + order.getOrderQuantity());
-
-            if (order.getOrderStatus().equals("Shipping/Processing")) {
-                System.out.println("Tracking ID : " + order.getOrderTrackingID() + "\n");
-                System.out.println("Please update the Delivery of this Order");
-                System.out.print("Have you received the order ? Y = Yes or N = No : ");
-                char orderReceivedConfirmation = input.next().charAt(0);
-
-                if (orderReceivedConfirmation == 'Y') {
-                    System.out.println("Thank you for your confirmation !");
-
-                    order.setOrderStatus("Delivered");
-                    order.setOrderReceivedOrNot(true);
-                    ordersDAO.updateOrders(order);
-
-                    System.out.println("\nPlease rate this order from 1 - 5 : ");
-                    int prodRating = 0;
-
+                    Orders order = null;
+                    //If we want to view more details
                     do {
                         try {
-                            System.out.print("\nYour Rating : ");
-                            prodRating = input.nextInt();
+                            System.out.print("Enter the Order ID to view the details : ");
+                            int orderID = input.nextInt();
+                            order = ordersDAO.getOrders(orderID);
                             validInput = true;
 
-                            if (prodRating < 1 || prodRating > 5) {
-                                System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 or 5 only.");
+                            if (order == null) {
+                                System.out.println("Uh oh , you have entered wrong Order ID, please only enter from the list above. ");
                                 validInput = false;
                                 input.nextLine();
                             }
@@ -1166,35 +1135,99 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
                     } while (!validInput);
 
-                    System.out.println("\nPlease leave your feedback ");
-                    String productFeedback = input.nextLine();
+                     System.out.println(
+                                        "Order ID     : " + order.getOrderID() + "\n" +
+                                        "Order Date   : " + order.getOrderDate() + "\n" +
+                                        "Order Status : " + order.getOrderStatus() + "\n" +
+                                        "Product Name : " + productDAO.getProduct(order.getOrderProductID()).getProductName() + "\n" +
+                                        "Product Price    : " + productDAO.getProduct(order.getOrderProductID()).getProductPrice() + "\n" +
+                                        "Quantity Ordered : " + order.getOrderQuantity());
 
-                    //TODO : TO THINK WHETHER THIS COMES EARLIER OR NOT
-                    Feedback feedbackProduct = new Feedback(
-                            productDAO.getProduct(order.getOrderProductID()).getProductID(),
-                            productFeedback,
-                            "None",
-                            sessionCustomer.getUserName(),
-                            prodRating);
-                    feedbackDAO.addFeedback(feedbackProduct);
+                        if (order.getOrderStatus().equals("Processing / Shipping")) {
+                            System.out.println("Tracking ID : " + order.getOrderTrackingID() + "\n");
+                            System.out.println("Please update the Delivery of this Order");
+
+                            char orderReceivedConfirmation = 0;
+                            do {
+                                try {
+                                    System.out.print("\nHave you received the order ? Y = Yes or N = No : ");
+                                     orderReceivedConfirmation = input.next().charAt(0);
+                                    validInput = true;
+
+                                    if (orderReceivedConfirmation !='Y' && orderReceivedConfirmation !='N') {
+                                        System.out.print("Oops wrong value, please enter either Y or N only.");
+                                        validInput = false;
+                                        input.nextLine();
+                                    }
+                                } catch (InputMismatchException ex) {
+                                    System.out.println("You have entered an invalid format of input.");
+                                    validInput = false;
+                                    input.nextLine();
+                                }
+
+                            } while (!validInput);
+
+
+
+                            if (orderReceivedConfirmation == 'Y') {
+                                System.out.println("Thank you for your confirmation !");
+
+                                order.setOrderStatus("Delivered");
+                                order.setOrderReceivedOrNot(true);
+                                ordersDAO.updateOrders(order);
+
+                                System.out.println("\nPlease rate this order from 1 - 5 ! ");
+                                int prodRating = 0;
+
+                                do {
+                                    try {
+                                        System.out.print("Your Rating : ");
+                                        prodRating = input.nextInt();
+                                        input.nextLine();
+                                        validInput = true;
+
+                                        if (prodRating < 1 || prodRating > 5) {
+                                            System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 or 5 only.\n");
+                                            validInput = false;
+                                        }
+
+                                    } catch (InputMismatchException ex) {
+                                        System.out.println("You have entered an invalid format of input");
+                                        validInput = false;
+                                        input.nextLine();
+                                    }
+
+                                } while (!validInput);
+
+                                System.out.println("\nPlease leave your feedback : ");
+                                String productFeedback = input.nextLine();
+
+
+                                //TODO : TO THINK WHETHER THIS COMES EARLIER OR NOT
+                                Feedback feedbackProduct = new Feedback(
+                                        productDAO.getProduct(order.getOrderProductID()).getProductID(),
+                                        productFeedback,
+                                        "None",
+                                        sessionCustomer.getCustomerID(),
+                                        prodRating);
+
+                                feedbackDAO.addFeedback(feedbackProduct);
+                            }
+
+                        } else if (order.getOrderStatus().equals("Unprocessed")) {
+                            System.out.println("\nYour order is yet to be processed by the seller");
+                        }
+
                 }
 
-            }else if (order.getOrderStatus().equals("Unprocessed")){
-
-                System.out.println("\nYour order is yet to be processed by the seller");
-                System.out.println("You will be redirected to Home Page");
-                promptEnterKey();
             }
             else{
-                System.out.println("You will be redirected to Home Page");
-                promptEnterKey();
+                System.out.println("\nThere is no orders have been placed !");
+
             }
 
-
-        } else {
-            promptEnterKey();
-            System.out.println("You will be redirected to Home Page");
-        }
+        System.out.println("\n\nYou will be redirected to Home Page");
+        promptEnterKey();
 
 
     }
@@ -1214,103 +1247,141 @@ static DecimalFormat df = new DecimalFormat("0.00");
     public static void userProfilePage() {
 
         boolean validInput;
+        int deleteConfirmation = 0;
+        boolean redirectToTopFlag = true;
+
+        do{
+
+            System.out.println("\n\n########----- P R O F I L E   P A G E-----########");
+            System.out.println("\nUsername  : " +sessionCustomer.getUserName());
+            System.out.println("Full Name : " +sessionCustomer.getFirstName()+ " " + sessionCustomer.getLastName());
+            System.out.println("Email     : "+sessionCustomer.getEmail());
+            System.out.println("Password  : "+sessionCustomer.getPassword());
+            System.out.println("Address   : "+sessionCustomer.getAddress());
 
 
-        System.out.println("########----- P R O F I L E   P A G E-----########");
-        System.out.println("1.Change Username");
-        System.out.println("2.Change Email");
-        System.out.println("3.Change Password");
-        System.out.println("4.Update address");
-        System.out.println("5.Delete Account");
+            System.out.println("\n1.Change Username");
+            System.out.println("2.Change Email");
+            System.out.println("3.Change Password");
+            System.out.println("4.Change Payment Password");
+            System.out.println("5.Update Address");
+            System.out.println("6.Delete Account");
+            System.out.println("7.Return to Home Page");
 
-        int userChoice = 0;         // Get the choice
+            int userChoice = 0;         // Get the choice
 
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
 
-        do {
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput = true;
-
-                if (userChoice < 1 || userChoice > 5) {
-                    System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 or 5 only.");
+                    if (userChoice < 1 || userChoice > 7) {
+                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 / 6 or 7 only.");
+                        validInput = false;
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
                     validInput = false;
+                    input.nextLine();
                 }
-            } catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput = false;
-                input.nextLine();
+
+            } while (!validInput);
+
+
+            Customer customer = sessionCustomer;
+            switch (userChoice) {
+                case 1:
+                        System.out.print("Your new username : ");
+                        String username = input.next();
+                        customer.setUserName(username);
+                        customerDAO.updateCustomer(customer);
+                        break;
+                case 2:
+                        System.out.print("Your new Email : ");
+                        String email = input.next();
+                        customer.setEmail(email);
+                        customerDAO.updateCustomer(customer);
+                        break;
+                case 3:
+                        System.out.print("Your new Password : ");
+                        String password = input.next();
+                        customer.setPassword(password);
+                        customerDAO.updateCustomer(customer);
+                        break;
+                case 4:
+                    System.out.print("Your new Payment Password : ");
+                    String paymentPassword = input.next();
+                    customer.setPaymentPassword(paymentPassword);
+                    customerDAO.updateCustomer(customer);
+                    break;
+
+                case 5:
+                        input.nextLine();
+                        System.out.print("Your new Address : ");
+                        String address = input.nextLine();
+                        customer.setAddress(address);
+                        customerDAO.updateCustomer(customer);
+                        break;
+                case 6:
+                        System.out.println("Are you sure to delete the account?");
+                        System.out.println("1. Yes");
+                        System.out.println("2. No");
+
+                        do {
+                            try {
+                                System.out.print("\nYour option : ");
+                                deleteConfirmation = input.nextInt();
+                                validInput = true;
+
+                                if (deleteConfirmation < 1 || deleteConfirmation > 2) {
+                                    System.out.print("Oops wrong value, please enter either 1 or 2.");
+                                    validInput = false;
+                                    input.nextLine();
+                                }
+                            } catch (InputMismatchException ex) {
+                                System.out.println("You have entered an invalid format of input");
+                                validInput = false;
+                                input.nextLine();
+                            }
+
+                        } while (!validInput);
+
+                        if (deleteConfirmation == 1) {
+                            customerDAO.deleteCustomer(sessionCustomer);
+                            System.out.println("It's sad to see you go !");
+                        } else {
+                            System.out.println("You have chose to not delete your account !");
+                        }
+                         break;
+
+                default: redirectToTopFlag = false;
+                break;
+
+
             }
 
-        } while (!validInput);
+        }while(redirectToTopFlag);
 
-
-        Customer customer = sessionCustomer;
-        switch (userChoice) {
-            case 1:
-                System.out.print("Your new username : ");
-                String username = input.next();
-                customer.setUserName(username);
-                customerDAO.updateCustomer(customer);
-                break;
-            case 2:
-                System.out.print("Your new Email : ");
-                String email = input.next();
-                customer.setEmail(email);
-                customerDAO.updateCustomer(customer);
-                break;
-            case 3:
-                System.out.print("Your new Password : ");
-                String password = input.next();
-                customer.setPassword(password);
-                customerDAO.updateCustomer(customer);
-                break;
-            case 4:
-                System.out.print("Your new Address : ");
-                String address = input.nextLine();
-                customer.setAddress(address);
-                customerDAO.updateCustomer(customer);
-                break;
-            default:
-                System.out.println("Are you sure to delete the account?");
-                System.out.println("1. Yes");
-                System.out.println("2. No");
-
-                int deleteConfirmation = 0;
-                do {
-                    try {
-                        System.out.print("\nYour option : ");
-                        deleteConfirmation = input.nextInt();
-                        validInput = true;
-
-                        if (deleteConfirmation < 1 || deleteConfirmation > 2) {
-                            System.out.print("Oops wrong value, please enter either 1 or 2.");
-                            validInput = false;
-                            input.nextLine();
-                        }
-                    } catch (InputMismatchException ex) {
-                        System.out.println("You have entered an invalid format of input");
-                        validInput = false;
-                        input.nextLine();
-                    }
-
-                } while (!validInput);
-
-                if (deleteConfirmation == 1) {
-                    customerDAO.deleteCustomer(sessionCustomer);
-                    mainMenuPage();
-                } else {
-                    // back to the userProfilePage!!! Then choice again!
-                }
-                break;
-
+        if ( deleteConfirmation ==1)
+        {
+            mainMenuPage();
         }
+        else{
 
+            System.out.println("\n\nYou will be redirected to Home Page");
+            promptEnterKey();
+        }
 
     }
 
-    public static void exitApp() {
 
+
+    public static void exitSystem( ) {
+        System.out.println("\n\nThe system will now end");
+        System.exit(0);
+
+        // Shut down system
     }
 
 
@@ -1431,17 +1502,16 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
                     // View list of products and stock counts
                     System.out.println("Product ID     Name           Category       Price          Stock          Sales");
-                    for (int i = 0; i < listOfProductOfThisSeller.size(); i++) {
+                    for (Product product : listOfProductOfThisSeller) {
                         System.out.printf("%s%18s%18s%13s%14s%14s\n",
-                                listOfProductOfThisSeller.get(i).getProductID(),
-                                listOfProductOfThisSeller.get(i).getProductName(),
-                                listOfProductOfThisSeller.get(i).getProductCategory(),
-                                listOfProductOfThisSeller.get(i).getProductPrice(),
-                                listOfProductOfThisSeller.get(i).getProductStockCount(),
-                                listOfProductOfThisSeller.get(i).getProductSalesCount());
+                                product.getProductID(),
+                                product.getProductName(),
+                                product.getProductCategory(),
+                                product.getProductPrice(),
+                                product.getProductStockCount(),
+                                product.getProductSalesCount());
 
                     }
-
                     break;
                 case 2:
                     //Add Product
@@ -1474,7 +1544,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
     public static void addProductPage() {
 
 
-        // Get the name, using nextLine to allow have space between name of product
+        // Get the name, using nextLine to allow to have space between name of product
         System.out.print("Enter the name of product : ");
         input.nextLine();
         String name = input.nextLine();
@@ -1483,7 +1553,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
         String category = input.nextLine();
 
         System.out.print("Enter the description of product : ");
-        String descrip = input.nextLine();
+        String description = input.nextLine();
 
         System.out.print("Enter the price of product : RM ");
         double price = input.nextDouble();
@@ -1492,7 +1562,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
         int stock = input.nextInt();
 
         //Get productDOA in seller class, write a method to return object of ProductDOA
-        productDAO.addProduct(new Product(sessionSeller.getSellerID(), 0, name, descrip, category, price, stock, 0));
+        productDAO.addProduct(new Product(sessionSeller.getSellerID(), 0, name, description, category, price, stock, 0));
 
     }
 
@@ -1622,12 +1692,12 @@ static DecimalFormat df = new DecimalFormat("0.00");
                 ArrayList<Feedback> searchedProductFeedback = feedbackDAO.getListOfFeedbackOfThisProduct(productID);
                 if (searchedProductFeedback != null) {
 
-                    for (int i = 0; i < searchedProductFeedback.size(); i++) {
+                    for (Feedback feedback : searchedProductFeedback) {
                         System.out.println("------------------------------------------------------------------------------------");
                         System.out.println(
-                                "User " + searchedProductFeedback.get(i).getFeedbackCustomerName() + ": \n" +
-                                        searchedProductFeedback.get(i).getFeedbackReview() +
-                                        "Comment By You : \n" + searchedProductFeedback.get(i).getFeedbackCommentBySeller()
+                                "User " + customerDAO.getCustomerUsername(feedback.getFeedbackCustomerID()) + ": \n" +
+                                        feedback.getFeedbackReview() +
+                                        "Comment By You : \n" + feedback.getFeedbackCommentBySeller()
                         );
                         System.out.println("------------------------------------------------------------------------------------");
 
@@ -1655,9 +1725,9 @@ static DecimalFormat df = new DecimalFormat("0.00");
     public static void manageOrdersPage() {
 
 
-        System.out.println("########----- P R O D U C T  P A G E-----########");
+        System.out.println("########----- MANAGE ORDERS PAGE-----########");
 
-        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Customer Username");
+        System.out.println("No      Order ID    Order Date      Product Name       Order Status       Customer Name");
 
         //First list all the orders that matches the seller
         ArrayList<Orders> listOfOrders = ordersDAO.getListOfOrdersOfSeller(sessionSeller.getSellerID());
@@ -1667,7 +1737,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
                     listOfOrders.get(i).getOrderDate() + "      " +
                     productDAO.getProduct(listOfOrders.get(i).getOrderProductID()).getProductName() + "      " +
                     listOfOrders.get(i).getOrderStatus() + "      " +
-                    listOfOrders.get(i).getOrderCustomerID());
+                    customerDAO.getCustomerFullName(listOfOrders.get(i).getOrderCustomerID()));
         }
 
         System.out.println("\n1.View details of an Order");
@@ -1701,8 +1771,9 @@ static DecimalFormat df = new DecimalFormat("0.00");
             System.out.print("Enter the Order ID to view the details : ");
             int orderID = input.nextInt();
 
-            //If want to view more details
+            System.out.println("\n-----DETAILS OF ORDER -----");
 
+            //If we want to view more details
             Orders order = ordersDAO.getOrders(orderID);
 
             System.out.println(
@@ -1711,21 +1782,24 @@ static DecimalFormat df = new DecimalFormat("0.00");
                             "Order Status : " + order.getOrderStatus() + "\n" +
                             "Product Name : " + productDAO.getProduct(order.getOrderProductID()).getProductName() + "\n" +
                             "Product Price    : " + productDAO.getProduct(order.getOrderProductID()).getProductPrice() + "\n" +
-                            "Quantity Ordered : " + order.getOrderQuantity());
+                            "Quantity Ordered : " + order.getOrderQuantity()+ "\n" +
+                            "Customer Name : "+customerDAO.getCustomerFullName(order.getOrderCustomerID())+ "\n" +
+                            "Customer Address : "+customerDAO.getCustomerAddress(order.getOrderCustomerID()));
 
 
             if (Objects.equals(order.getOrderStatus(), "Unprocessed")) {
 
-                System.out.println("\nWould you like to update the order ? Y = Yes or N = No");
+                System.out.print("\nWould you like to update the order ? Y = Yes or N = No : ");
                 char orderReceivedConfirmation = input.next().charAt(0);
                 input.nextLine();
 
                 if (orderReceivedConfirmation == 'Y') {
-                    System.out.println("Enter the Tracking ID : ");
+                    System.out.print("Enter the Tracking ID : ");
                     order.setOrderTrackingID(input.nextLine());
                     order.setOrderStatus("Processing / Shipping");
-
                     ordersDAO.updateOrders(order);
+                    System.out.print("Updated Order Successfully ! ");
+
                 }
 
             }
@@ -1740,22 +1814,28 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
     public static void manageFeedbackPage() {
 
+        System.out.println("\n\n########----- MANAGE FEEDBACK PAGE-----########");
+
         ArrayList<Feedback> feedbackOfThisSeller = feedbackDAO.getListOfFeedbackOfThisSeller(sessionSeller.getSellerID());
 
         if( feedbackOfThisSeller!= null){
+            System.out.println("\nFeedback ID    Product ID       Product Name       Given Review       Given Rating   Customer Username  Comment By You");
+
             for (int i = 0; i < feedbackOfThisSeller.size(); i++) {
-                System.out.println(feedbackOfThisSeller.get(i).getFeedbackID() + " " +
-                        feedbackOfThisSeller.get(i).getFeedbackProductID() + " " +
-                        productDAO.getProduct(feedbackOfThisSeller.get(i).getFeedbackProductID()).getProductName() + " " +
+
+                System.out.println(
+                        feedbackOfThisSeller.get(i).getFeedbackID() + "              " +
+                        feedbackOfThisSeller.get(i).getFeedbackProductID() + "                " +
+                        productDAO.getProduct(feedbackOfThisSeller.get(i).getFeedbackProductID()).getProductName() + "     " +
                         feedbackOfThisSeller.get(i).getFeedbackReview() + " " +
                         feedbackOfThisSeller.get(i).getFeedbackRating() + " " +
-                        feedbackOfThisSeller.get(i).getFeedbackCustomerName() + " " +
+                        customerDAO.getCustomerUsername(feedbackOfThisSeller.get(i).getFeedbackCustomerID()) + " " +
                         feedbackOfThisSeller.get(i).getFeedbackCommentBySeller()
                 );
             }
 
             //Ask if seller would like to comment for any feedback
-            System.out.println("Would you like to comment for any feedback ?\n1. To comment\n2. To Return");
+            System.out.println("\n\nWould you like to comment for any feedback ?\n1. To comment\n2. To Return");
             int userChoice = 99;
             boolean validInput;
 
@@ -1780,14 +1860,19 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
 
             if (userChoice == 1) {// IF user chose to comment , ask for Feedback ID
-                System.out.print("Please enter Feedback ID that you want to comment:");
+                System.out.print("\nPlease enter Feedback ID that you want to comment : ");
                 int feedbackID = input.nextInt();
-                //Get the comment , then set it using the setter function
+                input.nextLine();
+
                 System.out.println("Please enter your comment below : ");
                 String comment = input.nextLine();
+
                 Feedback feedbackToUpdate = feedbackDAO.getFeedback(feedbackID);
                 feedbackToUpdate.setFeedbackCommentBySeller(comment);
                 feedbackDAO.updateFeedback(feedbackToUpdate);
+
+                System.out.println("Successfully updated the feedback with your comment ");
+
             }
         }else{
             System.out.println("\nYay , there's no feedback to comment");
@@ -1801,20 +1886,18 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
     public static void managePaymentPage() {
 
-        System.out.println("\n########----- P A Y M E N T  P A G E-----########");
-
-        System.out.println("Total Profit : RM" + sessionSeller.getSellerProfit() + "\n");
-
+        System.out.println("\n\n########----- MANAGE PAYMENT PAGE-----########");
+        System.out.println("Total Profit : RM " + sessionSeller.getSellerProfit() + "\n");
         System.out.println("No      Transaction ID        Amount       Date & Time");
 
-        ArrayList<Transaction> listOfTransaction = sessionSeller.getSellerTransaction();
+        ArrayList<Transaction> listOfTransaction = sessionSeller.getSellerTransactions();
 
         if (listOfTransaction!= null){
             for (int i = 0; i < listOfTransaction.size(); i++) {
 
-                System.out.println((i + 1) + "      " +
-                        listOfTransaction.get(i).getTransactionID() + "      " +
-                        listOfTransaction.get(i).getTransactionAmount() + "      " +
+                System.out.println((i + 1) + "       " +
+                        "TR"+listOfTransaction.get(i).getTransactionID() + "                   " +
+                        "RM "+listOfTransaction.get(i).getTransactionAmount() + "      " +
                         listOfTransaction.get(i).getTransactionDateTime()
                 );
 
@@ -1835,86 +1918,108 @@ static DecimalFormat df = new DecimalFormat("0.00");
     public static void manageSellerProfilePage() {
 
         boolean validInput;
-
-
-        System.out.println("########----- P R O F I L E   P A G E-----########");
-        System.out.println("1.Change Username");
-        System.out.println("2.Change Email");
-        System.out.println("3.Change Password");
-        System.out.println("4.Update Address");
-        System.out.println("5.Change Phone Number");
-        System.out.println("6.Change Bank Account");
-        System.out.println("Your option : ");
-        int userChoice = 0;         // Get the choice
-
+        boolean redirectToTopFlag = true;
 
         do {
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput = true;
+            System.out.println("\n\n########----- MANAGE PROFILE PAGE-----########");
+            System.out.println("1.Change Username");
+            System.out.println("2.Change Name");
+            System.out.println("3.Change Email");
+            System.out.println("4.Change Password");
+            System.out.println("5.Update Address");
+            System.out.println("6.Change Phone Number");
+            System.out.println("7.Change Bank Account");
+            System.out.println("8.Return to Home Page");
+            int userChoice = 0;         // Get the choice
 
-                if (userChoice < 1 || userChoice > 6) {
-                    System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 or 6 only.");
+
+            do {
+                try {
+                    System.out.print("\nYour option : ");
+                    userChoice = input.nextInt();
+                    validInput = true;
+
+                    if (userChoice < 1 || userChoice > 8) {
+                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 / 6 / 7 or 8 only.");
+                        validInput = false;
+                    }
+                } catch (InputMismatchException ex) {
+                    System.out.println("You have entered an invalid format of input");
                     validInput = false;
+                    input.nextLine();
                 }
-            } catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput = false;
-                input.nextLine();
+
+            } while (!validInput);
+
+
+            switch (userChoice) {
+                case 1:
+                    System.out.print("Your new username : ");
+                    String username = input.next();
+                    sessionSeller.setUserName(username);
+                    break;
+                case 2:
+                    System.out.print("Your new First Name  : ");
+                    String firstName = input.next();
+                    sessionSeller.setFirstName(firstName);
+
+                    System.out.print("Your new Last Name  : ");
+                    String lastName = input.next();
+                    sessionSeller.setLastName(lastName);
+                    break;
+                case 3:
+                    System.out.print("Your new Email : ");
+                    String email = input.next();
+                    sessionSeller.setEmail(email);
+                    break;
+                case 4:
+                    System.out.print("Your new Password : ");
+                    String password = input.next();
+                    sessionSeller.setPassword(password);
+                    break;
+                case 5:
+                    System.out.print("Your new Address : ");
+                    String address = input.nextLine();
+                    sessionSeller.setSellerAddress(address);
+                    break;
+                case 6:
+                    System.out.print("Your new Phone Number : ");
+                    String phoneNum = input.nextLine();
+                    sessionSeller.setSellerPhoneNumber(phoneNum);
+                    break;
+                case 7:
+                    System.out.print("Your new Bank Account : ");
+                    String bankAccount = input.nextLine();
+                    sessionSeller.setSellerBankAccount(bankAccount);
+                    break;
+                case 8: redirectToTopFlag= false;
+                break;
             }
 
-        } while (!validInput);
+            if( userChoice!=8){
+                sellerDAO.updateSeller(sessionSeller);
+            }
 
 
-        switch (userChoice) {
-            case 1:
-                System.out.println("Your new username : ");
-                String username = input.next();
-                sessionSeller.setUserName(username);
-                break;
-            case 2:
-                System.out.println("Your new Email : ");
-                String email = input.next();
-                sessionSeller.setEmail(email);
-                break;
-            case 3:
-                System.out.println("Your new Password : ");
-                String password = input.next();
-                sessionSeller.setPassword(password);
-                break;
-            case 4:
-                System.out.println("Your new Address : ");
-                String address = input.nextLine();
-                sessionSeller.setSellerAddress(address);
-                break;
-            case 5:
-                System.out.println("Your new Phone Number : ");
-                String phoneNum = input.nextLine();
-                sessionSeller.setSellerPhoneNumber(phoneNum);
-                break;
-            case 6:
-                System.out.println("Your new Bank Account : ");
-                String bankAccount = input.nextLine();
-                sessionSeller.setSellerBankAccount(bankAccount);
-                break;
-        }
+        }while(redirectToTopFlag);
 
-        sellerDAO.updateSeller(sessionSeller);
+        System.out.println("\n\nYou will be now redirected to Dashboard Page");
+        promptEnterKey();
+
 
     }
 
     public static void manageSellerNotificationPage() {
 
 
-        System.out.println("\n########----- N O T I F I C A T I O N   P A G E-----########");
+        System.out.println("########----- MANAGE NOTIFICATION PAGE-----########");
 
         ArrayList<Notification> listOfNotificationOfSeller = notificationDAO.getListOfNotificationOfSeller(sessionSeller.getSellerID());
 
         if (listOfNotificationOfSeller != null) {
 
             for (int i = 0; i < listOfNotificationOfSeller.size(); i++) {
-                System.out.println(i + 1 + ".   " + "New Order(" + listOfNotificationOfSeller.get(i).getNotificationOrderId() + ") arrived for " + listOfNotificationOfSeller.get(i).getNotificationProductName() + " from " + listOfNotificationOfSeller.get(i).getNotificationCustomerName());
+                System.out.println(i + 1 + ".   " + "New Order( Order ID : " + listOfNotificationOfSeller.get(i).getNotificationOrderId() + ") arrived for " + productDAO.getProduct(listOfNotificationOfSeller.get(i).getNotificationProductID()).getProductName() + " from " + customerDAO.getCustomerFullName(listOfNotificationOfSeller.get(i).getNotificationCustomerID()));
                 notificationDAO.deleteNotification(listOfNotificationOfSeller.get(i).getNotificationID());
             }
         } else {
@@ -1922,7 +2027,7 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
         }
 
-        System.out.println("You will be now redirected to to Dashboard Page");
+        System.out.println("\n\nYou will be now redirected to to Dashboard Page");
         promptEnterKey();
     }
 

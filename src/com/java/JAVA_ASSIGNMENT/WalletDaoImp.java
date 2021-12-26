@@ -10,13 +10,11 @@ public class WalletDaoImp implements WalletDao{
     private static final String FIND_BY_ID = "SELECT * FROM wallet WHERE walletCustomerID=?";
     private static final String UPDATE = "UPDATE wallet SET walletBalance=? WHERE walletID=?";
     private static final String INSERT = "INSERT INTO wallet (walletBalance,walletCustomerID) VALUES (?,?)";
+    private static final String DELETE = "DELETE FROM wallet WHERE walletID=?";
 
 
     @Override
-    //TODO : RENAME TO REDUCE WALLET BALANCE
     public void reduceWalletBalance(Wallet customerWallet ,double paidAmount) {
-
-        sessionCustomer.getUserWallet().setWalletBalance(sessionCustomer.getUserWallet().getWalletBalance() -paidAmount );
 
         PreparedStatement stmnt = null;
         Connection conn = null;
@@ -31,7 +29,7 @@ public class WalletDaoImp implements WalletDao{
             stmnt.executeUpdate();
             System.out.println("Updated Wallet Successfully");
             sessionCustomer.getUserWallet().setWalletBalance(customerWallet.getWalletBalance()-paidAmount);
- // TODO : HANDLE THE NEGATIVE VALUE OF WALLET BALANCE
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         } finally {
@@ -122,7 +120,7 @@ public class WalletDaoImp implements WalletDao{
             }
         }
 
-        wallet.setWalletTransaction(transactionDAO.getListOfSellerTransactionOfThisCustomer(customerID));
+        wallet.setWalletTransaction(transactionDAO.getListOfCustomerTransaction(customerID));
 
         return wallet;
     }
@@ -149,9 +147,8 @@ public class WalletDaoImp implements WalletDao{
             rs = stmnt.getGeneratedKeys();
 
             if (rs.next()) {
-                wallet.setWalletID(rs.getInt(1)); //Setting the product ID
+                wallet.setWalletID(rs.getInt(1));
             }
-            System.out.println("Successfully created Wallet !");
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -163,5 +160,36 @@ public class WalletDaoImp implements WalletDao{
             }
         }
 
+    }
+
+    @Override
+    public void deleteWallet(Wallet customerWallet) {
+        PreparedStatement stmnt = null;
+        Connection conn = null;
+
+        try {
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(DELETE);
+            stmnt.setInt(1, customerWallet.getWalletID());
+
+            stmnt.executeUpdate();
+
+            System.out.println("Deleted your account Successfully");
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (stmnt != null) stmnt.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }

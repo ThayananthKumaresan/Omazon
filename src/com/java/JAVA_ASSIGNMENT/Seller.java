@@ -11,6 +11,8 @@ public class Seller  extends User{
     public String sellerAddress;
     public String sellerIC;
     public String sellerBusinessRegistrationNumber;
+    public String sellerShopName;
+
     public ArrayList<Transaction> sellerTransactions;
 
 
@@ -100,11 +102,19 @@ public class Seller  extends User{
         this.sellerBusinessRegistrationNumber = sellerBusinessRegistrationNumber;
     }
 
-    public ArrayList<Transaction> getSellerTransaction() {
+    public ArrayList<Transaction> getSellerTransactions() {
         return this.sellerTransactions;
     }
 
-    public void setSellerTransaction(ArrayList<Transaction> sellerTransactions) {
+    public void setSellerTransactions(ArrayList<Transaction> sellerTransactions) {
         this.sellerTransactions = sellerTransactions;
+    }
+
+    public String getSellerShopName() {
+        return sellerShopName;
+    }
+
+    public void setSellerShopName(String sellerShopName) {
+        this.sellerShopName = sellerShopName;
     }
 }

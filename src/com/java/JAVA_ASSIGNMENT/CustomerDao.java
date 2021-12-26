@@ -8,6 +8,6 @@ public interface CustomerDao {
     public boolean loginCustomer(Customer cust);
     public boolean checkPaymentPassword(String paymentPassword);
     public String getCustomerUsername(int customerID);
-
-
+    public String getCustomerFullName(int customerID);
+    public String getCustomerAddress(int customerID);
 }

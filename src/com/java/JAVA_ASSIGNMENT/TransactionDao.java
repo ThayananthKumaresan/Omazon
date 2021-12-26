@@ -6,7 +6,7 @@ public interface TransactionDao {
 
 
     public void addTransaction(Transaction transaction);
-    public ArrayList<Transaction>  getListOfSellerTransactionOfThisSeller(int sellerID);
-    public ArrayList<Transaction>  getListOfSellerTransactionOfThisCustomer(int customerID);
+    public ArrayList<Transaction> getListOfSellerTransaction(int sellerID);
+    public ArrayList<Transaction> getListOfCustomerTransaction(int customerID);
 
 }

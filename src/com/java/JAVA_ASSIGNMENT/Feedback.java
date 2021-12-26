@@ -4,20 +4,20 @@ public class Feedback {
 
     int feedbackID;
     int feedbackProductID;
-    String feedbackReview;
     int feedbackRating;
+    int feedbackCustomerID;
+    String feedbackReview;
     String feedbackCommentBySeller;
-    String feedbackCustomerUserName;
 
 
     public Feedback() {
     }
 
-    public Feedback(int feedbackProductID, String feedbackReview, String feedbackCommentBySeller, String feedbackCustomerUserName, int feedbackRating) {
+    public Feedback(int feedbackProductID, String feedbackReview, String feedbackCommentBySeller, int feedbackCustomerID, int feedbackRating) {
         this.feedbackProductID = feedbackProductID;
         this.feedbackReview = feedbackReview;
         this.feedbackCommentBySeller = feedbackCommentBySeller;
-        this.feedbackCustomerUserName = feedbackCustomerUserName;
+        this.feedbackCustomerID = feedbackCustomerID;
         this.feedbackRating = feedbackRating;
 
     }
@@ -54,12 +54,12 @@ public class Feedback {
         this.feedbackCommentBySeller = feedbackCommentBySeller;
     }
 
-    public String getFeedbackCustomerName() {
-        return feedbackCustomerUserName;
+    public int getFeedbackCustomerID() {
+        return feedbackCustomerID;
     }
 
-    public void setFeedbackCustomerName(String feedbackCustomerUserName) {
-        this.feedbackCustomerUserName = feedbackCustomerUserName;
+    public void setFeedbackCustomerID(int feedbackCustomerUserName) {
+        this.feedbackCustomerID = feedbackCustomerUserName;
     }
 
     public int getFeedbackRating() {

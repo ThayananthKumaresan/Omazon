@@ -3,6 +3,8 @@ package com.java.JAVA_ASSIGNMENT;
 import java.sql.*;
 import java.util.ArrayList;
 
+import static com.java.JAVA_ASSIGNMENT.Main.productDAO;
+
 
 public class CartDaoImp implements CartDao{
 
@@ -21,7 +23,6 @@ public class CartDaoImp implements CartDao{
         ResultSet rs = null;
         Connection conn;
         PreparedStatement stmnt;
-        Cart cart = new Cart();
 
         try {
 
@@ -32,11 +33,11 @@ public class CartDaoImp implements CartDao{
             rs = stmnt.executeQuery(); // Executing the sql query
 
             while (rs.next()) {
+                Cart cart = new Cart();
                 cart.setCartCustomerID(rs.getInt("cartCustomerID"));
                 cart.setCartID(rs.getInt("cartID"));
                 cart.setCartQuantity(rs.getInt("cartQuantity"));
                 cart.setCartProductID(rs.getInt("cartProductID"));
-
                 listOfCartOfThisCustomer.add(cart);
             }
 
@@ -50,8 +51,6 @@ public class CartDaoImp implements CartDao{
                 System.out.println(e.getMessage());
             }
         }
-
-
 
         if(listOfCartOfThisCustomer.size()==0){
             return null;

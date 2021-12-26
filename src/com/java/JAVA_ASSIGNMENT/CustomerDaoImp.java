@@ -15,7 +15,12 @@ public class CustomerDaoImp implements CustomerDao{
     private static final String FIND_BY_EMAIL_AND_PASSWORD = "SELECT * FROM customer WHERE email=? and password=?";
     private static final String INSERT = "INSERT INTO customer (userName, email, password, firstName, lastName, paymentPassword, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE customer SET userName=?, email=?, password=?, firstName=?, lastName=?, paymentPassword=?, address=? WHERE customerID=?";
-    private static final String FIND_CUSTOMER_NAME = "SELECT userName FROM seller WHERE customerID=?";
+    private static final String FIND_CUSTOMER_USERNAME = "SELECT userName FROM customer WHERE customerID=?";
+    private static final String FIND_CUSTOMER_FULL_NAME = "SELECT firstName, lastName FROM customer WHERE customerID=?";
+    private static final String FIND_CUSTOMER_ADDRESS = "SELECT address FROM customer WHERE customerID=?";
+
+
+
 
     public static ArrayList<Customer> customerDatabase = new ArrayList<>();
 
@@ -72,8 +77,8 @@ public class CustomerDaoImp implements CustomerDao{
     @Override
     public void deleteCustomer(Customer cust) {
      // todo check this
-        customerDatabase.remove(cust);
 
+        walletDAO.deleteWallet(cust.getUserWallet());
 
         PreparedStatement stmnt = null;
         Connection conn = null;
@@ -84,7 +89,9 @@ public class CustomerDaoImp implements CustomerDao{
             stmnt.setInt(1, cust.getCustomerID());
 
             stmnt.executeUpdate();
+
             System.out.println("Deleted your account Successfully");
+
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -100,7 +107,6 @@ public class CustomerDaoImp implements CustomerDao{
                 System.out.println(e.getMessage());
             }
         }
-
 
         sessionCustomer = null;
     }
@@ -146,7 +152,7 @@ public class CustomerDaoImp implements CustomerDao{
 
         walletDAO.createWallet(cust.getCustomerID());
         customerDatabase.add(cust);
-        System.out.println("Registered Customer Successfully" );
+        System.out.println("\nRegistered Customer Successfully" );
 
 
     }
@@ -210,7 +216,7 @@ public class CustomerDaoImp implements CustomerDao{
 
     @Override
     public String getCustomerUsername(int customerID) {
-        String sellerUsername = "";
+        String customerUsername = "";
 
         ResultSet rs = null;
         Connection conn;
@@ -219,13 +225,13 @@ public class CustomerDaoImp implements CustomerDao{
         try {
 
             conn = MySQLJDBCUtil.getConnection();
-            stmnt = conn.prepareStatement(FIND_CUSTOMER_NAME);
+            stmnt = conn.prepareStatement(FIND_CUSTOMER_USERNAME);
 
             stmnt.setInt(1, customerID);
             rs = stmnt.executeQuery(); // Executing the sql query
 
             while (rs.next()) {
-                sellerUsername = rs.getString("userName");
+                customerUsername = rs.getString("userName");
             }
 
 
@@ -241,7 +247,80 @@ public class CustomerDaoImp implements CustomerDao{
 
 
 
-        return sellerUsername;    }
+        return customerUsername;
+    }
+
+    @Override
+    public String getCustomerFullName(int customerID) {
+        String customerFullName = "";
+
+        ResultSet rs = null;
+        Connection conn;
+        PreparedStatement stmnt;
+
+        try {
+
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_CUSTOMER_FULL_NAME);
+
+            stmnt.setInt(1, customerID);
+            rs = stmnt.executeQuery(); // Executing the sql query
+
+            while (rs.next()) {
+                customerFullName = rs.getString("firstName")+" "+rs.getString("lastName") ;
+            }
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+
+        return customerFullName;    }
+
+    @Override
+    public String getCustomerAddress(int customerID) {
+        String customerAddress = "";
+
+        ResultSet rs = null;
+        Connection conn;
+        PreparedStatement stmnt;
+
+        try {
+
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_CUSTOMER_ADDRESS);
+
+            stmnt.setInt(1, customerID);
+            rs = stmnt.executeQuery(); // Executing the sql query
+
+            while (rs.next()) {
+                customerAddress = rs.getString("address") ;
+            }
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+
+        return customerAddress;    }
+
+
 
 
 }

@@ -11,7 +11,7 @@ public class OrdersDaoImp implements OrdersDao {
     private static final String FIND_BY_ID = "SELECT * FROM orders WHERE orderID =?";
     private static final String INSERT = "INSERT INTO orders (orderDate, " +
             "orderCustomerID, orderReceivedOrNot, orderTrackingID, orderRatedOrNot, " +
-            "orderSellerID ,orderProductID ,orderQuantity,orderStatus) VALUES (?,?,?,?,?,?,?,?,9)";
+            "orderSellerID ,orderProductID ,orderQuantity,orderStatus) VALUES (?,?,?,?,?,?,?,?,?)";
 
     private static final String UPDATE = "UPDATE orders SET orderStatus=?,orderTrackingID=?,orderReceivedOrNot=?,orderRatedOrNot=? WHERE orderID=?";
 
@@ -29,7 +29,6 @@ public class OrdersDaoImp implements OrdersDao {
         ResultSet rs = null;
         Connection conn;
         PreparedStatement stmnt;
-        Orders orders = new Orders();
 
         try {
 
@@ -40,6 +39,7 @@ public class OrdersDaoImp implements OrdersDao {
             rs = stmnt.executeQuery(); // Executing the sql query
 
             while (rs.next()) {
+                Orders orders = new Orders();
                 orders.setOrderID(rs.getInt("orderID"));
                 orders.setOrderProductID(rs.getInt("orderProductID"));
                 orders.setOrderDate(rs.getString("orderDate"));
@@ -163,7 +163,12 @@ public class OrdersDaoImp implements OrdersDao {
             }
         }
 
-        return orders;
+        if(orders.getOrderDate()==null)
+            return  null;
+        else
+            return orders;
+
+
     }
 
     @Override
