@@ -827,8 +827,6 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
             }
 
-            System.out.println("\nWhat would you like to do ?");
-            System.out.println("1. Add to cart");
             boolean sameSeller = false;
             if(sessionSeller.getSellerID() == searchedProduct.getProductSellerID()){
                 System.out.println("\nWhat would you like to do ?");
