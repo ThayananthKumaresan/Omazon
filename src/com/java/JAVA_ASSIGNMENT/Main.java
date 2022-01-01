@@ -829,8 +829,19 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
             System.out.println("\nWhat would you like to do ?");
             System.out.println("1. Add to cart");
-            System.out.println("2. Add to favorites");
-            System.out.println("3. Return");
+            boolean sameSeller = false;
+            if(sessionSeller.getSellerID() == searchedProduct.getProductSellerID()){
+                System.out.println("\nWhat would you like to do ?");
+                System.out.println("1. Add to favorites");
+                System.out.println("2. Return");
+                sameSeller = true;
+            }
+            else{
+                System.out.println("\nWhat would you like to do ?");
+                System.out.println("1. Add to cart");
+                System.out.println("2. Add to favorites");
+                System.out.println("3. Return");
+            }
 
             int userChoice = 0, cartQuantity = 0;
             boolean validInput;
@@ -841,17 +852,25 @@ static DecimalFormat df = new DecimalFormat("0.00");
                     userChoice = input.nextInt();
                     validInput = true;
 
-                    if (userChoice < 1 || userChoice > 3) {
+                    if (sameSeller && (userChoice < 1 || userChoice > 2)){
+                        System.out.print("Oops wrong value, please enter either 1 or 2.");
+                        validInput = false;
+                        input.nextLine();
+                    }
+                    else if (userChoice < 1 || userChoice > 3) {
                         System.out.print("Oops wrong value, please enter either 1 / 2 or 3.");
                         validInput = false;
                         input.nextLine();
                     }
+            
                 } catch (InputMismatchException ex) {
                     System.out.println("You have entered an invalid format of input");
                     validInput = false;
                     input.nextLine();
                 }
 
+                if(sameSeller)
+                    userChoice++;
             } while (!validInput);
 
 
