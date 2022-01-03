@@ -22,7 +22,7 @@ public class Main {
     static NotificationDao notificationDAO = new NotificationDaoImp();
     static FeedbackDao feedbackDAO = new FeedbackDaoImp();
     static FavoritesDao favoriteDAO = new FavoritesDaoImp();
-static DecimalFormat df = new DecimalFormat("0.00");
+    static DecimalFormat df = new DecimalFormat("0.00");
     static DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 
 
@@ -827,10 +827,9 @@ static DecimalFormat df = new DecimalFormat("0.00");
 
             }
 
-            System.out.println("\nWhat would you like to do ?");
-            System.out.println("1. Add to cart");
             boolean sameSeller = false;
-            if(sessionSeller.getSellerID() == searchedProduct.getProductSellerID()){
+            String sellerEmail = sellerDAO.getSellerEmail(searchedProduct.getProductSellerID());
+            if(sellerEmail == sessionCustomer.getEmail()){
                 System.out.println("\nWhat would you like to do ?");
                 System.out.println("1. Add to favorites");
                 System.out.println("2. Return");
