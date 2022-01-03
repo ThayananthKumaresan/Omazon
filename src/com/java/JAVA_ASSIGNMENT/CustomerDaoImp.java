@@ -18,6 +18,7 @@ public class CustomerDaoImp implements CustomerDao{
     private static final String FIND_CUSTOMER_USERNAME = "SELECT userName FROM customer WHERE customerID=?";
     private static final String FIND_CUSTOMER_FULL_NAME = "SELECT firstName, lastName FROM customer WHERE customerID=?";
     private static final String FIND_CUSTOMER_ADDRESS = "SELECT address FROM customer WHERE customerID=?";
+    private static final String FIND_CUSTOMERID_BY_EMAIL = "SELECT customerID FROM customer WHERE email=?";
 
 
 
@@ -320,7 +321,32 @@ public class CustomerDaoImp implements CustomerDao{
 
         return customerAddress;    }
 
+    public int getCustomerID(String email){
+        ResultSet rs = null;
+        PreparedStatement stmnt = null;
+        Connection conn = null;
+        int customerID = -1;
 
+        try {
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_CUSTOMERID_BY_EMAIL);
+            stmnt.setString(1, email);
 
+            rs = stmnt.executeQuery();
+            if(rs.next())
+                customerID = rs.getInt("customerID");
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) 
+                    rs.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
+        return customerID;
+    }
 }

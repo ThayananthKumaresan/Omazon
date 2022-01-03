@@ -10,4 +10,5 @@ public interface CustomerDao {
     public String getCustomerUsername(int customerID);
     public String getCustomerFullName(int customerID);
     public String getCustomerAddress(int customerID);
+    public int getCustomerID(String email);
 }

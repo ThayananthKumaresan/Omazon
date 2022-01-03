@@ -189,6 +189,11 @@ public class Main {
 
             System.out.print("Your Email : ");
             inputEmail = input.next();
+            while(customerDAO.getCustomerID(inputEmail) > 0){
+                System.out.println("Your Email has been used. Please enter another one");
+                System.out.print("Your Email : ");
+                inputEmail = input.next();
+            }
             //Perform Data validation for email , then only set it
             registerCustomer.setEmail(inputEmail);
 
@@ -212,7 +217,13 @@ public class Main {
             Seller registerSeller = new Seller();
 
             System.out.print("Your Email : ");
-            registerSeller.setEmail(input.next());
+            inputEmail = input.next();
+            while(sellerDAO.getSellerID(inputEmail) > 0){
+                System.out.println("Your Email has been used. Please enter another one");
+                System.out.print("Your Email : ");
+                inputEmail = input.next();
+            }
+            registerSeller.setEmail(inputEmail);
 
             System.out.print("Your Password : ");
             registerSeller.setPassword(input.next());

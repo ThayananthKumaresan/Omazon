@@ -8,6 +8,8 @@ import static com.java.JAVA_ASSIGNMENT.Main.transactionDAO;
 public class SellerDaoImp implements SellerDao {
 
     private static final String FIND_SELLER_NAME = "SELECT userName FROM seller WHERE sellerID=?";
+    private static final String FIND_SELLER_EMAIL = "SELECT email FROM seller WHERE sellerID=?";
+    private static final String FIND_SELLERID_BY_EMAIL = "SELECT sellerID FROM seller WHERE email=?";
     private static final String FIND_BY_EMAIL_AND_PASSWORD = "SELECT * FROM seller WHERE email=? and password=?";
     private static final String INSERT = "INSERT INTO seller (" +
             "userName, email, password, firstName, lastName, " +
@@ -18,6 +20,7 @@ public class SellerDaoImp implements SellerDao {
     private static final String UPDATE_SELLER_PROFIT = "UPDATE seller " +
             "SET  sellerProfit=?" +
             "WHERE sellerID=?";
+    private static final String FIND_EMAIL_SELLER = "SELECT sellerID FROM seller WHERE email=?";
 
     // TODO : ADD SHOP NAME & RENAME TO SHOP NAME
     @Override
@@ -55,6 +58,40 @@ public class SellerDaoImp implements SellerDao {
 
 
         return sellerUsername;
+    }
+
+    @Override
+    public String getSellerEmail(int sellerID){
+        String sellerEmail = "";
+
+        ResultSet rs = null;
+        Connection conn;
+        PreparedStatement stmnt;
+
+        try {
+
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_SELLER_EMAIL);
+
+            stmnt.setInt(1, sellerID);
+            rs = stmnt.executeQuery(); // Executing the sql query
+
+            while (rs.next()) {
+                sellerEmail = rs.getString("email");
+            }
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return sellerEmail;
     }
 
     @Override
@@ -257,12 +294,35 @@ public class SellerDaoImp implements SellerDao {
             }
 
         }
-
-
-
-
-
     }
 
+    @Override
+    public int getSellerID(String email){
+        ResultSet rs = null;
+        PreparedStatement stmnt = null;
+        Connection conn = null;
+        int customerID = -1;
 
+        try {
+            conn = MySQLJDBCUtil.getConnection();
+            stmnt = conn.prepareStatement(FIND_SELLERID_BY_EMAIL);
+            stmnt.setString(1, email);
+
+            rs = stmnt.executeQuery();
+            if(rs.next())
+                customerID = rs.getInt("customerID");
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) 
+                    rs.close();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return customerID;
+    }
 }
