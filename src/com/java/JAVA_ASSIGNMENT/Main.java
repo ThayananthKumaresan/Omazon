@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner14;
+
 
 public class Main {
 
@@ -30,6 +32,7 @@ public class Main {
         System.out.println("Press \"ENTER\" to return...");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
+        scanner.close();
     }
 
 
@@ -64,54 +67,43 @@ public class Main {
             }
         } while (!validInput);
 
-
-        if (userRole == 'S' || userRole == 'C')
-        {
+        if (userRole == 'C'){
             System.out.println("Before showing your shopping ability , please choose to ");
             System.out.println("1. Login");
-            System.out.println("2. Register");
+            System.out.println("2. Register");           
+        }
+        else if (userRole == 'S'){
+            System.out.println("Please take note you need to register as customer frist before become a seller.");
+            System.out.println("1. Login");
+            System.out.println("2. Register as customer");
+        }
 
-            int userChoice = 0;
-            do {
-                try {
-                    System.out.print("\nYour option : ");
-                    userChoice = input.nextInt();
-                    validInput = true;
+        int userChoice = 0;
+        do {
+            try {
+                System.out.print("\nYour option : ");
+                userChoice = input.nextInt();
+                validInput = true;
 
-                    if (userChoice < 1 || userChoice > 2) {
-                        System.out.print("Oops wrong value, please enter either 1 or 2 only.");
-                        validInput = false;
-                        input.nextLine();
-                    }
-                } catch (InputMismatchException ex) {
-                    System.out.println("You have entered an invalid format of input");
+                if (userChoice < 1 || userChoice > 2) {
+                    System.out.print("Oops wrong value, please enter either 1 or 2 only.");
                     validInput = false;
                     input.nextLine();
                 }
-
-            } while (!validInput);
-
-
-            if (userRole == 'S') {
-
-                if (userChoice != 1) {
-                    registerPage('S');
-                }
-                loginPage('S');
-
-            } else {
-
-                if (userChoice != 1) {
-                    registerPage('C');
-                }
-                loginPage('C');
+            } catch (InputMismatchException ex) {
+                System.out.println("You have entered an invalid format of input");
+                validInput = false;
+                input.nextLine();
             }
 
-        }else{
+        } while (!validInput);
+
+        if(userChoice == 1)
+            loginPage(userRole);
+        else if (userChoice == 2)
+            registerPage('C');
+        else
             exitSystem();
-        }
-
-
     }
 
     public static void loginPage(char userRole) {
@@ -215,27 +207,12 @@ public class Main {
         } else {
 
             Seller registerSeller = new Seller();
-
-            System.out.print("Your Email : ");
-            inputEmail = input.next();
-            while(sellerDAO.getSellerID(inputEmail) > 0){
-                System.out.println("Your Email has been used. Please enter another one");
-                System.out.print("Your Email : ");
-                inputEmail = input.next();
-            }
-            registerSeller.setEmail(inputEmail);
-
-            System.out.print("Your Password : ");
-            registerSeller.setPassword(input.next());
-
-            System.out.print("Your Username : ");
-            registerSeller.setUserName(input.next());
-
-            System.out.print("Your First Name : ");
-            registerSeller.setFirstName(input.next());
-
-            System.out.print("Your Last Name : ");
-            registerSeller.setLastName(input.next());
+            registerSeller.setEmail(sessionCustomer.getEmail());
+            registerSeller.setPassword(sessionCustomer.getPassword());
+            registerSeller.setUserName(sessionCustomer.getUserName());
+            registerSeller.setFirstName(sessionCustomer.getFirstName());
+            registerSeller.setLastName(sessionCustomer.getLastName());
+            registerSeller.setSellerAddress(sessionCustomer.getAddress());
 
             System.out.print("Your IC Number : ");
             registerSeller.setSellerIC(input.next());
@@ -243,18 +220,11 @@ public class Main {
             System.out.print("Your Phone Number : ");
             registerSeller.setSellerPhoneNumber(input.next());
 
-            System.out.print("Your Address : ");
-            registerSeller.setSellerAddress(input.next());
-
             System.out.print("Your Shop Name : ");
             registerSeller.setSellerShopName(input.next());
 
             System.out.print("Your Business Registration Number : ");
             registerSeller.setSellerBusinessRegistrationNumber(input.next());
-
-            //TODO : DO WE NEED THIS ?
-            System.out.print("Your Bank Account : ");
-            registerSeller.setSellerBankAccount(input.next());
 
             sellerDAO.registerSeller(registerSeller);
         }
@@ -1295,7 +1265,8 @@ public class Main {
             System.out.println("4.Change Payment Password");
             System.out.println("5.Update Address");
             System.out.println("6.Delete Account");
-            System.out.println("7.Return to Home Page");
+            System.out.println("7.Register as a seller");
+            System.out.println("8.Return to Home Page");
 
             int userChoice = 0;         // Get the choice
 
@@ -1306,7 +1277,7 @@ public class Main {
                     validInput = true;
 
                     if (userChoice < 1 || userChoice > 7) {
-                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 / 6 or 7 only.");
+                        System.out.print("Oops wrong value, please enter either 1 / 2 / 3 / 4 / 5 / 6 / 7 or 8 only.");
                         validInput = false;
                     }
                 } catch (InputMismatchException ex) {
@@ -1383,7 +1354,9 @@ public class Main {
                             System.out.println("You have chose to not delete your account !");
                         }
                          break;
-
+                case 7:
+                        registerPage('S');
+                        break;
                 default: redirectToTopFlag = false;
                 break;
 
