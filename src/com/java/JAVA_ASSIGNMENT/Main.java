@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import javax.lang.model.util.ElementScanner14;
-
 
 public class Main {
 
@@ -45,26 +43,22 @@ public class Main {
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ OMAZON ONLINE SHOPPING APP ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
         System.out.println("----------------------------------------------------------------------------------");
-
         System.out.println("Welcome digital nomads. We know how important Omazon is in your life to survive this pandemic.");
         System.out.println("But ... first , tell us who you are or press E to exit system");
-
         System.out.println("S. Seller and I'm going to sell great products! ");
         System.out.println("C. Customer and I cant wait to buy ! ");
         System.out.println("E. Exit system ");
 
         char userRole ;
         boolean validInput;
-        do {  //
+        do {
             System.out.print("\nYour option ? : ");
             userRole = input.next().charAt(0);
 
-            if (userRole == 'S' || userRole == 'C'  || userRole == 'E') {
-                validInput = true;
-            } else {
+            validInput = (userRole == 'S' || userRole == 'C'  || userRole == 'E') ? true : false;
+            if(!validInput)
                 System.out.print("Oops wrong value, please enter either S / C or E.");
-                validInput = false;
-            }
+
         } while (!validInput);
 
         if (userRole == 'C'){
@@ -78,48 +72,41 @@ public class Main {
             System.out.println("2. Register as customer");
         }
 
-        int userChoice = 0;
+        char userChoice;
         do {
-            try {
-                System.out.print("\nYour option : ");
-                userChoice = input.nextInt();
-                validInput = true;
+            System.out.print("\nYour option ? : ");
+            userChoice = input.next().charAt(0);
 
-                if (userChoice < 1 || userChoice > 2) {
-                    System.out.print("Oops wrong value, please enter either 1 or 2 only.");
-                    validInput = false;
-                    input.nextLine();
-                }
-            } catch (InputMismatchException ex) {
-                System.out.println("You have entered an invalid format of input");
-                validInput = false;
-                input.nextLine();
-            }
-
+            validInput = (userChoice == '1' || userChoice == '2') ? true : false;
+            if(!validInput)
+                System.out.print("Oops wrong value, please enter either 1 or 2 only.");
         } while (!validInput);
 
-        if(userChoice == 1)
+        if(userChoice == '1')
             loginPage(userRole);
-        else if (userChoice == 2)
+        else if (userChoice == '2'){
             registerPage('C');
+            loginPage('C');
+        }
         else
             exitSystem();
     }
 
     public static void loginPage(char userRole) {
-
-
         System.out.println("########----- L O G I N  P A G E-----########");
-
         String inputEmail;
         String inputPassword ;
-
 
         // FOR CUSTOMER
         //1. Get email & password , then create an instance of user and set email and password
         //2. Check if this customer is found in the customerDatabase
         //3. If found then copy to sessionCustomer
         //4. Redirect user to  Home Page
+        // FOR Seller
+        //1. Get email & password , then create an instance of user and set email and password
+        //2. Check if this seller is found in the sellerDatabase
+        //3. If found then copy to sessionSeller
+        //4. Redirect user to  seller Dash Board
         if (userRole == 'C') {
             Customer loginCustomer;
             do {
@@ -132,11 +119,8 @@ public class Main {
                 loginCustomer = new Customer(inputEmail, inputPassword);
 
             } while (!customerDAO.loginCustomer(loginCustomer));
-
-
             homePage();
         } else {
-
             Seller loginSeller ;
             do {
                 System.out.print("Enter your email : ");
@@ -146,16 +130,12 @@ public class Main {
                 inputPassword = input.next();
 
                 loginSeller = new Seller(inputEmail, inputPassword);
-
             } while (!sellerDAO.loginSeller(loginSeller));
-
             sellerDashboardPage();
         }
-
     }
 
     public static void logOutPage(char userRole) {
-
         if (userRole == 'C') {
             System.out.print("Thank you for shopping. You have been logged out. You will be now redirected to Main Menu Page");
             sessionCustomer = null;
@@ -163,30 +143,34 @@ public class Main {
             System.out.print("Thank you for your service. You have been logged out.You will be now redirected to Main Menu Page");
             sessionSeller = null;
         }
-
         promptEnterKey();
         mainMenuPage();
-
     }
 
 
     public static void registerPage(char userRole) {
-
         System.out.println("########----- R E G I S T R A T I O N  P A G E-----########");
-
         String inputEmail ;
 
         if (userRole == 'C') {
             Customer registerCustomer = new Customer();
+            boolean validEmail = false;
 
-            System.out.print("Your Email : ");
-            inputEmail = input.next();
-            while(customerDAO.getCustomerID(inputEmail) > 0){
-                System.out.println("Your Email has been used. Please enter another one");
+            //Perform Data validation for email , then only set it
+            do{
                 System.out.print("Your Email : ");
                 inputEmail = input.next();
-            }
-            //Perform Data validation for email , then only set it
+
+                for(int i = 0; i < inputEmail.length(); i++)
+                    if(inputEmail.charAt(i) == '@')
+                        validEmail = true;
+                
+                if(customerDAO.getCustomerID(inputEmail) > 0){
+                    System.out.println("Your Email has been used. Please enter another one");
+                    validEmail = false;
+                }
+            }while(!validEmail);
+            
             registerCustomer.setEmail(inputEmail);
 
             System.out.print("Your Password : ");
@@ -205,7 +189,6 @@ public class Main {
             CustomerDao customerDAO = new CustomerDaoImp();
             customerDAO.registerCustomer(registerCustomer);
         } else {
-
             Seller registerSeller = new Seller();
             registerSeller.setEmail(sessionCustomer.getEmail());
             registerSeller.setPassword(sessionCustomer.getPassword());
@@ -228,8 +211,6 @@ public class Main {
 
             sellerDAO.registerSeller(registerSeller);
         }
-
-
     }
 
 
@@ -338,13 +319,9 @@ public class Main {
     }
 
     public static void searchPage() {
-
-
         //result of searching similar term
         ArrayList<Product> searchResult = new ArrayList<>();
-        // require a method in class ProductDao to return an ArrayList contain all Product in database, will raise as an issue
         ArrayList<Product> listOfAllProducts = productDAO.getListOfAllProduct();
-
         int cont = 0;
 
         do {
@@ -650,7 +627,7 @@ public class Main {
             }
 
         } else {
-            System.out.println("\nOops sorry , no products added to your favorites");
+            System.out.println("\nOops ,no products is added to your favorites");
         }
 
         System.out.println("\n\nYou will be now redirected to to Home Page");
@@ -1355,12 +1332,13 @@ public class Main {
                         }
                          break;
                 case 7:
-                        registerPage('S');
+                        if(sellerDAO.getSellerID(sessionCustomer.getEmail()) > 0)
+                            System.out.println("Seller account already exist. You need login as seller");
+                        else
+                            registerPage('S');
                         break;
                 default: redirectToTopFlag = false;
                 break;
-
-
             }
 
         }while(redirectToTopFlag);

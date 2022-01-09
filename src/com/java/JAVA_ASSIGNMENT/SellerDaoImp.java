@@ -20,7 +20,6 @@ public class SellerDaoImp implements SellerDao {
     private static final String UPDATE_SELLER_PROFIT = "UPDATE seller " +
             "SET  sellerProfit=?" +
             "WHERE sellerID=?";
-    private static final String FIND_EMAIL_SELLER = "SELECT sellerID FROM seller WHERE email=?";
 
     // TODO : ADD SHOP NAME & RENAME TO SHOP NAME
     @Override
