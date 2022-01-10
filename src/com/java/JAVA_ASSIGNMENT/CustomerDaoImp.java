@@ -154,8 +154,6 @@ public class CustomerDaoImp implements CustomerDao{
         walletDAO.createWallet(cust.getCustomerID());
         customerDatabase.add(cust);
         System.out.println("\nRegistered Customer Successfully" );
-
-
     }
 
     @Override
@@ -206,7 +204,6 @@ public class CustomerDaoImp implements CustomerDao{
         sessionCustomer.setUserWallet(walletDAO.getCustomerWallet(sessionCustomer.getCustomerID()));
 
         return loginSuccessFlag;
-
     }
 
     @Override

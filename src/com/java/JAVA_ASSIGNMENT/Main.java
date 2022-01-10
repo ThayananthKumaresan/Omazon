@@ -1209,15 +1209,94 @@ public class Main {
     }
 
     public static void feedbackPage() {
+        System.out.println("\n\n########----- F E E D B A C K   P A G E-----########");
         // Find orders of this user that has not Rated & Received
-        // Display the product [ Name and ID ] from that order
-        // Get Review & Rating
-        // ^ Loop all the products from that order
+        ArrayList<Orders> orders = ordersDAO.getListOfOrdersOfCustomer(sessionCustomer.getCustomerID());
+        if(orders.isEmpty()){
+            System.out.println("There are no order");
+            return;
+        }
+
+        ArrayList<Orders> unRatedOrderList = new ArrayList<>();
+            ArrayList<Orders> unReceivedOrderList = new ArrayList<>();
+            for(int i = 0; i < orders.size(); i++){
+                if(!orders.get(i).getOrderRatedOrNot())
+                    unRatedOrderList.add(orders.get(i));
+                if(!orders.get(i).getOrderReceivedOrNot())
+                    unReceivedOrderList.add(orders.get(i));
+            }
+    
+        do{
+            // Display the product [ Name and ID ] from that order
+    
+            System.out.println("Unreceived product:");
+            for(int i = 0; i < unReceivedOrderList.size(); i++){
+                System.out.println((i+1) + ". " + unReceivedOrderList.get(i).orderID + " " + productDAO.getProduct(unReceivedOrderList.get(i).getOrderProductID()).getProductName());
+            }
+            System.out.println("Unrated product:");
+            for(int i = 0; i < unRatedOrderList.size(); i++){
+                System.out.println((i+1) + ". " + unRatedOrderList.get(i).orderID + " " + productDAO.getProduct(unRatedOrderList.get(i).getOrderProductID()).getProductName());
+            }
+            // Get Review & Rating
+
+            char userChoice;
+            int orderNum = -1;
+            boolean validInput = false;
+            do{
+                System.out.println("1. Mark unreceived product as received");
+                System.out.println("2. Rate product receive product");
+                System.out.println("3. Return to Home Page");
+                System.out.print("Your option:");
+
+                userChoice = input.next().charAt(0);
+                validInput = true;
+                if((userChoice - '0') < 1 || (userChoice - '0') > 3)
+                    validInput = false;
+                if(userChoice == '3')
+                    return;
+            }while(!validInput);
+
+            validInput = false;
+            do{
+                System.out.println("Please enter order number:");
+                try{
+                    orderNum = input.nextInt();
+                    orderNum--;
+                    if(userChoice == '1'){
+                        if(orderNum >= 0 && orderNum < unReceivedOrderList.size())
+                            validInput = true;
+                    }
+                    else{
+                        if(orderNum >= 0 && orderNum < unRatedOrderList.size())
+                            validInput = true;
+                    }
+                }
+                catch(InputMismatchException e){
+                    System.out.println("Invalid input");
+                }
+            }while(!validInput);
+
+            if(userChoice == '1'){
+                unReceivedOrderList.get(orderNum).setOrderReceivedOrNot(true);
+                unRatedOrderList.add(unReceivedOrderList.get(orderNum))
+                unReceivedOrderList.remove(orderNum);
+            }
+            else if(userChoice == '2'){
+                Feedback feedback = new Feedback();
+                feedback.setFeedbackProductID(unRatedOrderList.get(orderNum).orderProductID);
+                feedback.setFeedbackCustomerID(sessionCustomer.getCustomerID());
+                System.out.println("Please enter you rating (1-5):");
+                feedback.setFeedbackRating((input.next().charAt(0)-'0') % 5);
+                System.out.println("Please enter your review:");
+                feedback.setFeedbackReview(input.nextLine());
+                feedbackDAO.addFeedback(feedback);
+                ordersDAO.deleteOrders(unRatedOrderList.get(orderNum));
+                unRatedOrderList.remove(orderNum);
+            }
+        }while(true);
         // Once all the products have been reviewed from that one order , Update the Rated attributed to "Yes" of that order
         // Then proceed to check for other orders
         // ** Its definitely going to be a loop inside a loop inside a loop
-
-
     }
 
     public static void userProfilePage() {
