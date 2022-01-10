@@ -1210,7 +1210,7 @@ public class Main {
 
 
     public static void feedbackPage() {
-        // Find orders of this user that has not Rated & Received
+        System.out.println("\n\n########----- F E E D B A C K   P A G E-----########");
         ArrayList<Orders> orders = ordersDAO.getListOfOrdersOfCustomer(sessionCustomer.getCustomerID());
         if(orders.isEmpty()){
             System.out.println("There are no order");
@@ -1278,7 +1278,7 @@ public class Main {
 
             if(userChoice == '1'){
                 unReceivedOrderList.get(orderNum).setOrderReceivedOrNot(true);
-                unRatedOrderList.add(unReceivedOrderList.get(orderNum))
+                unRatedOrderList.add(unReceivedOrderList.get(orderNum));
                 unReceivedOrderList.remove(orderNum);
             }
             else if(userChoice == '2'){
@@ -1295,6 +1295,14 @@ public class Main {
             }
         }while(true);
         // Once all the products have been reviewed from that one order , Update the Rated attributed to "Yes" of that order
+        // Then proceed to check for other orders
+        // ** Its definitely going to be a loop inside a loop inside a loop
+    }
+
+    public static void userProfilePage() {
+
+        boolean validInput;
+        int deleteConfirmation = 0;
         boolean redirectToTopFlag = true;
 
         do{
