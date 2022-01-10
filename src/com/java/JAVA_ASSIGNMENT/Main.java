@@ -1208,8 +1208,8 @@ public class Main {
 
     }
 
+
     public static void feedbackPage() {
-        System.out.println("\n\n########----- F E E D B A C K   P A G E-----########");
         // Find orders of this user that has not Rated & Received
         ArrayList<Orders> orders = ordersDAO.getListOfOrdersOfCustomer(sessionCustomer.getCustomerID());
         if(orders.isEmpty()){
@@ -1295,14 +1295,6 @@ public class Main {
             }
         }while(true);
         // Once all the products have been reviewed from that one order , Update the Rated attributed to "Yes" of that order
-        // Then proceed to check for other orders
-        // ** Its definitely going to be a loop inside a loop inside a loop
-    }
-
-    public static void userProfilePage() {
-
-        boolean validInput;
-        int deleteConfirmation = 0;
         boolean redirectToTopFlag = true;
 
         do{
